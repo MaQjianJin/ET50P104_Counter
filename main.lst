@@ -1,4 +1,4 @@
-Wed Sep 18 14:42:35 2024
+Wed Sep 18 16:09:57 2024
 -------------------------
 CAS V2.15.1-rc1 - (C) Copyright 2000-2012 CHIPMAST TECHNOLOGY CO. LTD.
 Main file   : main.asm
@@ -1301,17 +1301,17 @@ Current file: main.asm
     42 00:F021: 73 3E         	LDA		FUSE
     43 00:F023: 7F 2F         	STA		MF									;为内部RC振荡器提供校准数据
     44                        
-    45 00:F025: 15 AD F3      	jsr		F_Beep_Init
-    46 00:F028: 15 EB F2      	jsr		L_Init_SystemRam_Prog				;初始化系统RAM并禁用所有断电保留的RAM
+    45 00:F025: 15 B0 F3      	jsr		F_Beep_Init
+    46 00:F028: 15 EA F2      	jsr		L_Init_SystemRam_Prog				;初始化系统RAM并禁用所有断电保留的RAM
     47                        
-    48 00:F02B: 15 08 F3      	jsr		F_LCD_Init
-    49 00:F02E: 15 6F F3      	jsr		F_Port_Init
+    48 00:F02B: 15 0B F3      	jsr		F_LCD_Init
+    49 00:F02E: 15 72 F3      	jsr		F_Port_Init
     50                        
     51 00:F031: 53 07         	lda		#$07								;系统时钟和中断使能
     52 00:F033: 7F 1D         	sta		SYSCLK
     53                        
-    54 00:F035: 15 84 F3      	jsr		F_Timer_Init
-    55 00:F038: 15 2D F7      	jsr		F_Display_Time
+    54 00:F035: 15 87 F3      	jsr		F_Timer_Init
+    55 00:F038: 15 30 F7      	jsr		F_Display_Time
     56                        
     57 00:F03B: 05            	cli		; 开总中断
     58                        
@@ -1325,7 +1325,7 @@ Current file: main.asm
     66 00:F03E: 51 0C         	and		#$0c
     67 00:F040: 56 00         	cmp		#$00
     68 00:F042: 13 03         	beq		Beep_Out
-    69 00:F044: 15 C7 F2      	jsr		F_Beep_Manage
+    69 00:F044: 15 C6 F2      	jsr		F_Beep_Manage
     70                        
     71                        Beep_Out:
     72 00:F047: 39 AE 16      	bbs1	Key_Flag,Key_QA_Out		; 首次触发必定进扫键
@@ -1360,10 +1360,10 @@ Current file: main.asm
    101                        Status_Pos:
    102 00:F076: 15 C6 F1      	jsr		F_Sec_Pos_Counter
    103 00:F079: 31 AC C0      	bbr1	Timer_Flag,MainLoop
-   104 00:F07C: 15 4B F2      	jsr		Pos_Time_Count
+   104 00:F07C: 15 4A F2      	jsr		Pos_Time_Count
    105 00:F07F: 17 BB         	bra		MainLoop
    106                        Status_Des:
-   107 00:F081: 15 83 F2      	jsr		F_Sec_Des_Counter
+   107 00:F081: 15 82 F2      	jsr		F_Sec_Des_Counter
    108 00:F084: 17 B6         	bra		MainLoop
    109                        Status_Pause:
    110                        
@@ -1529,13 +1529,13 @@ Current file: main.asm
     62 00:F156: 73 B6         	lda		R_Time_Min
     63 00:F158: 56 64         	cmp		#100
     64 00:F15A: 13 04         	beq		L_Reset_Min
-    65 00:F15C: 15 4F F7      	jsr		L_DisTimer_Min
+    65 00:F15C: 15 52 F7      	jsr		L_DisTimer_Min
     66 00:F15F: 09            	rts
     67                        
     68                        L_Reset_Min:
     69 00:F160: 53 00         	lda		#$0
     70 00:F162: 7F B6         	sta		R_Time_Min
-    71 00:F164: 15 4F F7      	jsr		L_DisTimer_Min
+    71 00:F164: 15 52 F7      	jsr		L_DisTimer_Min
     72 00:F167: 09            	rts
     73                        
     74                        
@@ -1554,13 +1554,13 @@ Current file: main.asm
     87 00:F177: 73 B5         	lda		R_Time_Sec
     88 00:F179: 56 3C         	cmp		#60
     89 00:F17B: 13 04         	beq		L_Reset_Sec
-    90 00:F17D: 15 37 F7      	jsr		L_DisTimer_Sec
+    90 00:F17D: 15 3A F7      	jsr		L_DisTimer_Sec
     91 00:F180: 09            	rts
     92                        
     93                        L_Reset_Sec:							; 60溢出后回到0
     94 00:F181: 53 00         	lda		#$0
     95 00:F183: 7F B5         	sta		R_Time_Sec
-    96 00:F185: 15 37 F7      	jsr		L_DisTimer_Sec
+    96 00:F185: 15 3A F7      	jsr		L_DisTimer_Sec
     97 00:F188: 09            	rts
     98                        
     99                        
@@ -1593,7 +1593,7 @@ Current file: main.asm
    123                        	; 处理暂停态的情况
    124                        L_KeyC_Pause:
    125 00:F1A6: 23 AD         	rmb3	Sys_Status_Flag				; 退出暂停态
-   126 00:F1A8: 15 2D F7      	jsr		F_Display_Time
+   126 00:F1A8: 15 30 F7      	jsr		F_Display_Time
    127                        	TMR2_ON								; 重新启动半S计时
 +  127 00:F1AB: 2A 16          SMB2 TMRC
    128                        	TMR0_ON
@@ -1613,7 +1613,7 @@ Current file: main.asm
 +  140 00:F1BE: 22 16          RMB2 TMRC
    141                        
    142 00:F1C0: 2A AC         	smb2	Timer_Flag					; 按键提示音标志位
-   143 00:F1C2: 15 2D F7      	jsr		F_Display_Time
+   143 00:F1C2: 15 30 F7      	jsr		F_Display_Time
    144 00:F1C5: 09            	rts
    144                        
    201                        .INCLUDE	Time.asm
@@ -1630,17 +1630,17 @@ Current file: main.asm
     11 00:F1D4: 56 3C         	cmp		#60
     12 00:F1D6: 13 2B         	beq		L_CarryToMin					; 秒进位分动画
     13                        
-    14 00:F1D8: 15 69 F7      	jsr		F_DisFrame_Sec_d4				; sec个位走时动画
+    14 00:F1D8: 15 6C F7      	jsr		F_DisFrame_Sec_d4				; sec个位走时动画
     15                        
     16 00:F1DB: 73 B5         	lda		R_Time_Sec						; 检测十位有没有进位
-    17 00:F1DD: 15 71 F2      	jsr		F_DivideBy10					; 除以10的结果不为零，且余数为0才执行十位的动画
+    17 00:F1DD: 15 70 F2      	jsr		F_DivideBy10					; 除以10的结果不为零，且余数为0才执行十位的动画
     18 00:F1E0: 56 00         	cmp		#0								; 商为0则一定无十位，d3无动画
     19 00:F1E2: 13 09         	beq		L_Sec_D3_Out
     20 00:F1E4: 73 B7         	lda		P_Temp							; 余数不为0也不更新十位
     21 00:F1E6: 56 00         	cmp		#0
     22 00:F1E8: 12 03         	bne		L_Sec_D3_Out
     23                        
-    24 00:F1EA: 15 7F F7      	jsr		F_DisFrame_Sec_d3				; sec十位走时动画
+    24 00:F1EA: 15 82 F7      	jsr		F_DisFrame_Sec_d3				; sec十位走时动画
     25                        
     26                        L_Sec_D3_Out:
     27 00:F1ED: 73 AA         	lda		Frame_Counter
@@ -1648,13 +1648,13 @@ Current file: main.asm
     29 00:F1F1: 13 06         	beq		L_Sec_Pos_Out
     30                        
     31 00:F1F3: 5E 54         	ldx		#lcd_MS
-    32 00:F1F5: 15 43 F4      	jsr		F_ClrpSymbol
+    32 00:F1F5: 15 46 F4      	jsr		F_ClrpSymbol
     33                        
     34 00:F1F8: 09            	rts
     35                        
     36                        L_Sec_Pos_Out:
     37 00:F1F9: 5E 54         	ldx		#lcd_MS
-    38 00:F1FB: 15 3C F4      	jsr		F_DispSymbol
+    38 00:F1FB: 15 3F F4      	jsr		F_DispSymbol
     39 00:F1FE: 53 00         	lda		#0
     40 00:F200: 7F AA         	sta		Frame_Counter
     41                        
@@ -1663,90 +1663,90 @@ Current file: main.asm
     44                        
     45                        L_CarryToMin:
     46 00:F203: 73 B6         	lda		R_Time_Min
-    47 00:F205: 56 63         	cmp		#99
-    48 00:F207: 13 31         	beq		L_Time_Overflow					; 分钟溢出动画
+    47 00:F205: 56 64         	cmp		#100
+    48 00:F207: 13 31         	beq		L_Time_Overflow					; 计满99min59s则为溢出
     49                        
-    50 00:F209: 15 69 F7      	jsr		F_DisFrame_Sec_d4				; Sec个位走时动画
-    51 00:F20C: 15 7F F7      	jsr		F_DisFrame_Sec_d3				; Sec十位走时动画
-    52 00:F20F: 15 98 F7      	jsr		F_DisFrame_Min_d2				; Min个位走时动画
+    50 00:F209: 15 6C F7      	jsr		F_DisFrame_Sec_d4				; Sec个位走时动画
+    51 00:F20C: 15 82 F7      	jsr		F_DisFrame_Sec_d3				; Sec十位走时动画
+    52 00:F20F: 15 9B F7      	jsr		F_DisFrame_Min_d2				; Min个位走时动画
     53                        
     54 00:F212: 73 B6         	lda		R_Time_Min						; 检测十位有没有进位
-    55 00:F214: 15 71 F2      	jsr		F_DivideBy10					; 除以10的结果不为零，且余数为0才执行十位的动画
+    55 00:F214: 15 70 F2      	jsr		F_DivideBy10					; 除以10的结果不为零，且余数为0才执行十位的动画
     56 00:F217: 56 00         	cmp		#0								; 商为0则一定无十位，d3无动画
     57 00:F219: 13 09         	beq		L_Min_D1_Out
     58 00:F21B: 73 B7         	lda		P_Temp							; 余数不为0也不更新十位
     59 00:F21D: 56 00         	cmp		#0
     60 00:F21F: 12 03         	bne		L_Min_D1_Out
     61                        
-    62 00:F221: 15 AE F7      	jsr		F_DisFrame_Min_d1				; Min十位走时动画
+    62 00:F221: 15 B1 F7      	jsr		F_DisFrame_Min_d1				; Min十位走时动画
     63                        
     64                        L_Min_D1_Out:
     65 00:F224: 73 AA         	lda		Frame_Counter
     66 00:F226: 56 08         	cmp		#$08
     67 00:F228: 13 06         	beq		L_Min_Pos_Out
-    68                        
-    69 00:F22A: 5E 54         	ldx		#lcd_MS
-    70 00:F22C: 15 43 F4      	jsr		F_ClrpSymbol
-    71 00:F22F: 09            	rts
-    72                        
-    73                        L_Min_Pos_Out:
-    74 00:F230: 5E 54         	ldx		#lcd_MS
-    75 00:F232: 15 3C F4      	jsr		F_DispSymbol
-    76 00:F235: 53 00         	lda		#0
-    77 00:F237: 7F AA         	sta		Frame_Counter
-    78 00:F239: 09            	rts
-    79                        
-    80                        L_Time_Overflow:
-    81 00:F23A: 53 0C         	lda		#$0c							; 正计时溢出则进入倒计时暂停态
-    82 00:F23C: 7F AD         	sta		Sys_Status_Flag
-    83 00:F23E: 15 AE F7      	jsr		F_DisFrame_Min_d1
-    84 00:F241: 15 98 F7      	jsr		F_DisFrame_Min_d2
-    85 00:F244: 15 7F F7      	jsr		F_DisFrame_Sec_d3
-    86 00:F247: 15 69 F7      	jsr		F_DisFrame_Sec_d4
-    87 00:F24A: 09            	rts
+    68 00:F22A: 5E 54         	ldx		#lcd_MS
+    69 00:F22C: 15 46 F4      	jsr		F_ClrpSymbol
+    70 00:F22F: 09            	rts
+    71                        
+    72                        L_Min_Pos_Out:
+    73 00:F230: 5E 54         	ldx		#lcd_MS
+    74 00:F232: 15 3F F4      	jsr		F_DispSymbol
+    75 00:F235: 53 00         	lda		#0
+    76 00:F237: 7F AA         	sta		Frame_Counter
+    77 00:F239: 09            	rts
+    78                        
+    79                        L_Time_Overflow:
+    80 00:F23A: 53 0C         	lda		#$0c							; 正计时溢出则进入倒计时暂停态
+    81 00:F23C: 7F AD         	sta		Sys_Status_Flag
+    82 00:F23E: 53 63         	lda		#99
+    83 00:F240: 7F B6         	sta		R_Time_Min
+    84 00:F242: 53 3B         	lda		#59
+    85 00:F244: 7F B5         	sta		R_Time_Sec
+    86 00:F246: 15 30 F7      	jsr		F_Display_Time
+    87 00:F249: 09            	rts
     88                        
     89                        ; 增时独立于动画显示进行
     90                        Pos_Time_Count:
-    91 00:F24B: 21 AC         	rmb1	Timer_Flag
-    92 00:F24D: 73 B5         	lda		R_Time_Sec
-    93 00:F24F: 56 3B         	cmp		#59
-    94 00:F251: 13 12         	beq		Count_Add_Min
-    95 00:F253: 56 3C         	cmp		#60
-    96 00:F255: 13 03         	beq		Count_CarryToMin				; 秒数满则进位分钟数
-    97 00:F257: 78 B5         	inc		R_Time_Sec
-    98 00:F259: 09            	rts
+    91 00:F24A: 21 AC         	rmb1	Timer_Flag
+    92 00:F24C: 73 B5         	lda		R_Time_Sec
+    93 00:F24E: 56 3B         	cmp		#59
+    94 00:F250: 13 12         	beq		Count_Add_Min
+    95 00:F252: 56 3C         	cmp		#60
+    96 00:F254: 13 03         	beq		Count_CarryToMin				; 秒数满则进位分钟数
+    97 00:F256: 78 B5         	inc		R_Time_Sec
+    98 00:F258: 09            	rts
     99                        Count_CarryToMin:
-   100 00:F25A: 73 B6         	lda		R_Time_Min
-   101 00:F25C: 56 63         	cmp		#99
-   102 00:F25E: 13 0A         	beq		Count_Overflow
-   103 00:F260: 53 01         	lda		#$1
-   104 00:F262: 7F B5         	sta		R_Time_Sec
-   105 00:F264: 09            	rts
+   100 00:F259: 73 B6         	lda		R_Time_Min
+   101 00:F25B: 56 63         	cmp		#99
+   102 00:F25D: 13 0A         	beq		Count_Overflow
+   103 00:F25F: 53 01         	lda		#$1
+   104 00:F261: 7F B5         	sta		R_Time_Sec
+   105 00:F263: 09            	rts
    106                        Count_Add_Min:
-   107 00:F265: 78 B5         	inc		R_Time_Sec
-   108 00:F267: 78 B6         	inc		R_Time_Min
-   109 00:F269: 09            	rts
+   107 00:F264: 78 B5         	inc		R_Time_Sec
+   108 00:F266: 78 B6         	inc		R_Time_Min
+   109 00:F268: 09            	rts
    110                        Count_Overflow:
-   111 00:F26A: 53 00         	lda		#$0
-   112 00:F26C: 7F B5         	sta		R_Time_Sec
-   113 00:F26E: 7F B6         	sta		R_Time_Min
-   114 00:F270: 09            	rts
+   111 00:F269: 53 00         	lda		#$0
+   112 00:F26B: 7F B5         	sta		R_Time_Sec
+   113 00:F26D: 7F B6         	sta		R_Time_Min
+   114 00:F26F: 09            	rts
    115                        
    116                        
    117                        F_DivideBy10:
-   118 00:F271: 5E 00         	ldx		#0								; 初始化 X 寄存器为 0，保存商
-   119 00:F273: 7F B7         	sta		P_Temp							; 临时保存余数
+   118 00:F270: 5E 00         	ldx		#0								; 初始化 X 寄存器为 0，保存商
+   119 00:F272: 7F B7         	sta		P_Temp							; 临时保存余数
    120                        DivideBy10:
-   121 00:F275: 56 0A         	cmp		#10								; 检查 A 是否大于等于 10
-   122 00:F277: 10 06         	bcc		Done							; 如果 A 小于 10，跳转到 Done
-   123 00:F279: 00            	sec										; 设置进位，准备减法
-   124 00:F27A: 55 0A         	sbc		#10								; A = A - 10
-   125 00:F27C: 0B            	inx										; X = X + 1，记录商
-   126 00:F27D: 17 F6         	bra		DivideBy10						; 如果没有借位，继续循环
+   121 00:F274: 56 0A         	cmp		#10								; 检查 A 是否大于等于 10
+   122 00:F276: 10 06         	bcc		Done							; 如果 A 小于 10，跳转到 Done
+   123 00:F278: 00            	sec										; 设置进位，准备减法
+   124 00:F279: 55 0A         	sbc		#10								; A = A - 10
+   125 00:F27B: 0B            	inx										; X = X + 1，记录商
+   126 00:F27C: 17 F6         	bra		DivideBy10						; 如果没有借位，继续循环
    127                        Done:
-   128 00:F27F: 7F B7         	sta		P_Temp							; 剩余值(余数)
-   129 00:F281: 1C            	txa
-   130 00:F282: 09            	rts
+   128 00:F27E: 7F B7         	sta		P_Temp							; 剩余值(余数)
+   129 00:F280: 1C            	txa
+   130 00:F281: 09            	rts
    131                        
    132                        
    133                        
@@ -1755,279 +1755,282 @@ Current file: main.asm
    136                        
    137                        ; 倒计时部分
    138                        F_Sec_Des_Counter:
-   139 00:F283: 38 AC 13      	bbs0	Timer_Flag, L_Sec_des_Out	; 若有半秒标志，说明还没到计数时候，闪MS并退出
+   139 00:F282: 38 AC 13      	bbs0	Timer_Flag, L_Sec_des_Out	; 若有半秒标志，说明还没到计数时候，闪MS并退出
    140                        
-   141 00:F286: 73 B5         	lda		R_Time_Sec
-   142 00:F288: 56 00         	cmp		#0
-   143 00:F28A: 13 13         	beq		L_BorrowToMin
-   144 00:F28C: 79 B5         	dec		R_Time_Sec
-   145 00:F28E: 15 37 F7      	jsr		L_DisTimer_Sec
+   141 00:F285: 73 B5         	lda		R_Time_Sec
+   142 00:F287: 56 00         	cmp		#0
+   143 00:F289: 13 13         	beq		L_BorrowToMin
+   144 00:F28B: 79 B5         	dec		R_Time_Sec
+   145 00:F28D: 15 3A F7      	jsr		L_DisTimer_Sec
    146                        
-   147 00:F291: 5E 54         	ldx		#lcd_MS
-   148 00:F293: 15 3C F4      	jsr		F_DispSymbol
-   149 00:F296: 21 AC         	rmb1	Timer_Flag					; 复翻转标志位，防止重复进入
-   150 00:F298: 09            	rts
+   147 00:F290: 5E 54         	ldx		#lcd_MS
+   148 00:F292: 15 3F F4      	jsr		F_DispSymbol
+   149 00:F295: 21 AC         	rmb1	Timer_Flag					; 复翻转标志位，防止重复进入
+   150 00:F297: 09            	rts
    151                        
    152                        L_Sec_des_Out:
-   153 00:F299: 5E 54         	ldx		#lcd_MS
-   154 00:F29B: 15 43 F4      	jsr		F_ClrpSymbol
-   155 00:F29E: 09            	rts
+   153 00:F298: 5E 54         	ldx		#lcd_MS
+   154 00:F29A: 15 46 F4      	jsr		F_ClrpSymbol
+   155 00:F29D: 09            	rts
    156                        
    157                        L_BorrowToMin:
-   158 00:F29F: 53 3C         	lda		#60
-   159 00:F2A1: 7F B5         	sta		R_Time_Sec
+   158 00:F29E: 53 3C         	lda		#60
+   159 00:F2A0: 7F B5         	sta		R_Time_Sec
    160                        
-   161 00:F2A3: 73 B6         	lda		R_Time_Min
-   162 00:F2A5: 56 00         	cmp		#0
-   163 00:F2A7: 13 06         	beq		L_Counter_Over
+   161 00:F2A2: 73 B6         	lda		R_Time_Min
+   162 00:F2A4: 56 00         	cmp		#0
+   163 00:F2A6: 13 06         	beq		L_Counter_Over
    164                        
-   165 00:F2A9: 79 B6         	dec		R_Time_Min
-   166 00:F2AB: 15 2D F7      	jsr		F_Display_Time
-   167 00:F2AE: 09            	rts
+   165 00:F2A8: 79 B6         	dec		R_Time_Min
+   166 00:F2AA: 15 30 F7      	jsr		F_Display_Time
+   167 00:F2AD: 09            	rts
    168                        
    169                        L_Counter_Over:
-   170 00:F2AF: 2B AC         	smb3	Timer_Flag					; 倒计时完成
-   171 00:F2B1: 53 07         	lda		#$07
-   172 00:F2B3: 7F AB         	sta		Beep_Serial					; 响3声
-   173 00:F2B5: 53 DF         	lda		#$df
-   174 00:F2B7: 7F 12         	sta		TMR1
+   170 00:F2AE: 2B AC         	smb3	Timer_Flag					; 倒计时完成
+   171 00:F2B0: 53 07         	lda		#$07
+   172 00:F2B2: 7F AB         	sta		Beep_Serial					; 响3声
+   173 00:F2B4: 53 DF         	lda		#$df
+   174 00:F2B6: 7F 12         	sta		TMR1
    175                        
-   176 00:F2B9: 53 00         	lda		#$0
-   177 00:F2BB: 7F AD         	sta		Sys_Status_Flag				; 回到初始态
-   178 00:F2BD: 28 AD         	smb0	Sys_Status_Flag
-   179 00:F2BF: 7F B5         	sta		R_Time_Sec
-   180 00:F2C1: 7F B6         	sta		R_Time_Min
-   181 00:F2C3: 15 2D F7      	jsr		F_Display_Time
+   176 00:F2B8: 53 00         	lda		#$0
+   177 00:F2BA: 7F AD         	sta		Sys_Status_Flag				; 回到初始态
+   178 00:F2BC: 28 AD         	smb0	Sys_Status_Flag
+   179 00:F2BE: 7F B5         	sta		R_Time_Sec
+   180 00:F2C0: 7F B6         	sta		R_Time_Min
+   181 00:F2C2: 15 30 F7      	jsr		F_Display_Time
    182                        
-   183 00:F2C6: 09            	rts
+   183 00:F2C5: 09            	rts
    183                        
    202                        .INCLUDE	Beep.asm
      1                        F_Beep_Manage:
      2                        	TMR1_ON
-+    2 00:F2C7: 29 16          SMB1 TMRC
++    2 00:F2C6: 29 16          SMB1 TMRC
      3                        
-     4 00:F2C9: 35 AC 15      	bbr5	Timer_Flag,L_Beep_rts			; 响铃的持续和间隔都是1/32秒
-     5 00:F2CC: 25 AC         	rmb5	Timer_Flag						; 清掉1/32秒标志位
-     6 00:F2CE: 73 AB         	lda		Beep_Serial						; 响铃序列全为0则响铃结束
-     7 00:F2D0: 56 00         	cmp		#$0
-     8 00:F2D2: 13 0E         	beq		L_Beep_Over
+     4 00:F2C8: 35 AC 15      	bbr5	Timer_Flag,L_Beep_rts			; 响铃的持续和间隔都是1/32秒
+     5 00:F2CB: 25 AC         	rmb5	Timer_Flag						; 清掉1/32秒标志位
+     6 00:F2CD: 73 AB         	lda		Beep_Serial						; 响铃序列全为0则响铃结束
+     7 00:F2CF: 56 00         	cmp		#$0
+     8 00:F2D1: 13 0E         	beq		L_Beep_Over
      9                        
-    10 00:F2D4: 30 AB 06      	bbr0	Beep_Serial,L_No_Beep			; 判断响铃序列第一位，为1就响，为0就不响
-    11 00:F2D7: 2F 16         	smb7	TMRC
-    12 00:F2D9: 79 AB         	dec		Beep_Serial
-    13 00:F2DB: 17 04         	bra		L_Beep_rts
+    10 00:F2D3: 30 AB 06      	bbr0	Beep_Serial,L_No_Beep			; 判断响铃序列第一位，为1就响，为0就不响
+    11 00:F2D6: 2F 16         	smb7	TMRC
+    12 00:F2D8: 79 AB         	dec		Beep_Serial
+    13 00:F2DA: 17 04         	bra		L_Beep_rts
     14                        
     15                        L_No_Beep:
-    16 00:F2DD: 27 16         	rmb7	TMRC
-    17 00:F2DF: 79 AB         	dec		Beep_Serial
+    16 00:F2DC: 27 16         	rmb7	TMRC
+    17 00:F2DE: 79 AB         	dec		Beep_Serial
     18                        
     19                        L_Beep_rts:
-    20 00:F2E1: 09            	rts
+    20 00:F2E0: 09            	rts
     21                        
     22                        L_Beep_Over:								; 关闭定时器和蜂鸣输出，复位相应标志位
     23                        	TMR1_OFF
-+   23 00:F2E2: 21 16          RMB1 TMRC
-    24 00:F2E4: 27 16         	rmb7	TMRC
-    25 00:F2E6: 22 AC         	rmb2	Timer_Flag
-    26 00:F2E8: 23 AC         	rmb3	Timer_Flag
-    27 00:F2EA: 09            	rts
++   23 00:F2E1: 21 16          RMB1 TMRC
+    24 00:F2E3: 27 16         	rmb7	TMRC
+    25 00:F2E5: 22 AC         	rmb2	Timer_Flag
+    26 00:F2E7: 23 AC         	rmb3	Timer_Flag
+    27 00:F2E9: 09            	rts
     27                        
    203                        .INCLUDE	Init.asm
      1                        L_Init_SystemRam_Prog:							; 系统初始化
-     2 00:F2EB: 53 00         	LDA		#0
-     3 00:F2ED: 7F B5         	STA		R_Time_Sec
-     4 00:F2EF: 7F B6         	STA		R_Time_Min
-     5 00:F2F1: 7F AE         	STA		Key_Flag
-     6 00:F2F3: 7F AB         	sta		Beep_Serial
-     7 00:F2F5: 7F A7         	sta		Counter_4Hz
-     8 00:F2F7: 7F A6         	sta		Counter_1Hz
-     9 00:F2F9: 7F A8         	sta		Counter_16Hz
-    10 00:F2FB: 7F AA         	sta		Frame_Counter
-    11 00:F2FD: 7F A9         	sta		TimeCnt
-    12 00:F2FF: 7F A5         	sta		CC1
-    13 00:F301: 53 01         	lda		#$01
-    14 00:F303: 7F AC         	STA		Timer_Flag
-    15 00:F305: 7F AD         	sta		Sys_Status_Flag
-    16                        
-    17 00:F307: 09            	RTS
-    18                        
+     2 00:F2EA: 53 00         	lda		#0
+     3 00:F2EC: 7F AE         	sta		Key_Flag
+     4 00:F2EE: 7F AB         	sta		Beep_Serial
+     5 00:F2F0: 7F A7         	sta		Counter_4Hz
+     6 00:F2F2: 7F A6         	sta		Counter_1Hz
+     7 00:F2F4: 7F A8         	sta		Counter_16Hz
+     8 00:F2F6: 7F AA         	sta		Frame_Counter
+     9 00:F2F8: 7F A9         	sta		TimeCnt
+    10 00:F2FA: 7F A5         	sta		CC1
+    11 00:F2FC: 53 01         	lda		#$01
+    12 00:F2FE: 7F AC         	sta		Timer_Flag
+    13 00:F300: 7F AD         	sta		Sys_Status_Flag
+    14                        
+    15 00:F302: 53 00         	lda		#0
+    16 00:F304: 7F B6         	sta		R_Time_Min
+    17 00:F306: 53 00         	lda		#0
+    18 00:F308: 7F B5         	sta		R_Time_Sec
     19                        
-    20                        F_LCD_Init:
-    21 00:F308: 15 BD F3      	jsr		F_ClearScreen						; LCD初始化
-    22                        	CHECK_LCD
-+   22 00:F30B: 53 FE          LDA #$00FE
-+   22 00:F30D: 7F 08          STA P_PC_DIR
-+   22 00:F30F: 53 FE          LDA #$00FE
-+   22 00:F311: 7F 07          STA P_PC
-+   22 00:F313: 1A             NOP
-+   22 00:F314: 1A             NOP
-+   22 00:F315: 1A             NOP
-+   22 00:F316: 73 07          LDA P_PC
-+   22 00:F318: 51 02          AND #$0002
-+   22                        ?_Loop
-+   22 00:F31A: 7F B8          STA P_Temp+$0001
-+   22 00:F31C: 53 0F          LDA #$000F
-+   22                        ?_LoopPort
-+   22 00:F31E: 07             DEC
-+   22 00:F31F: 12 FD          BNE ?_LoopPort
-+   22 00:F321: 73 07          LDA P_PC
-+   22 00:F323: 51 02          AND #$0002
-+   22 00:F325: 7F B7          STA P_Temp
-+   22 00:F327: 76 B8          CMP P_Temp+$0001
-+   22 00:F329: 12 EF          BNE ?_Loop
-+   22 00:F32B: 39 B7 1D       BBS1 P_Temp,?LCD_R_Type
-+   22                        ?LCD_C_Type:
-+   22                         LCD_C_TYPE
-+   22 00:F32E: 2F 1A          SMB7 LCDCOM
-+   22 00:F330: 28 09          SMB0 PCSEG
-+   22 00:F332: 29 09          SMB1 PCSEG
-+   22 00:F334: 2A 09          SMB2 PCSEG
-+   22 00:F336: 2B 09          SMB3 PCSEG
-+   22                         LCD_ENCH_EN
-+   22 00:F338: 2E 1A          SMB6 LCDCOM
-+   22                         LCD_5COM
-+   22 00:F33A: 20 1A          RMB0 LCDCOM
-+   22 00:F33C: 21 1A          RMB1 LCDCOM
-+   22 00:F33E: 2A 1A          SMB2 LCDCOM
-+   22                         LCD_DRIVE_8
-+   22 00:F340: 28 19          SMB0 LCDCTRL
-+   22 00:F342: 29 19          SMB1 LCDCTRL
-+   22                         LCD_C_1_3_BAIS_3V
-+   22 00:F344: 2A 19          SMB2 LCDCTRL
-+   22 00:F346: 23 19          RMB3 LCDCTRL
-+   22 00:F348: 16 57 F3       JMP ?Exit
-+   22                        ?LCD_R_Type:
-+   22                         LCD_R_TYPE
-+   22 00:F34B: 27 1A          RMB7 LCDCOM
-+   22                        
-+   22                         LCD_5COM
-+   22 00:F34D: 20 1A          RMB0 LCDCOM
-+   22 00:F34F: 21 1A          RMB1 LCDCOM
-+   22 00:F351: 2A 1A          SMB2 LCDCOM
-+   22                        
-+   22                         LCD_R_1_3_BAIS
-+   22 00:F353: 22 19          RMB2 LCDCTRL
-+   22 00:F355: 23 19          RMB3 LCDCTRL
-+   22                        
-+   22                        ?Exit:
-+   22 00:F357: 53 00          LDA #$0000
-+   22 00:F359: 7F 08          STA P_PC_IO
-+   22 00:F35B: 7F 07          STA P_PC
-+   22                        
-+   22                        
-    23                        
-    24                        	PC45_SEG									; 配置IO口为SEG线模式
-+   24 00:F35D: 2C 09          SMB4 PCSEG
-    25                        	PC67_SEG
-+   25 00:F35F: 2D 09          SMB5 PCSEG
-    26                        	PD03_SEG
-+   26 00:F361: 2E 09          SMB6 PCSEG
-    27                        	PD47_SEG
-+   27 00:F363: 2F 09          SMB7 PCSEG
-    28                        
-    29 00:F365: 20 1A         	RMB0	P_LCD_COM							; 配置COM线数量
-    30 00:F367: 29 1A         	SMB1	P_LCD_COM
+    20 00:F30A: 09            	rts
+    21                        
+    22                        
+    23                        F_LCD_Init:
+    24 00:F30B: 15 C0 F3      	jsr		F_ClearScreen						; LCD初始化
+    25                        	CHECK_LCD
++   25 00:F30E: 53 FE          LDA #$00FE
++   25 00:F310: 7F 08          STA P_PC_DIR
++   25 00:F312: 53 FE          LDA #$00FE
++   25 00:F314: 7F 07          STA P_PC
++   25 00:F316: 1A             NOP
++   25 00:F317: 1A             NOP
++   25 00:F318: 1A             NOP
++   25 00:F319: 73 07          LDA P_PC
++   25 00:F31B: 51 02          AND #$0002
++   25                        ?_Loop
++   25 00:F31D: 7F B8          STA P_Temp+$0001
++   25 00:F31F: 53 0F          LDA #$000F
++   25                        ?_LoopPort
++   25 00:F321: 07             DEC
++   25 00:F322: 12 FD          BNE ?_LoopPort
++   25 00:F324: 73 07          LDA P_PC
++   25 00:F326: 51 02          AND #$0002
++   25 00:F328: 7F B7          STA P_Temp
++   25 00:F32A: 76 B8          CMP P_Temp+$0001
++   25 00:F32C: 12 EF          BNE ?_Loop
++   25 00:F32E: 39 B7 1D       BBS1 P_Temp,?LCD_R_Type
++   25                        ?LCD_C_Type:
++   25                         LCD_C_TYPE
++   25 00:F331: 2F 1A          SMB7 LCDCOM
++   25 00:F333: 28 09          SMB0 PCSEG
++   25 00:F335: 29 09          SMB1 PCSEG
++   25 00:F337: 2A 09          SMB2 PCSEG
++   25 00:F339: 2B 09          SMB3 PCSEG
++   25                         LCD_ENCH_EN
++   25 00:F33B: 2E 1A          SMB6 LCDCOM
++   25                         LCD_5COM
++   25 00:F33D: 20 1A          RMB0 LCDCOM
++   25 00:F33F: 21 1A          RMB1 LCDCOM
++   25 00:F341: 2A 1A          SMB2 LCDCOM
++   25                         LCD_DRIVE_8
++   25 00:F343: 28 19          SMB0 LCDCTRL
++   25 00:F345: 29 19          SMB1 LCDCTRL
++   25                         LCD_C_1_3_BAIS_3V
++   25 00:F347: 2A 19          SMB2 LCDCTRL
++   25 00:F349: 23 19          RMB3 LCDCTRL
++   25 00:F34B: 16 5A F3       JMP ?Exit
++   25                        ?LCD_R_Type:
++   25                         LCD_R_TYPE
++   25 00:F34E: 27 1A          RMB7 LCDCOM
++   25                        
++   25                         LCD_5COM
++   25 00:F350: 20 1A          RMB0 LCDCOM
++   25 00:F352: 21 1A          RMB1 LCDCOM
++   25 00:F354: 2A 1A          SMB2 LCDCOM
++   25                        
++   25                         LCD_R_1_3_BAIS
++   25 00:F356: 22 19          RMB2 LCDCTRL
++   25 00:F358: 23 19          RMB3 LCDCTRL
++   25                        
++   25                        ?Exit:
++   25 00:F35A: 53 00          LDA #$0000
++   25 00:F35C: 7F 08          STA P_PC_IO
++   25 00:F35E: 7F 07          STA P_PC
++   25                        
++   25                        
+    26                        
+    27                        	PC45_SEG									; 配置IO口为SEG线模式
++   27 00:F360: 2C 09          SMB4 PCSEG
+    28                        	PC67_SEG
++   28 00:F362: 2D 09          SMB5 PCSEG
+    29                        	PD03_SEG
++   29 00:F364: 2E 09          SMB6 PCSEG
+    30                        	PD47_SEG
++   30 00:F366: 2F 09          SMB7 PCSEG
     31                        
-    32                        	LCD_ON
-+   32 00:F369: 2C 16          SMB4 TMRC
-    33 00:F36B: 15 BD F3      	jsr		F_ClearScreen						; 清屏
+    32 00:F368: 20 1A         	RMB0	P_LCD_COM							; 配置COM线数量
+    33 00:F36A: 29 1A         	SMB1	P_LCD_COM
     34                        
-    35 00:F36E: 09            	rts
-    36                        
+    35                        	LCD_ON
++   35 00:F36C: 2C 16          SMB4 TMRC
+    36 00:F36E: 15 C0 F3      	jsr		F_ClearScreen						; 清屏
     37                        
-    38                        F_Port_Init:
-    39 00:F36F: 53 A4         	LDA		#$A4								; PA2\5\7作按键输入
-    40 00:F371: 7F 02         	STA		P_PA_WAKE
-    41 00:F373: 7F 04         	STA		P_PA_IO
-    42 00:F375: 53 FF         	LDA		#$FF
-    43 00:F377: 7F 01         	STA		P_PA
-    44                        	EN_PA_IRQ									; 打开PA口外部中断
-+   44 00:F379: 2C 0E          SMB4 IER
-    45                        
-    46                        	PB2_PWM
-+   46 00:F37B: 28 0C          SMB0 PADF0
-+   46 00:F37D: 2A 06          SMB2 PBTYPE
-    47                        	PB3_PB3_COMS
-+   47 00:F37F: 21 0C          RMB1 PADF0
-+   47 00:F381: 2B 06          SMB3 PBTYPE
+    38 00:F371: 09            	rts
+    39                        
+    40                        
+    41                        F_Port_Init:
+    42 00:F372: 53 A4         	LDA		#$A4								; PA2\5\7作按键输入
+    43 00:F374: 7F 02         	STA		P_PA_WAKE
+    44 00:F376: 7F 04         	STA		P_PA_IO
+    45 00:F378: 53 FF         	LDA		#$FF
+    46 00:F37A: 7F 01         	STA		P_PA
+    47                        	EN_PA_IRQ									; 打开PA口外部中断
++   47 00:F37C: 2C 0E          SMB4 IER
     48                        
-    49 00:F383: 09            	rts
-    50                        
+    49                        	PB2_PWM
++   49 00:F37E: 28 0C          SMB0 PADF0
++   49 00:F380: 2A 06          SMB2 PBTYPE
+    50                        	PB3_PB3_COMS
++   50 00:F382: 21 0C          RMB1 PADF0
++   50 00:F384: 2B 06          SMB3 PBTYPE
     51                        
-    52                        F_Timer_Init:
-    53                        	TMR1_CLK_512Hz								; TIM1时钟源Fsub/64(512Hz)
-+   53 00:F384: 2A 17          SMB2 TMCLK
-+   53 00:F386: 23 17          RMB3 TMCLK
-    54                        	TMR0_CLK_FSUB								; TIM0时钟源Fsub(32768Hz)
-+   54 00:F388: 20 17          RMB0 TMCLK
-+   54 00:F38A: 21 17          RMB1 TMCLK
-+   54 00:F38C: 20 0D          RMB0 PADF1
-    55                        	DIV_512HZ									; DIV分频512Hz
-+   55 00:F38E: 20 18          RMB0 DIVC
-+   55 00:F390: 29 18          SMB1 DIVC
-+   55 00:F392: 25 18          RMB5 DIVC
-    56                        
-    57 00:F394: 53 00         	lda		#$0									; 重装载计数设置为0
-    58 00:F396: 7F 10         	sta		TMR0
-    59 00:F398: 7F 14         	sta		TMR2
-    60                        
-    61 00:F39A: 53 EF         	lda		#$ef
-    62 00:F39C: 7F 12         	sta		TMR1
+    52 00:F386: 09            	rts
+    53                        
+    54                        
+    55                        F_Timer_Init:
+    56                        	TMR1_CLK_512Hz								; TIM1时钟源Fsub/64(512Hz)
++   56 00:F387: 2A 17          SMB2 TMCLK
++   56 00:F389: 23 17          RMB3 TMCLK
+    57                        	TMR0_CLK_FSUB								; TIM0时钟源Fsub(32768Hz)
++   57 00:F38B: 20 17          RMB0 TMCLK
++   57 00:F38D: 21 17          RMB1 TMCLK
++   57 00:F38F: 20 0D          RMB0 PADF1
+    58                        	DIV_512HZ									; DIV分频512Hz
++   58 00:F391: 20 18          RMB0 DIVC
++   58 00:F393: 29 18          SMB1 DIVC
++   58 00:F395: 25 18          RMB5 DIVC
+    59                        
+    60 00:F397: 53 00         	lda		#$0									; 重装载计数设置为0
+    61 00:F399: 7F 10         	sta		TMR0
+    62 00:F39B: 7F 14         	sta		TMR2
     63                        
-    64 00:F39E: 26 18         	rmb6	DIVC								; 关闭定时器同步
-    65                        
-    66                        	EN_TMR1_IRQ									; 开定时器中断
-+   66 00:F3A0: 2A 0E          SMB2 IER
-    67                        	EN_TMR2_IRQ
-+   67 00:F3A2: 2B 0E          SMB3 IER
-    68                        	EN_TMR0_IRQ
-+   68 00:F3A4: 29 0E          SMB1 IER
-    69                        	TMR0_ON
-+   69 00:F3A6: 28 16          SMB0 TMRC
-    70                        	TMR1_OFF
-+   70 00:F3A8: 21 16          RMB1 TMRC
-    71                        	TMR2_ON
-+   71 00:F3AA: 2A 16          SMB2 TMRC
-    72                        
-    73 00:F3AC: 09            	rts
-    74                        
+    64 00:F39D: 53 EF         	lda		#$ef
+    65 00:F39F: 7F 12         	sta		TMR1
+    66                        
+    67 00:F3A1: 26 18         	rmb6	DIVC								; 关闭定时器同步
+    68                        
+    69                        	EN_TMR1_IRQ									; 开定时器中断
++   69 00:F3A3: 2A 0E          SMB2 IER
+    70                        	EN_TMR2_IRQ
++   70 00:F3A5: 2B 0E          SMB3 IER
+    71                        	EN_TMR0_IRQ
++   71 00:F3A7: 29 0E          SMB1 IER
+    72                        	TMR0_ON
++   72 00:F3A9: 28 16          SMB0 TMRC
+    73                        	TMR1_OFF
++   73 00:F3AB: 21 16          RMB1 TMRC
+    74                        	TMR2_ON
++   74 00:F3AD: 2A 16          SMB2 TMRC
     75                        
-    76                        F_Beep_Init:
-    77                        	TONE_2KHZ									; 配置蜂鸣器音调频率
-+   77 00:F3AD: 22 18          RMB2 DIVC
-+   77 00:F3AF: 23 18          RMB3 DIVC
-    78 00:F3B1: 53 00         	lda		#$0
-    79 00:F3B3: 7F 20         	sta		AUDCR
-    80 00:F3B5: 53 FF         	lda		#$ff
-    81 00:F3B7: 7F 1F         	sta		P_AUD
-    81                        
+    76 00:F3AF: 09            	rts
+    77                        
+    78                        
+    79                        F_Beep_Init:
+    80                        	TONE_2KHZ									; 配置蜂鸣器音调频率
++   80 00:F3B0: 22 18          RMB2 DIVC
++   80 00:F3B2: 23 18          RMB3 DIVC
+    81 00:F3B4: 53 00         	lda		#$0
+    82 00:F3B6: 7F 20         	sta		AUDCR
+    83 00:F3B8: 53 FF         	lda		#$ff
+    84 00:F3BA: 7F 1F         	sta		P_AUD
+    84                        
    204                        .INCLUDE	Disp.asm
      1                        ;===========================================================
      2                        ; LCD_RamAddr		.equ	0200H
      3                        ;===========================================================
      4                        F_FillScreen:
-     5 00:F3B9: 53 FF         	LDA		#FFH
-     6 00:F3BB: 12 02         	BNE		L_FillLcd
+     5 00:F3BC: 53 FF         	LDA		#FFH
+     6 00:F3BE: 12 02         	BNE		L_FillLcd
      7                        F_ClearScreen:
-     8 00:F3BD: 53 00         	LDA		#0
+     8 00:F3C0: 53 00         	LDA		#0
      9                        L_FillLcd:
-    10 00:F3BF: 4F 00 18      	STA		1800H
-    11 00:F3C2: 4F 01 18      	STA		1801H
-    12 00:F3C5: 4F 05 18      	STA		1805H
-    13 00:F3C8: 4F 06 18      	STA		1806H
-    14 00:F3CB: 4F 07 18      	STA		1807H
-    15 00:F3CE: 4F 0B 18      	STA		180BH
-    16 00:F3D1: 4F 0C 18      	STA		180CH
-    17 00:F3D4: 4F 0D 18      	STA		180DH
-    18 00:F3D7: 4F 11 18      	STA		1811H
-    19 00:F3DA: 4F 12 18      	STA		1812H
-    20 00:F3DD: 4F 13 18      	STA		1813H
-    21 00:F3E0: 4F 17 18      	STA		1817H
-    22 00:F3E3: 4F 18 18      	STA		1818H
-    23 00:F3E6: 4F 19 18      	STA		1819H
-    24 00:F3E9: 4F 1D 18      	STA		181DH
+    10 00:F3C2: 4F 00 18      	STA		1800H
+    11 00:F3C5: 4F 01 18      	STA		1801H
+    12 00:F3C8: 4F 05 18      	STA		1805H
+    13 00:F3CB: 4F 06 18      	STA		1806H
+    14 00:F3CE: 4F 07 18      	STA		1807H
+    15 00:F3D1: 4F 0B 18      	STA		180BH
+    16 00:F3D4: 4F 0C 18      	STA		180CH
+    17 00:F3D7: 4F 0D 18      	STA		180DH
+    18 00:F3DA: 4F 11 18      	STA		1811H
+    19 00:F3DD: 4F 12 18      	STA		1812H
+    20 00:F3E0: 4F 13 18      	STA		1813H
+    21 00:F3E3: 4F 17 18      	STA		1817H
+    22 00:F3E6: 4F 18 18      	STA		1818H
+    23 00:F3E9: 4F 19 18      	STA		1819H
+    24 00:F3EC: 4F 1D 18      	STA		181DH
     25                        
-    26 00:F3EC: 09            	RTS
+    26 00:F3EF: 09            	RTS
     27                        ;===========================================================
     28                        ;@brief		显示完整的一个数字
     29                        ;@para:		A = 0~9
@@ -2037,48 +2040,48 @@ Current file: main.asm
     33                        L_Dis_21Bit_DigitDot_Prog:
     34                        ;	STA		P_Temp
     35                        ;	LDA		Table_Digit_Addr_Offset,X
-    36 00:F3ED: 7C BA         	STX		P_Temp+3					; 偏移量暂存进P_Temp+3, 腾出X来做变址寻址
-    37 00:F3EF: 7F B7         	STA		P_Temp						; 将显示的数字转换为内存偏移量
-    38 00:F3F1: 15 C8 F7      	jsr		L_Multi_24_Prog				; 乘24得到正确的偏移量
+    36 00:F3F0: 7C BA         	STX		P_Temp+3					; 偏移量暂存进P_Temp+3, 腾出X来做变址寻址
+    37 00:F3F2: 7F B7         	STA		P_Temp						; 将显示的数字转换为内存偏移量
+    38 00:F3F4: 15 D1 F7      	jsr		L_Multi_24_Prog				; 乘24得到正确的偏移量
     39                        
-    40 00:F3F4: 1B            	TAX
-    41 00:F3F5: 63 FD F4      	LDA		Table_Digit_Anim,X			; 将显示的数字通过查表找到对应的段码存进A
-    42 00:F3F8: 7F B7         	STA		P_Temp						; 暂存低八位段码值到P_Temp
-    43 00:F3FA: 0B            	INX
-    44 00:F3FB: 63 FD F4      	LDA		Table_Digit_Anim,X			; 将显示的数字通过查表找到对应的段码存进A
-    45 00:F3FE: 7F B8         	STA		P_Temp+1					; 暂存段码中8位值到P_Temp+1
-    46 00:F400: 0B            	INX
-    47 00:F401: 63 FD F4      	LDA		Table_Digit_Anim,X			; 将显示的数字通过查表找到对应的段码存进A
-    48 00:F404: 7F B9         	STA		P_Temp+2					; 暂存高8位段码值到P_Temp+2
+    40 00:F3F7: 1B            	TAX
+    41 00:F3F8: 63 00 F5      	LDA		Table_Digit_Anim,X			; 将显示的数字通过查表找到对应的段码存进A
+    42 00:F3FB: 7F B7         	STA		P_Temp						; 暂存低八位段码值到P_Temp
+    43 00:F3FD: 0B            	INX
+    44 00:F3FE: 63 00 F5      	LDA		Table_Digit_Anim,X			; 将显示的数字通过查表找到对应的段码存进A
+    45 00:F401: 7F B8         	STA		P_Temp+1					; 暂存段码中8位值到P_Temp+1
+    46 00:F403: 0B            	INX
+    47 00:F404: 63 00 F5      	LDA		Table_Digit_Anim,X			; 将显示的数字通过查表找到对应的段码存进A
+    48 00:F407: 7F B9         	STA		P_Temp+2					; 暂存高8位段码值到P_Temp+2
     49                        
-    50 00:F406: 7E BA         	LDX		P_Temp+3					; 将偏移量取回
-    51 00:F408: 7C BA         	STX		P_Temp+3					; 暂存偏移量到P_Temp+3
-    52 00:F40A: 53 15         	LDA		#21
-    53 00:F40C: 7F BB         	STA		P_Temp+4					; 设置显示段数为21
+    50 00:F409: 7E BA         	LDX		P_Temp+3					; 将偏移量取回
+    51 00:F40B: 7C BA         	STX		P_Temp+3					; 暂存偏移量到P_Temp+3
+    52 00:F40D: 53 15         	LDA		#21
+    53 00:F40F: 7F BB         	STA		P_Temp+4					; 设置显示段数为21
     54                        L_Judge_Dis_21Bit_DigitDot:				; 显示循环的开始
-    55 00:F40E: 7E BA         	LDX		P_Temp+3					; 取回偏移量作为索引
-    56 00:F410: 63 D8 F6      	LDA		Lcd_bit,X					; 查表定位目标段的bit位
-    57 00:F413: 7F BC         	STA		P_Temp+5
-    58 00:F415: 63 83 F6      	LDA		Lcd_byte,X					; 查表定位目标段的显存地址
-    59 00:F418: 1B            	TAX
-    60 00:F419: 7B B7         	ROR		P_Temp						; 循环右移取得目标段是亮或者灭
-    61 00:F41B: 7B B8         	ROR		P_Temp+1
-    62 00:F41D: 7B B9         	ROR		P_Temp+2
-    63 00:F41F: 10 0A         	BCC		L_CLR						; 当前段的值若是0则进清点子程序
-    64 00:F421: 63 00 18      	LDA		LCD_RamAddr,X				; 将目标段的显存的特定bit位置1来打亮
-    65 00:F424: 70 BC         	ORA		P_Temp+5
-    66 00:F426: 6F 00 18      	STA		LCD_RamAddr,X
-    67 00:F429: 17 0A         	BRA		L_Inc_Dis_Index_Prog		; 跳转到显示索引增加的子程序。
+    55 00:F411: 7E BA         	LDX		P_Temp+3					; 取回偏移量作为索引
+    56 00:F413: 63 DB F6      	LDA		Lcd_bit,X					; 查表定位目标段的bit位
+    57 00:F416: 7F BC         	STA		P_Temp+5
+    58 00:F418: 63 86 F6      	LDA		Lcd_byte,X					; 查表定位目标段的显存地址
+    59 00:F41B: 1B            	TAX
+    60 00:F41C: 7B B7         	ROR		P_Temp						; 循环右移取得目标段是亮或者灭
+    61 00:F41E: 7B B8         	ROR		P_Temp+1
+    62 00:F420: 7B B9         	ROR		P_Temp+2
+    63 00:F422: 10 0A         	BCC		L_CLR						; 当前段的值若是0则进清点子程序
+    64 00:F424: 63 00 18      	LDA		LCD_RamAddr,X				; 将目标段的显存的特定bit位置1来打亮
+    65 00:F427: 70 BC         	ORA		P_Temp+5
+    66 00:F429: 6F 00 18      	STA		LCD_RamAddr,X
+    67 00:F42C: 17 0A         	BRA		L_Inc_Dis_Index_Prog		; 跳转到显示索引增加的子程序。
     68                        L_CLR:
-    69 00:F42B: 63 00 18      	LDA		LCD_RamAddr,X				; 加载LCD RAM的地址
-    70 00:F42E: 70 BC         	ORA		P_Temp+5					; 将COM和SEG信息与LCD RAM地址进行逻辑或操作
-    71 00:F430: 72 BC         	EOR		P_Temp+5					; 进行异或操作，用于清除对应的段。
-    72 00:F432: 6F 00 18      	STA		LCD_RamAddr,X				; 将结果写回LCD RAM，清除对应位置。
+    69 00:F42E: 63 00 18      	LDA		LCD_RamAddr,X				; 加载LCD RAM的地址
+    70 00:F431: 70 BC         	ORA		P_Temp+5					; 将COM和SEG信息与LCD RAM地址进行逻辑或操作
+    71 00:F433: 72 BC         	EOR		P_Temp+5					; 进行异或操作，用于清除对应的段。
+    72 00:F435: 6F 00 18      	STA		LCD_RamAddr,X				; 将结果写回LCD RAM，清除对应位置。
     73                        L_Inc_Dis_Index_Prog:
-    74 00:F435: 78 BA         	INC		P_Temp+3					; 递增偏移量，处理下一个段
-    75 00:F437: 79 BB         	DEC		P_Temp+4					; 递减剩余要显示的段数
-    76 00:F439: 12 D3         	BNE		L_Judge_Dis_21Bit_DigitDot	; 剩余段数为0则返回
-    77 00:F43B: 09            	RTS
+    74 00:F438: 78 BA         	INC		P_Temp+3					; 递增偏移量，处理下一个段
+    75 00:F43A: 79 BB         	DEC		P_Temp+4					; 递减剩余要显示的段数
+    76 00:F43C: 12 D3         	BNE		L_Judge_Dis_21Bit_DigitDot	; 剩余段数为0则返回
+    77 00:F43E: 09            	RTS
     78                        
     79                        ;-----------------------------------------
     80                        ;@brief:	单独的画点、清点函数,一般用于MS显示
@@ -2086,260 +2089,260 @@ Current file: main.asm
     82                        ;@impact:	A, X, P_Temp+2
     83                        ;-----------------------------------------
     84                        F_DispSymbol:
-    85 00:F43C: 15 4C F4      	JSR		F_DispSymbol_Com
-    86 00:F43F: 6F 00 18      	STA		LCD_RamAddr,X				; 画点
-    87 00:F442: 09            	RTS
+    85 00:F43F: 15 4F F4      	JSR		F_DispSymbol_Com
+    86 00:F442: 6F 00 18      	STA		LCD_RamAddr,X				; 画点
+    87 00:F445: 09            	RTS
     88                        
     89                        F_ClrpSymbol:
-    90 00:F443: 15 4C F4      	JSR		F_DispSymbol_Com			; 清点
-    91 00:F446: 72 B9         	EOR		P_Temp+2
-    92 00:F448: 6F 00 18      	STA		LCD_RamAddr,X
-    93 00:F44B: 09            	RTS
+    90 00:F446: 15 4F F4      	JSR		F_DispSymbol_Com			; 清点
+    91 00:F449: 72 B9         	EOR		P_Temp+2
+    92 00:F44B: 6F 00 18      	STA		LCD_RamAddr,X
+    93 00:F44E: 09            	RTS
     94                        
     95                        F_DispSymbol_Com:
-    96 00:F44C: 63 D8 F6      	LDA		Lcd_bit,X					; 查表得知目标段的bit位
-    97 00:F44F: 7F B9         	STA		P_Temp+2
-    98 00:F451: 63 83 F6      	LDA		Lcd_byte,X					; 查表得知目标段的地址
-    99 00:F454: 1B            	TAX
-   100 00:F455: 63 00 18      	LDA		LCD_RamAddr,X				; 将目标段的显存的特定bit位置1来打亮
-   101 00:F458: 70 B9         	ORA		P_Temp+2
-   102 00:F45A: 09            	RTS
+    96 00:F44F: 63 DB F6      	LDA		Lcd_bit,X					; 查表得知目标段的bit位
+    97 00:F452: 7F B9         	STA		P_Temp+2
+    98 00:F454: 63 86 F6      	LDA		Lcd_byte,X					; 查表得知目标段的地址
+    99 00:F457: 1B            	TAX
+   100 00:F458: 63 00 18      	LDA		LCD_RamAddr,X				; 将目标段的显存的特定bit位置1来打亮
+   101 00:F45B: 70 B9         	ORA		P_Temp+2
+   102 00:F45D: 09            	RTS
    103                        
    104                        ;============================================================
    105                        
    106                        L_Dis_21Bit_DigitFrame_Prog:
-   107 00:F45B: 7C BA         	STX		P_Temp+3					; 偏移量暂存进P_Temp+3, 腾出X来做变址寻址
-   108 00:F45D: 7F B7         	STA		P_Temp						; 将显示的数字转换为内存偏移量
-   109 00:F45F: 04            	CLC
-   110 00:F460: 18            	ROL
-   111 00:F461: 04            	CLC
-   112 00:F462: 74 B7         	ADC		P_Temp
+   107 00:F45E: 7C BA         	STX		P_Temp+3					; 偏移量暂存进P_Temp+3, 腾出X来做变址寻址
+   108 00:F460: 7F B7         	STA		P_Temp						; 将显示的数字转换为内存偏移量
+   109 00:F462: 04            	CLC
+   110 00:F463: 18            	ROL
+   111 00:F464: 04            	CLC
+   112 00:F465: 74 B7         	ADC		P_Temp
    113                        
-   114 00:F464: 1B            	TAX
-   115 00:F465: 63 FD F4      	LDA		Table_Digit_Anim,X			; 将显示的数字通过查表找到对应的段码存进A
-   116 00:F468: 7F B7         	STA		P_Temp						; 暂存低八位段码值到P_Temp
-   117 00:F46A: 0B            	INX
-   118 00:F46B: 63 FD F4      	LDA		Table_Digit_Anim,X			; 将显示的数字通过查表找到对应的段码存进A
-   119 00:F46E: 7F B8         	STA		P_Temp+1					; 暂存段码中8位值到P_Temp+1
-   120 00:F470: 0B            	INX
-   121 00:F471: 63 FD F4      	LDA		Table_Digit_Anim,X			; 将显示的数字通过查表找到对应的段码存进A
-   122 00:F474: 7F B9         	STA		P_Temp+2					; 暂存高8位段码值到P_Temp+2
+   114 00:F467: 1B            	TAX
+   115 00:F468: 63 00 F5      	LDA		Table_Digit_Anim,X			; 将显示的数字通过查表找到对应的段码存进A
+   116 00:F46B: 7F B7         	STA		P_Temp						; 暂存低八位段码值到P_Temp
+   117 00:F46D: 0B            	INX
+   118 00:F46E: 63 00 F5      	LDA		Table_Digit_Anim,X			; 将显示的数字通过查表找到对应的段码存进A
+   119 00:F471: 7F B8         	STA		P_Temp+1					; 暂存段码中8位值到P_Temp+1
+   120 00:F473: 0B            	INX
+   121 00:F474: 63 00 F5      	LDA		Table_Digit_Anim,X			; 将显示的数字通过查表找到对应的段码存进A
+   122 00:F477: 7F B9         	STA		P_Temp+2					; 暂存高8位段码值到P_Temp+2
    123                        
-   124 00:F476: 7E BA         	LDX		P_Temp+3					; 将偏移量取回
+   124 00:F479: 7E BA         	LDX		P_Temp+3					; 将偏移量取回
    125                        
-   126 00:F478: 7C BA         	STX		P_Temp+3					; 暂存偏移量到P_Temp+3
-   127 00:F47A: 53 15         	LDA		#21
-   128 00:F47C: 7F BB         	STA		P_Temp+4					; 设置显示段数为21
+   126 00:F47B: 7C BA         	STX		P_Temp+3					; 暂存偏移量到P_Temp+3
+   127 00:F47D: 53 15         	LDA		#21
+   128 00:F47F: 7F BB         	STA		P_Temp+4					; 设置显示段数为21
    129                        L_Judge_Dis_21Bit_DigitFrame:				; 显示循环的开始
-   130 00:F47E: 7E BA         	LDX		P_Temp+3					; 取回偏移量作为索引
-   131 00:F480: 63 D8 F6      	LDA		Lcd_bit,X					; 查表定位目标段的bit位
-   132 00:F483: 7F BC         	STA		P_Temp+5
-   133 00:F485: 63 83 F6      	LDA		Lcd_byte,X					; 查表定位目标段的显存地址
-   134 00:F488: 1B            	TAX
-   135 00:F489: 7B B7         	ROR		P_Temp						; 循环右移取得目标段是亮或者灭
-   136 00:F48B: 7B B8         	ROR		P_Temp+1
-   137 00:F48D: 7B B9         	ROR		P_Temp+2
-   138 00:F48F: 10 0A         	BCC		L_CLR_Frame					; 当前段的值若是0则进清点子程序
-   139 00:F491: 63 00 18      	LDA		LCD_RamAddr,X				; 将目标段的显存的特定bit位置1来打亮
-   140 00:F494: 70 BC         	ORA		P_Temp+5
-   141 00:F496: 6F 00 18      	STA		LCD_RamAddr,X
-   142 00:F499: 17 0A         	BRA		L_Inc_Dis_FrameIndex_Prog		; 跳转到显示索引增加的子程序。
+   130 00:F481: 7E BA         	LDX		P_Temp+3					; 取回偏移量作为索引
+   131 00:F483: 63 DB F6      	LDA		Lcd_bit,X					; 查表定位目标段的bit位
+   132 00:F486: 7F BC         	STA		P_Temp+5
+   133 00:F488: 63 86 F6      	LDA		Lcd_byte,X					; 查表定位目标段的显存地址
+   134 00:F48B: 1B            	TAX
+   135 00:F48C: 7B B7         	ROR		P_Temp						; 循环右移取得目标段是亮或者灭
+   136 00:F48E: 7B B8         	ROR		P_Temp+1
+   137 00:F490: 7B B9         	ROR		P_Temp+2
+   138 00:F492: 10 0A         	BCC		L_CLR_Frame					; 当前段的值若是0则进清点子程序
+   139 00:F494: 63 00 18      	LDA		LCD_RamAddr,X				; 将目标段的显存的特定bit位置1来打亮
+   140 00:F497: 70 BC         	ORA		P_Temp+5
+   141 00:F499: 6F 00 18      	STA		LCD_RamAddr,X
+   142 00:F49C: 17 0A         	BRA		L_Inc_Dis_FrameIndex_Prog		; 跳转到显示索引增加的子程序。
    143                        L_CLR_Frame:
-   144 00:F49B: 63 00 18      	LDA		LCD_RamAddr,X				; 加载LCD RAM的地址
-   145 00:F49E: 70 BC         	ORA		P_Temp+5					; 将COM和SEG信息与LCD RAM地址进行逻辑或操作
-   146 00:F4A0: 72 BC         	EOR		P_Temp+5					; 进行异或操作，用于清除对应的段。
-   147 00:F4A2: 6F 00 18      	STA		LCD_RamAddr,X				; 将结果写回LCD RAM，清除对应位置。
+   144 00:F49E: 63 00 18      	LDA		LCD_RamAddr,X				; 加载LCD RAM的地址
+   145 00:F4A1: 70 BC         	ORA		P_Temp+5					; 将COM和SEG信息与LCD RAM地址进行逻辑或操作
+   146 00:F4A3: 72 BC         	EOR		P_Temp+5					; 进行异或操作，用于清除对应的段。
+   147 00:F4A5: 6F 00 18      	STA		LCD_RamAddr,X				; 将结果写回LCD RAM，清除对应位置。
    148                        L_Inc_Dis_FrameIndex_Prog:
-   149 00:F4A5: 78 BA         	INC		P_Temp+3					; 递增偏移量，处理下一个段
-   150 00:F4A7: 79 BB         	DEC		P_Temp+4					; 递减剩余要显示的段数
-   151 00:F4A9: 12 D3         	BNE		L_Judge_Dis_21Bit_DigitFrame	; 剩余段数为0则返回
-   152 00:F4AB: 09            	RTS
+   149 00:F4A8: 78 BA         	INC		P_Temp+3					; 递增偏移量，处理下一个段
+   150 00:F4AA: 79 BB         	DEC		P_Temp+4					; 递减剩余要显示的段数
+   151 00:F4AC: 12 D3         	BNE		L_Judge_Dis_21Bit_DigitFrame	; 剩余段数为0则返回
+   152 00:F4AE: 09            	RTS
    153                        
    154                        ;================================================================================
    155                        
    156                        L_Dis_21Bit_DigitFrame_Prog_1:
-   157 00:F4AC: 7C BA         	STX		P_Temp+3					; 偏移量暂存进P_Temp+3, 腾出X来做变址寻址
-   158 00:F4AE: 7F B7         	STA		P_Temp						; 将显示的数字转换为内存偏移量
-   159 00:F4B0: 04            	CLC
-   160 00:F4B1: 18            	ROL
-   161 00:F4B2: 04            	CLC
-   162 00:F4B3: 74 B7         	ADC		P_Temp
+   157 00:F4AF: 7C BA         	STX		P_Temp+3					; 偏移量暂存进P_Temp+3, 腾出X来做变址寻址
+   158 00:F4B1: 7F B7         	STA		P_Temp						; 将显示的数字转换为内存偏移量
+   159 00:F4B3: 04            	CLC
+   160 00:F4B4: 18            	ROL
+   161 00:F4B5: 04            	CLC
+   162 00:F4B6: 74 B7         	ADC		P_Temp
    163                        
-   164 00:F4B5: 1B            	TAX
-   165 00:F4B6: 63 F0 F5      	LDA		Table_Digit_Anim_2,X			; 将显示的数字通过查表找到对应的段码存进A
-   166 00:F4B9: 7F B7         	STA		P_Temp						; 暂存低八位段码值到P_Temp
-   167 00:F4BB: 0B            	INX
-   168 00:F4BC: 63 F0 F5      	LDA		Table_Digit_Anim_2,X			; 将显示的数字通过查表找到对应的段码存进A
-   169 00:F4BF: 7F B8         	STA		P_Temp+1					; 暂存段码中8位值到P_Temp+1
-   170 00:F4C1: 0B            	INX
-   171 00:F4C2: 63 F0 F5      	LDA		Table_Digit_Anim_2,X			; 将显示的数字通过查表找到对应的段码存进A
-   172 00:F4C5: 7F B9         	STA		P_Temp+2					; 暂存高8位段码值到P_Temp+2
+   164 00:F4B8: 1B            	TAX
+   165 00:F4B9: 63 F3 F5      	LDA		Table_Digit_Anim_2,X			; 将显示的数字通过查表找到对应的段码存进A
+   166 00:F4BC: 7F B7         	STA		P_Temp						; 暂存低八位段码值到P_Temp
+   167 00:F4BE: 0B            	INX
+   168 00:F4BF: 63 F3 F5      	LDA		Table_Digit_Anim_2,X			; 将显示的数字通过查表找到对应的段码存进A
+   169 00:F4C2: 7F B8         	STA		P_Temp+1					; 暂存段码中8位值到P_Temp+1
+   170 00:F4C4: 0B            	INX
+   171 00:F4C5: 63 F3 F5      	LDA		Table_Digit_Anim_2,X			; 将显示的数字通过查表找到对应的段码存进A
+   172 00:F4C8: 7F B9         	STA		P_Temp+2					; 暂存高8位段码值到P_Temp+2
    173                        
-   174 00:F4C7: 7E BA         	LDX		P_Temp+3					; 将偏移量取回
+   174 00:F4CA: 7E BA         	LDX		P_Temp+3					; 将偏移量取回
    175                        
-   176 00:F4C9: 7C BA         	STX		P_Temp+3					; 暂存偏移量到P_Temp+3
-   177 00:F4CB: 53 15         	LDA		#21
-   178 00:F4CD: 7F BB         	STA		P_Temp+4					; 设置显示段数为21
+   176 00:F4CC: 7C BA         	STX		P_Temp+3					; 暂存偏移量到P_Temp+3
+   177 00:F4CE: 53 15         	LDA		#21
+   178 00:F4D0: 7F BB         	STA		P_Temp+4					; 设置显示段数为21
    179                        L_Judge_Dis_21Bit_DigitFrame_1:				; 显示循环的开始
-   180 00:F4CF: 7E BA         	LDX		P_Temp+3					; 取回偏移量作为索引
-   181 00:F4D1: 63 D8 F6      	LDA		Lcd_bit,X					; 查表定位目标段的bit位
-   182 00:F4D4: 7F BC         	STA		P_Temp+5
-   183 00:F4D6: 63 83 F6      	LDA		Lcd_byte,X					; 查表定位目标段的显存地址
-   184 00:F4D9: 1B            	TAX
-   185 00:F4DA: 7B B7         	ROR		P_Temp						; 循环右移取得目标段是亮或者灭
-   186 00:F4DC: 7B B8         	ROR		P_Temp+1
-   187 00:F4DE: 7B B9         	ROR		P_Temp+2
-   188 00:F4E0: 10 0A         	BCC		L_CLR_Frame_1					; 当前段的值若是0则进清点子程序
-   189 00:F4E2: 63 00 18      	LDA		LCD_RamAddr,X				; 将目标段的显存的特定bit位置1来打亮
-   190 00:F4E5: 70 BC         	ORA		P_Temp+5
-   191 00:F4E7: 6F 00 18      	STA		LCD_RamAddr,X
-   192 00:F4EA: 17 0A         	BRA		L_Inc_Dis_FrameIndex_Prog_1		; 跳转到显示索引增加的子程序。
+   180 00:F4D2: 7E BA         	LDX		P_Temp+3					; 取回偏移量作为索引
+   181 00:F4D4: 63 DB F6      	LDA		Lcd_bit,X					; 查表定位目标段的bit位
+   182 00:F4D7: 7F BC         	STA		P_Temp+5
+   183 00:F4D9: 63 86 F6      	LDA		Lcd_byte,X					; 查表定位目标段的显存地址
+   184 00:F4DC: 1B            	TAX
+   185 00:F4DD: 7B B7         	ROR		P_Temp						; 循环右移取得目标段是亮或者灭
+   186 00:F4DF: 7B B8         	ROR		P_Temp+1
+   187 00:F4E1: 7B B9         	ROR		P_Temp+2
+   188 00:F4E3: 10 0A         	BCC		L_CLR_Frame_1					; 当前段的值若是0则进清点子程序
+   189 00:F4E5: 63 00 18      	LDA		LCD_RamAddr,X				; 将目标段的显存的特定bit位置1来打亮
+   190 00:F4E8: 70 BC         	ORA		P_Temp+5
+   191 00:F4EA: 6F 00 18      	STA		LCD_RamAddr,X
+   192 00:F4ED: 17 0A         	BRA		L_Inc_Dis_FrameIndex_Prog_1		; 跳转到显示索引增加的子程序。
    193                        L_CLR_Frame_1:
-   194 00:F4EC: 63 00 18      	LDA		LCD_RamAddr,X				; 加载LCD RAM的地址
-   195 00:F4EF: 70 BC         	ORA		P_Temp+5					; 将COM和SEG信息与LCD RAM地址进行逻辑或操作
-   196 00:F4F1: 72 BC         	EOR		P_Temp+5					; 进行异或操作，用于清除对应的段。
-   197 00:F4F3: 6F 00 18      	STA		LCD_RamAddr,X				; 将结果写回LCD RAM，清除对应位置。
+   194 00:F4EF: 63 00 18      	LDA		LCD_RamAddr,X				; 加载LCD RAM的地址
+   195 00:F4F2: 70 BC         	ORA		P_Temp+5					; 将COM和SEG信息与LCD RAM地址进行逻辑或操作
+   196 00:F4F4: 72 BC         	EOR		P_Temp+5					; 进行异或操作，用于清除对应的段。
+   197 00:F4F6: 6F 00 18      	STA		LCD_RamAddr,X				; 将结果写回LCD RAM，清除对应位置。
    198                        L_Inc_Dis_FrameIndex_Prog_1:
-   199 00:F4F6: 78 BA         	INC		P_Temp+3					; 递增偏移量，处理下一个段
-   200 00:F4F8: 79 BB         	DEC		P_Temp+4					; 递减剩余要显示的段数
-   201 00:F4FA: 12 D3         	BNE		L_Judge_Dis_21Bit_DigitFrame_1	; 剩余段数为0则返回
-   202 00:F4FC: 09            	RTS
+   199 00:F4F9: 78 BA         	INC		P_Temp+3					; 递增偏移量，处理下一个段
+   200 00:F4FB: 79 BB         	DEC		P_Temp+4					; 递减剩余要显示的段数
+   201 00:F4FD: 12 D3         	BNE		L_Judge_Dis_21Bit_DigitFrame_1	; 剩余段数为0则返回
+   202 00:F4FF: 09            	RTS
    203                        
    204                        ;============================================================
    205                        
    206                        Table_Digit_Anim:
-   207 00:F4FD: 1E DB 6F      	.byte $1e, $db, $6f	;0			0
-   208 00:F500: 03 DB 6D      	.byte $03, $db, $6d	;0->1, 1	1
-   209 00:F503: 10 7B 6D      	.byte $10, $7b, $6d	;0->1, 2	2
-   210 00:F506: 12 0F 6D      	.byte $12, $0f, $6d ;0->1, 3	3
-   211 00:F509: 12 41 ED      	.byte $12, $41, $ed ;0->1, 4	4
-   212 00:F50C: 12 48 3D      	.byte $12, $48, $3d ;0->1, 5	5
-   213 00:F50F: 12 49 07      	.byte $12, $49, $07 ;0->1, 6	6
-   214 00:F512: 12 49 20      	.byte $12, $49, $20 ;0->1, 7	7
-   215 00:F515: 12 49 24      	.byte $12, $49, $24 ;1			8
-   216 00:F518: 02 49 24      	.byte $02, $49, $24	;1->2, 1	9
-   217 00:F51B: 1C 49 24      	.byte $1c, $49, $24	;1->2, 2	a
-   218 00:F51E: 13 89 24      	.byte $13, $89, $24 ;1->2, 3	b
-   219 00:F521: 12 71 24      	.byte $12, $71, $24 ;1->2, 4	c
-   220 00:F524: 1E 4E 24      	.byte $1e, $4e, $24 ;1->2, 5	d
-   221 00:F527: 07 C9 C4      	.byte $07, $c9, $c4 ;1->2, 6	e
-   222 00:F52A: 04 F9 38      	.byte $04, $f9, $38 ;1->2, 7	f
-   223 00:F52D: 1C 9F 27      	.byte $1c, $9f, $27 ;2			10
-   224 00:F530: 03 93 E4      	.byte $03, $93, $e4	;2->3, 1	11
-   225 00:F533: 1C 72 7C      	.byte $1c, $72, $7c	;2->3, 2	12
-   226 00:F536: 13 8E 4F      	.byte $13, $8e, $4f ;2->3, 3	13
-   227 00:F539: 12 71 C9      	.byte $12, $71, $c9 ;2->3, 4	14
-   228 00:F53C: 1E 4E 39      	.byte $1e, $4e, $39 ;2->3, 5	15
-   229 00:F53F: 13 C9 C7      	.byte $13, $c9, $c7 ;2->3, 6	16
-   230 00:F542: 12 79 38      	.byte $12, $79, $38 ;2->3, 7	17
-   231 00:F545: 1E 4F 27      	.byte $1e, $4f, $27 ;3			18
-   232 00:F548: 03 C9 E4      	.byte $03, $c9, $e4	;3->4, 1	19
-   233 00:F54B: 14 79 3C      	.byte $14, $79, $3c	;3->4, 2	1a
-   234 00:F54E: 16 8F 27      	.byte $16, $8f, $27 ;3->4, 3	1b
-   235 00:F551: 16 D1 E4      	.byte $16, $d1, $e4 ;3->4, 4	1c
-   236 00:F554: 1E DA 3C      	.byte $1e, $da, $3c ;3->4, 5	1d
-   237 00:F557: 13 DB 47      	.byte $13, $db, $47 ;3->4, 6	1e
-   238 00:F55A: 12 7B 68      	.byte $12, $7b, $68 ;3->4, 7	1f
-   239 00:F55D: 12 4F 6D      	.byte $12, $4f, $6d ;4			20
-   240 00:F560: 02 49 ED      	.byte $02, $49, $ed	;4->5, 1	21
-   241 00:F563: 1C 49 3D      	.byte $1c, $49, $3d	;4->5, 2	22
-   242 00:F566: 07 89 27      	.byte $07, $89, $27 ;4->5, 3	23
-   243 00:F569: 04 F1 24      	.byte $04, $f1, $24 ;4->5, 4	24
-   244 00:F56C: 1C 9E 24      	.byte $1c, $9e, $24 ;4->5, 5	25
-   245 00:F56F: 13 93 C4      	.byte $13, $93, $c4 ;4->5, 6	26
-   246 00:F572: 12 72 78      	.byte $12, $72, $78 ;4->5, 7	27
-   247 00:F575: 1E 4E 4F      	.byte $1e, $4e, $4f ;5			28
-   248 00:F578: 03 C9 C9      	.byte $03, $c9, $c9	;5->6, 1	29
-   249 00:F57B: 1C 79 39      	.byte $1c, $79, $39	;5->6, 2	2a
-   250 00:F57E: 07 8F 27      	.byte $07, $8f, $27 ;5->6, 3	2b
-   251 00:F581: 04 F1 E4      	.byte $04, $f1, $e4 ;5->6, 4	2c
-   252 00:F584: 1C 9E 3C      	.byte $1c, $9e, $3c ;5->6, 5	2d
-   253 00:F587: 17 93 C7      	.byte $17, $93, $c7 ;5->6, 6	2e
-   254 00:F58A: 16 F2 78      	.byte $16, $f2, $78 ;5->6, 7	2f
-   255 00:F58D: 1E DE 4F      	.byte $1e, $de, $4f ;6			30
-   256 00:F590: 03 DB C9      	.byte $03, $db, $c9	;6->7, 1	31
-   257 00:F593: 1C 7B 79      	.byte $1c, $7b, $79	;6->7, 2	32
-   258 00:F596: 13 8F 6F      	.byte $13, $8f, $6f ;6->7, 3	33
-   259 00:F599: 12 71 ED      	.byte $12, $71, $ed ;6->7, 4	34
-   260 00:F59C: 12 4E 3D      	.byte $12, $4e, $3d ;6->7, 5	35
-   261 00:F59F: 12 49 C7      	.byte $12, $49, $c7 ;6->7, 6	36
-   262 00:F5A2: 12 49 38      	.byte $12, $49, $38 ;6->7, 7	37
-   263 00:F5A5: 12 49 27      	.byte $12, $49, $27 ;7			38
-   264 00:F5A8: 02 49 24      	.byte $02, $49, $24	;7->8, 1	39
-   265 00:F5AB: 1C 49 24      	.byte $1c, $49, $24	;7->8, 2	3a
-   266 00:F5AE: 17 89 24      	.byte $17, $89, $24 ;7->8, 3	3b
-   267 00:F5B1: 16 F1 24      	.byte $16, $f1, $24 ;7->8, 4	3c
-   268 00:F5B4: 1E DE 24      	.byte $1e, $de, $24 ;7->8, 5	3d
-   269 00:F5B7: 17 DB C4      	.byte $17, $db, $c4 ;7->8, 6	3e
-   270 00:F5BA: 16 FB 78      	.byte $16, $fb, $78 ;7->8, 7	3f
-   271 00:F5BD: 1E DF 6F      	.byte $1e, $df, $6f ;8			40
-   272 00:F5C0: 03 DB ED      	.byte $03, $db, $ed	;8->9, 1	41
-   273 00:F5C3: 1C 7B 7D      	.byte $1c, $7b, $7d	;8->9, 2	42
-   274 00:F5C6: 17 8F 6F      	.byte $17, $8f, $6f ;8->9, 3	43
-   275 00:F5C9: 16 F1 ED      	.byte $16, $f1, $ed ;8->9, 4	44
-   276 00:F5CC: 1E DE 3D      	.byte $1e, $de, $3d ;8->9, 5	45
-   277 00:F5CF: 13 DB C4      	.byte $13, $db, $c4 ;8->9, 6	46
-   278 00:F5D2: 12 7B 78      	.byte $12, $7b, $78 ;8->9, 7	47
-   279 00:F5D5: 1E 4F 6F      	.byte $1e, $4f, $6f ;9			48
-   280 00:F5D8: 03 C9 ED      	.byte $03, $c9, $ed	;9->0, 1	49
-   281 00:F5DB: 1C 79 3D      	.byte $1c, $79, $3d	;9->0, 2	4a
-   282 00:F5DE: 17 8F 27      	.byte $17, $8f, $27 ;9->0, 3	4b
-   283 00:F5E1: 16 F1 E4      	.byte $16, $f1, $e4 ;9->0, 4	4c
-   284 00:F5E4: 16 DE 3C      	.byte $16, $de, $3c ;9->0, 5	4d
-   285 00:F5E7: 16 DB C7      	.byte $16, $db, $c7 ;9->0, 6	4e
-   286 00:F5EA: 16 DB 78      	.byte $16, $db, $78 ;9->0, 7	4f
-   287 00:F5ED: 1E DB 6F      	.byte $1e, $db, $6f ;0			50
+   207 00:F500: 1E DB 6F      	.byte $1e, $db, $6f	;0			0
+   208 00:F503: 03 DB 6D      	.byte $03, $db, $6d	;0->1, 1	1
+   209 00:F506: 10 7B 6D      	.byte $10, $7b, $6d	;0->1, 2	2
+   210 00:F509: 12 0F 6D      	.byte $12, $0f, $6d ;0->1, 3	3
+   211 00:F50C: 12 41 ED      	.byte $12, $41, $ed ;0->1, 4	4
+   212 00:F50F: 12 48 3D      	.byte $12, $48, $3d ;0->1, 5	5
+   213 00:F512: 12 49 07      	.byte $12, $49, $07 ;0->1, 6	6
+   214 00:F515: 12 49 20      	.byte $12, $49, $20 ;0->1, 7	7
+   215 00:F518: 12 49 24      	.byte $12, $49, $24 ;1			8
+   216 00:F51B: 02 49 24      	.byte $02, $49, $24	;1->2, 1	9
+   217 00:F51E: 1C 49 24      	.byte $1c, $49, $24	;1->2, 2	a
+   218 00:F521: 13 89 24      	.byte $13, $89, $24 ;1->2, 3	b
+   219 00:F524: 12 71 24      	.byte $12, $71, $24 ;1->2, 4	c
+   220 00:F527: 1E 4E 24      	.byte $1e, $4e, $24 ;1->2, 5	d
+   221 00:F52A: 07 C9 C4      	.byte $07, $c9, $c4 ;1->2, 6	e
+   222 00:F52D: 04 F9 38      	.byte $04, $f9, $38 ;1->2, 7	f
+   223 00:F530: 1C 9F 27      	.byte $1c, $9f, $27 ;2			10
+   224 00:F533: 03 93 E4      	.byte $03, $93, $e4	;2->3, 1	11
+   225 00:F536: 1C 72 7C      	.byte $1c, $72, $7c	;2->3, 2	12
+   226 00:F539: 13 8E 4F      	.byte $13, $8e, $4f ;2->3, 3	13
+   227 00:F53C: 12 71 C9      	.byte $12, $71, $c9 ;2->3, 4	14
+   228 00:F53F: 1E 4E 39      	.byte $1e, $4e, $39 ;2->3, 5	15
+   229 00:F542: 13 C9 C7      	.byte $13, $c9, $c7 ;2->3, 6	16
+   230 00:F545: 12 79 38      	.byte $12, $79, $38 ;2->3, 7	17
+   231 00:F548: 1E 4F 27      	.byte $1e, $4f, $27 ;3			18
+   232 00:F54B: 03 C9 E4      	.byte $03, $c9, $e4	;3->4, 1	19
+   233 00:F54E: 14 79 3C      	.byte $14, $79, $3c	;3->4, 2	1a
+   234 00:F551: 16 8F 27      	.byte $16, $8f, $27 ;3->4, 3	1b
+   235 00:F554: 16 D1 E4      	.byte $16, $d1, $e4 ;3->4, 4	1c
+   236 00:F557: 1E DA 3C      	.byte $1e, $da, $3c ;3->4, 5	1d
+   237 00:F55A: 13 DB 47      	.byte $13, $db, $47 ;3->4, 6	1e
+   238 00:F55D: 12 7B 68      	.byte $12, $7b, $68 ;3->4, 7	1f
+   239 00:F560: 12 4F 6D      	.byte $12, $4f, $6d ;4			20
+   240 00:F563: 02 49 ED      	.byte $02, $49, $ed	;4->5, 1	21
+   241 00:F566: 1C 49 3D      	.byte $1c, $49, $3d	;4->5, 2	22
+   242 00:F569: 07 89 27      	.byte $07, $89, $27 ;4->5, 3	23
+   243 00:F56C: 04 F1 24      	.byte $04, $f1, $24 ;4->5, 4	24
+   244 00:F56F: 1C 9E 24      	.byte $1c, $9e, $24 ;4->5, 5	25
+   245 00:F572: 13 93 C4      	.byte $13, $93, $c4 ;4->5, 6	26
+   246 00:F575: 12 72 78      	.byte $12, $72, $78 ;4->5, 7	27
+   247 00:F578: 1E 4E 4F      	.byte $1e, $4e, $4f ;5			28
+   248 00:F57B: 03 C9 C9      	.byte $03, $c9, $c9	;5->6, 1	29
+   249 00:F57E: 1C 79 39      	.byte $1c, $79, $39	;5->6, 2	2a
+   250 00:F581: 07 8F 27      	.byte $07, $8f, $27 ;5->6, 3	2b
+   251 00:F584: 04 F1 E4      	.byte $04, $f1, $e4 ;5->6, 4	2c
+   252 00:F587: 1C 9E 3C      	.byte $1c, $9e, $3c ;5->6, 5	2d
+   253 00:F58A: 17 93 C7      	.byte $17, $93, $c7 ;5->6, 6	2e
+   254 00:F58D: 16 F2 78      	.byte $16, $f2, $78 ;5->6, 7	2f
+   255 00:F590: 1E DE 4F      	.byte $1e, $de, $4f ;6			30
+   256 00:F593: 03 DB C9      	.byte $03, $db, $c9	;6->7, 1	31
+   257 00:F596: 1C 7B 79      	.byte $1c, $7b, $79	;6->7, 2	32
+   258 00:F599: 13 8F 6F      	.byte $13, $8f, $6f ;6->7, 3	33
+   259 00:F59C: 12 71 ED      	.byte $12, $71, $ed ;6->7, 4	34
+   260 00:F59F: 12 4E 3D      	.byte $12, $4e, $3d ;6->7, 5	35
+   261 00:F5A2: 12 49 C7      	.byte $12, $49, $c7 ;6->7, 6	36
+   262 00:F5A5: 12 49 38      	.byte $12, $49, $38 ;6->7, 7	37
+   263 00:F5A8: 12 49 27      	.byte $12, $49, $27 ;7			38
+   264 00:F5AB: 02 49 24      	.byte $02, $49, $24	;7->8, 1	39
+   265 00:F5AE: 1C 49 24      	.byte $1c, $49, $24	;7->8, 2	3a
+   266 00:F5B1: 17 89 24      	.byte $17, $89, $24 ;7->8, 3	3b
+   267 00:F5B4: 16 F1 24      	.byte $16, $f1, $24 ;7->8, 4	3c
+   268 00:F5B7: 1E DE 24      	.byte $1e, $de, $24 ;7->8, 5	3d
+   269 00:F5BA: 17 DB C4      	.byte $17, $db, $c4 ;7->8, 6	3e
+   270 00:F5BD: 16 FB 78      	.byte $16, $fb, $78 ;7->8, 7	3f
+   271 00:F5C0: 1E DF 6F      	.byte $1e, $df, $6f ;8			40
+   272 00:F5C3: 03 DB ED      	.byte $03, $db, $ed	;8->9, 1	41
+   273 00:F5C6: 1C 7B 7D      	.byte $1c, $7b, $7d	;8->9, 2	42
+   274 00:F5C9: 17 8F 6F      	.byte $17, $8f, $6f ;8->9, 3	43
+   275 00:F5CC: 16 F1 ED      	.byte $16, $f1, $ed ;8->9, 4	44
+   276 00:F5CF: 1E DE 3D      	.byte $1e, $de, $3d ;8->9, 5	45
+   277 00:F5D2: 13 DB C4      	.byte $13, $db, $c4 ;8->9, 6	46
+   278 00:F5D5: 12 7B 78      	.byte $12, $7b, $78 ;8->9, 7	47
+   279 00:F5D8: 1E 4F 6F      	.byte $1e, $4f, $6f ;9			48
+   280 00:F5DB: 03 C9 ED      	.byte $03, $c9, $ed	;9->0, 1	49
+   281 00:F5DE: 1C 79 3D      	.byte $1c, $79, $3d	;9->0, 2	4a
+   282 00:F5E1: 17 8F 27      	.byte $17, $8f, $27 ;9->0, 3	4b
+   283 00:F5E4: 16 F1 E4      	.byte $16, $f1, $e4 ;9->0, 4	4c
+   284 00:F5E7: 16 DE 3C      	.byte $16, $de, $3c ;9->0, 5	4d
+   285 00:F5EA: 16 DB C7      	.byte $16, $db, $c7 ;9->0, 6	4e
+   286 00:F5ED: 16 DB 78      	.byte $16, $db, $78 ;9->0, 7	4f
+   287 00:F5F0: 1E DB 6F      	.byte $1e, $db, $6f ;0			50
    288                        
    289                        Table_Digit_Anim_2:
-   290 00:F5F0: 1E DB 6F      	.byte $1e, $db, $6f	;0			0
-   291 00:F5F3: 03 DB 6D      	.byte $03, $db, $6d	;0->1, 1	1
-   292 00:F5F6: 10 7B 6D      	.byte $10, $7b, $6d	;0->1, 2	2
-   293 00:F5F9: 12 0F 6D      	.byte $12, $0f, $6d ;0->1, 3	3
-   294 00:F5FC: 12 41 ED      	.byte $12, $41, $ed ;0->1, 4	4
-   295 00:F5FF: 12 48 3D      	.byte $12, $48, $3d ;0->1, 5	5
-   296 00:F602: 12 49 07      	.byte $12, $49, $07 ;0->1, 6	6
-   297 00:F605: 12 49 20      	.byte $12, $49, $20 ;0->1, 7	7
-   298 00:F608: 12 49 24      	.byte $12, $49, $24 ;1			8
-   299 00:F60B: 02 49 24      	.byte $02, $49, $24	;1->2, 1	9
-   300 00:F60E: 1C 49 24      	.byte $1c, $49, $24	;1->2, 2	a
-   301 00:F611: 13 89 24      	.byte $13, $89, $24 ;1->2, 3	b
-   302 00:F614: 12 71 24      	.byte $12, $71, $24 ;1->2, 4	c
-   303 00:F617: 1E 4E 24      	.byte $1e, $4e, $24 ;1->2, 5	d
-   304 00:F61A: 07 C9 C4      	.byte $07, $c9, $c4 ;1->2, 6	e
-   305 00:F61D: 04 F9 38      	.byte $04, $f9, $38 ;1->2, 7	f
-   306 00:F620: 1C 9F 27      	.byte $1c, $9f, $27 ;2			10
-   307 00:F623: 03 93 E4      	.byte $03, $93, $e4	;2->3, 1	11
-   308 00:F626: 1C 72 7C      	.byte $1c, $72, $7c	;2->3, 2	12
-   309 00:F629: 13 8E 4F      	.byte $13, $8e, $4f ;2->3, 3	13
-   310 00:F62C: 12 71 C9      	.byte $12, $71, $c9 ;2->3, 4	14
-   311 00:F62F: 1E 4E 39      	.byte $1e, $4e, $39 ;2->3, 5	15
-   312 00:F632: 13 C9 C7      	.byte $13, $c9, $c7 ;2->3, 6	16
-   313 00:F635: 12 79 38      	.byte $12, $79, $38 ;2->3, 7	17
-   314 00:F638: 1E 4F 27      	.byte $1e, $4f, $27 ;3			18
-   315 00:F63B: 03 C9 E4      	.byte $03, $c9, $e4	;3->4, 1	19
-   316 00:F63E: 14 79 3C      	.byte $14, $79, $3c	;3->4, 2	1a
-   317 00:F641: 16 8F 27      	.byte $16, $8f, $27 ;3->4, 3	1b
-   318 00:F644: 16 D1 E4      	.byte $16, $d1, $e4 ;3->4, 4	1c
-   319 00:F647: 1E DA 3C      	.byte $1e, $da, $3c ;3->4, 5	1d
-   320 00:F64A: 13 DB 47      	.byte $13, $db, $47 ;3->4, 6	1e
-   321 00:F64D: 12 7B 68      	.byte $12, $7b, $68 ;3->4, 7	1f
-   322 00:F650: 12 4F 6D      	.byte $12, $4f, $6d ;4			20
-   323 00:F653: 02 49 ED      	.byte $02, $49, $ed	;4->5, 1	21
-   324 00:F656: 1C 49 3D      	.byte $1c, $49, $3d	;4->5, 2	22
-   325 00:F659: 07 89 27      	.byte $07, $89, $27 ;4->5, 3	23
-   326 00:F65C: 04 F1 24      	.byte $04, $f1, $24 ;4->5, 4	24
-   327 00:F65F: 1C 9E 24      	.byte $1c, $9e, $24 ;4->5, 5	25
-   328 00:F662: 13 93 C4      	.byte $13, $93, $c4 ;4->5, 6	26
-   329 00:F665: 12 72 78      	.byte $12, $72, $78 ;4->5, 7	27
-   330 00:F668: 1E 4E 4F      	.byte $1e, $4e, $4f ;5			28
-   331 00:F66B: 03 C9 C9      	.byte $03, $c9, $c9	;5->0, 1	29
-   332 00:F66E: 1C 79 39      	.byte $1c, $79, $39	;5->0, 2	2a
-   333 00:F671: 17 8F 27      	.byte $17, $8f, $27 ;5->0, 3	2b
-   334 00:F674: 16 F1 E4      	.byte $16, $f1, $e4 ;5->0, 4	2c
-   335 00:F677: 16 DE 3C      	.byte $16, $de, $3c ;5->0, 5	2d
-   336 00:F67A: 16 DB C7      	.byte $16, $db, $c7 ;5->0, 6	2e
-   337 00:F67D: 16 DB 78      	.byte $16, $db, $78 ;5->0, 7	2f
-   338 00:F680: 1E DB 6F      	.byte $1e, $db, $6f ;0			30
+   290 00:F5F3: 1E DB 6F      	.byte $1e, $db, $6f	;0			0
+   291 00:F5F6: 03 DB 6D      	.byte $03, $db, $6d	;0->1, 1	1
+   292 00:F5F9: 10 7B 6D      	.byte $10, $7b, $6d	;0->1, 2	2
+   293 00:F5FC: 12 0F 6D      	.byte $12, $0f, $6d ;0->1, 3	3
+   294 00:F5FF: 12 41 ED      	.byte $12, $41, $ed ;0->1, 4	4
+   295 00:F602: 12 48 3D      	.byte $12, $48, $3d ;0->1, 5	5
+   296 00:F605: 12 49 07      	.byte $12, $49, $07 ;0->1, 6	6
+   297 00:F608: 12 49 20      	.byte $12, $49, $20 ;0->1, 7	7
+   298 00:F60B: 12 49 24      	.byte $12, $49, $24 ;1			8
+   299 00:F60E: 02 49 24      	.byte $02, $49, $24	;1->2, 1	9
+   300 00:F611: 1C 49 24      	.byte $1c, $49, $24	;1->2, 2	a
+   301 00:F614: 13 89 24      	.byte $13, $89, $24 ;1->2, 3	b
+   302 00:F617: 12 71 24      	.byte $12, $71, $24 ;1->2, 4	c
+   303 00:F61A: 1E 4E 24      	.byte $1e, $4e, $24 ;1->2, 5	d
+   304 00:F61D: 07 C9 C4      	.byte $07, $c9, $c4 ;1->2, 6	e
+   305 00:F620: 04 F9 38      	.byte $04, $f9, $38 ;1->2, 7	f
+   306 00:F623: 1C 9F 27      	.byte $1c, $9f, $27 ;2			10
+   307 00:F626: 03 93 E4      	.byte $03, $93, $e4	;2->3, 1	11
+   308 00:F629: 1C 72 7C      	.byte $1c, $72, $7c	;2->3, 2	12
+   309 00:F62C: 13 8E 4F      	.byte $13, $8e, $4f ;2->3, 3	13
+   310 00:F62F: 12 71 C9      	.byte $12, $71, $c9 ;2->3, 4	14
+   311 00:F632: 1E 4E 39      	.byte $1e, $4e, $39 ;2->3, 5	15
+   312 00:F635: 13 C9 C7      	.byte $13, $c9, $c7 ;2->3, 6	16
+   313 00:F638: 12 79 38      	.byte $12, $79, $38 ;2->3, 7	17
+   314 00:F63B: 1E 4F 27      	.byte $1e, $4f, $27 ;3			18
+   315 00:F63E: 03 C9 E4      	.byte $03, $c9, $e4	;3->4, 1	19
+   316 00:F641: 14 79 3C      	.byte $14, $79, $3c	;3->4, 2	1a
+   317 00:F644: 16 8F 27      	.byte $16, $8f, $27 ;3->4, 3	1b
+   318 00:F647: 16 D1 E4      	.byte $16, $d1, $e4 ;3->4, 4	1c
+   319 00:F64A: 1E DA 3C      	.byte $1e, $da, $3c ;3->4, 5	1d
+   320 00:F64D: 13 DB 47      	.byte $13, $db, $47 ;3->4, 6	1e
+   321 00:F650: 12 7B 68      	.byte $12, $7b, $68 ;3->4, 7	1f
+   322 00:F653: 12 4F 6D      	.byte $12, $4f, $6d ;4			20
+   323 00:F656: 02 49 ED      	.byte $02, $49, $ed	;4->5, 1	21
+   324 00:F659: 1C 49 3D      	.byte $1c, $49, $3d	;4->5, 2	22
+   325 00:F65C: 07 89 27      	.byte $07, $89, $27 ;4->5, 3	23
+   326 00:F65F: 04 F1 24      	.byte $04, $f1, $24 ;4->5, 4	24
+   327 00:F662: 1C 9E 24      	.byte $1c, $9e, $24 ;4->5, 5	25
+   328 00:F665: 13 93 C4      	.byte $13, $93, $c4 ;4->5, 6	26
+   329 00:F668: 12 72 78      	.byte $12, $72, $78 ;4->5, 7	27
+   330 00:F66B: 1E 4E 4F      	.byte $1e, $4e, $4f ;5			28
+   331 00:F66E: 03 C9 C9      	.byte $03, $c9, $c9	;5->0, 1	29
+   332 00:F671: 1C 79 39      	.byte $1c, $79, $39	;5->0, 2	2a
+   333 00:F674: 17 8F 27      	.byte $17, $8f, $27 ;5->0, 3	2b
+   334 00:F677: 16 F1 E4      	.byte $16, $f1, $e4 ;5->0, 4	2c
+   335 00:F67A: 16 DE 3C      	.byte $16, $de, $3c ;5->0, 5	2d
+   336 00:F67D: 16 DB C7      	.byte $16, $db, $c7 ;5->0, 6	2e
+   337 00:F680: 16 DB 78      	.byte $16, $db, $78 ;5->0, 7	2f
+   338 00:F683: 1E DB 6F      	.byte $1e, $db, $6f ;0			30
    338                        
    205                        .INCLUDE	Lcdtab.asm
      1                        ;--------COM------------
@@ -2382,682 +2385,686 @@ Current file: main.asm
     38                        lcd_table1:
     39                        lcd_d1 .equ	lcd_table1-lcd_table1
     40                        	db_c_s	c4,s0					;A1
-+   40 00:F683: 18             .DB c4*$0006+s0/$0008
++   40 00:F686: 18             .DB c4*$0006+s0/$0008
     41                        	db_c_s	c4,s1					;A2
-+   41 00:F684: 18             .DB c4*$0006+s1/$0008
++   41 00:F687: 18             .DB c4*$0006+s1/$0008
     42                        	db_c_s	c4,s2					;A3
-+   42 00:F685: 18             .DB c4*$0006+s2/$0008
++   42 00:F688: 18             .DB c4*$0006+s2/$0008
     43                        	db_c_s	c3,s0					;A4
-+   43 00:F686: 12             .DB c3*$0006+s0/$0008
++   43 00:F689: 12             .DB c3*$0006+s0/$0008
     44                        	db_c_s	c3,s1					;A5
-+   44 00:F687: 12             .DB c3*$0006+s1/$0008
++   44 00:F68A: 12             .DB c3*$0006+s1/$0008
     45                        	db_c_s	c4,s3					;A6
-+   45 00:F688: 18             .DB c4*$0006+s3/$0008
++   45 00:F68B: 18             .DB c4*$0006+s3/$0008
     46                        	db_c_s	c2,s0					;A7
-+   46 00:F689: 0C             .DB c2*$0006+s0/$0008
++   46 00:F68C: 0C             .DB c2*$0006+s0/$0008
     47                        	db_c_s	c3,s2					;A8
-+   47 00:F68A: 12             .DB c3*$0006+s2/$0008
++   47 00:F68D: 12             .DB c3*$0006+s2/$0008
     48                        	db_c_s	c3,s3					;A9
-+   48 00:F68B: 12             .DB c3*$0006+s3/$0008
++   48 00:F68E: 12             .DB c3*$0006+s3/$0008
     49                        	db_c_s	c2,s1					;A10
-+   49 00:F68C: 0C             .DB c2*$0006+s1/$0008
++   49 00:F68F: 0C             .DB c2*$0006+s1/$0008
     50                        	db_c_s	c2,s2					;A11
-+   50 00:F68D: 0C             .DB c2*$0006+s2/$0008
++   50 00:F690: 0C             .DB c2*$0006+s2/$0008
     51                        	db_c_s	c2,s3					;A12
-+   51 00:F68E: 0C             .DB c2*$0006+s3/$0008
++   51 00:F691: 0C             .DB c2*$0006+s3/$0008
     52                        	db_c_s	c1,s0					;A13
-+   52 00:F68F: 06             .DB c1*$0006+s0/$0008
++   52 00:F692: 06             .DB c1*$0006+s0/$0008
     53                        	db_c_s	c1,s3					;A14
-+   53 00:F690: 06             .DB c1*$0006+s3/$0008
++   53 00:F693: 06             .DB c1*$0006+s3/$0008
     54                        	db_c_s	c1,s4					;A15
-+   54 00:F691: 06             .DB c1*$0006+s4/$0008
++   54 00:F694: 06             .DB c1*$0006+s4/$0008
     55                        	db_c_s	c1,s1					;A16
-+   55 00:F692: 06             .DB c1*$0006+s1/$0008
++   55 00:F695: 06             .DB c1*$0006+s1/$0008
     56                        	db_c_s	c1,s2					;A17
-+   56 00:F693: 06             .DB c1*$0006+s2/$0008
++   56 00:F696: 06             .DB c1*$0006+s2/$0008
     57                        	db_c_s	c0,s3					;A18
-+   57 00:F694: 00             .DB c0*$0006+s3/$0008
++   57 00:F697: 00             .DB c0*$0006+s3/$0008
     58                        	db_c_s	c0,s0					;A19
-+   58 00:F695: 00             .DB c0*$0006+s0/$0008
++   58 00:F698: 00             .DB c0*$0006+s0/$0008
     59                        	db_c_s	c0,s1					;A20
-+   59 00:F696: 00             .DB c0*$0006+s1/$0008
++   59 00:F699: 00             .DB c0*$0006+s1/$0008
     60                        	db_c_s	c0,s2					;A21
-+   60 00:F697: 00             .DB c0*$0006+s2/$0008
++   60 00:F69A: 00             .DB c0*$0006+s2/$0008
     61                        
     62                        lcd_d2	.equ lcd_d1+21
     63                        	db_c_s	c4,s5					;B1
-+   63 00:F698: 18             .DB c4*$0006+s5/$0008
++   63 00:F69B: 18             .DB c4*$0006+s5/$0008
     64                        	db_c_s	c4,s6					;B2
-+   64 00:F699: 18             .DB c4*$0006+s6/$0008
++   64 00:F69C: 18             .DB c4*$0006+s6/$0008
     65                        	db_c_s	c4,s7					;B3
-+   65 00:F69A: 18             .DB c4*$0006+s7/$0008
++   65 00:F69D: 18             .DB c4*$0006+s7/$0008
     66                        	db_c_s	c4,s4					;B4
-+   66 00:F69B: 18             .DB c4*$0006+s4/$0008
++   66 00:F69E: 18             .DB c4*$0006+s4/$0008
     67                        	db_c_s	c3,s6					;B5
-+   67 00:F69C: 12             .DB c3*$0006+s6/$0008
++   67 00:F69F: 12             .DB c3*$0006+s6/$0008
     68                        	db_c_s	c3,s7					;B6
-+   68 00:F69D: 12             .DB c3*$0006+s7/$0008
++   68 00:F6A0: 12             .DB c3*$0006+s7/$0008
     69                        	db_c_s	c3,s4					;B7
-+   69 00:F69E: 12             .DB c3*$0006+s4/$0008
++   69 00:F6A1: 12             .DB c3*$0006+s4/$0008
     70                        	db_c_s	c3,s5					;B8
-+   70 00:F69F: 12             .DB c3*$0006+s5/$0008
++   70 00:F6A2: 12             .DB c3*$0006+s5/$0008
     71                        	db_c_s	c2,s8					;B9
-+   71 00:F6A0: 0D             .DB c2*$0006+s8/$0008
++   71 00:F6A3: 0D             .DB c2*$0006+s8/$0008
     72                        	db_c_s	c2,s4					;B10
-+   72 00:F6A1: 0C             .DB c2*$0006+s4/$0008
++   72 00:F6A4: 0C             .DB c2*$0006+s4/$0008
     73                        	db_c_s	c2,s6					;B11
-+   73 00:F6A2: 0C             .DB c2*$0006+s6/$0008
++   73 00:F6A5: 0C             .DB c2*$0006+s6/$0008
     74                        	db_c_s	c2,s7					;B12
-+   74 00:F6A3: 0C             .DB c2*$0006+s7/$0008
++   74 00:F6A6: 0C             .DB c2*$0006+s7/$0008
     75                        	db_c_s	c2,s5					;B13
-+   75 00:F6A4: 0C             .DB c2*$0006+s5/$0008
++   75 00:F6A7: 0C             .DB c2*$0006+s5/$0008
     76                        	db_c_s	c1,s7					;B14
-+   76 00:F6A5: 06             .DB c1*$0006+s7/$0008
++   76 00:F6A8: 06             .DB c1*$0006+s7/$0008
     77                        	db_c_s	c1,s8					;B15
-+   77 00:F6A6: 07             .DB c1*$0006+s8/$0008
++   77 00:F6A9: 07             .DB c1*$0006+s8/$0008
     78                        	db_c_s	c1,s5					;B16
-+   78 00:F6A7: 06             .DB c1*$0006+s5/$0008
++   78 00:F6AA: 06             .DB c1*$0006+s5/$0008
     79                        	db_c_s	c1,s6					;B17
-+   79 00:F6A8: 06             .DB c1*$0006+s6/$0008
++   79 00:F6AB: 06             .DB c1*$0006+s6/$0008
     80                        	db_c_s	c0,s7					;B18
-+   80 00:F6A9: 00             .DB c0*$0006+s7/$0008
++   80 00:F6AC: 00             .DB c0*$0006+s7/$0008
     81                        	db_c_s	c0,s4					;B19
-+   81 00:F6AA: 00             .DB c0*$0006+s4/$0008
++   81 00:F6AD: 00             .DB c0*$0006+s4/$0008
     82                        	db_c_s	c0,s5					;B20
-+   82 00:F6AB: 00             .DB c0*$0006+s5/$0008
++   82 00:F6AE: 00             .DB c0*$0006+s5/$0008
     83                        	db_c_s	c0,s6					;B21
-+   83 00:F6AC: 00             .DB c0*$0006+s6/$0008
++   83 00:F6AF: 00             .DB c0*$0006+s6/$0008
     84                        
     85                        lcd_d3	.equ lcd_d2+21
     86                        	db_c_s	c4,s8					;C1
-+   86 00:F6AD: 19             .DB c4*$0006+s8/$0008
++   86 00:F6B0: 19             .DB c4*$0006+s8/$0008
     87                        	db_c_s	c4,s9					;C2
-+   87 00:F6AE: 19             .DB c4*$0006+s9/$0008
++   87 00:F6B1: 19             .DB c4*$0006+s9/$0008
     88                        	db_c_s	c4,s10					;C3
-+   88 00:F6AF: 19             .DB c4*$0006+s10/$0008
++   88 00:F6B2: 19             .DB c4*$0006+s10/$0008
     89                        	db_c_s	c3,s8					;C4
-+   89 00:F6B0: 13             .DB c3*$0006+s8/$0008
++   89 00:F6B3: 13             .DB c3*$0006+s8/$0008
     90                        	db_c_s	c3,s11					;C5
-+   90 00:F6B1: 13             .DB c3*$0006+s11/$0008
++   90 00:F6B4: 13             .DB c3*$0006+s11/$0008
     91                        	db_c_s	c4,s11					;C6
-+   91 00:F6B2: 19             .DB c4*$0006+s11/$0008
++   91 00:F6B5: 19             .DB c4*$0006+s11/$0008
     92                        	db_c_s	c3,s9					;C7
-+   92 00:F6B3: 13             .DB c3*$0006+s9/$0008
++   92 00:F6B6: 13             .DB c3*$0006+s9/$0008
     93                        	db_c_s	c3,s10					;C8
-+   93 00:F6B4: 13             .DB c3*$0006+s10/$0008
++   93 00:F6B7: 13             .DB c3*$0006+s10/$0008
     94                        	db_c_s	c3,s12					;C9
-+   94 00:F6B5: 13             .DB c3*$0006+s12/$0008
++   94 00:F6B8: 13             .DB c3*$0006+s12/$0008
     95                        	db_c_s	c2,s9					;C10
-+   95 00:F6B6: 0D             .DB c2*$0006+s9/$0008
++   95 00:F6B9: 0D             .DB c2*$0006+s9/$0008
     96                        	db_c_s	c2,s10					;C11
-+   96 00:F6B7: 0D             .DB c2*$0006+s10/$0008
++   96 00:F6BA: 0D             .DB c2*$0006+s10/$0008
     97                        	db_c_s	c2,s11					;C12
-+   97 00:F6B8: 0D             .DB c2*$0006+s11/$0008
++   97 00:F6BB: 0D             .DB c2*$0006+s11/$0008
     98                        	db_c_s	c1,s9					;C13
-+   98 00:F6B9: 07             .DB c1*$0006+s9/$0008
++   98 00:F6BC: 07             .DB c1*$0006+s9/$0008
     99                        	db_c_s	c1,s10					;C14
-+   99 00:F6BA: 07             .DB c1*$0006+s10/$0008
++   99 00:F6BD: 07             .DB c1*$0006+s10/$0008
    100                        	db_c_s	c2,s12					;C15
-+  100 00:F6BB: 0D             .DB c2*$0006+s12/$0008
++  100 00:F6BE: 0D             .DB c2*$0006+s12/$0008
    101                        	db_c_s	c0,s8					;C16
-+  101 00:F6BC: 01             .DB c0*$0006+s8/$0008
++  101 00:F6BF: 01             .DB c0*$0006+s8/$0008
    102                        	db_c_s	c1,s11					;C17
-+  102 00:F6BD: 07             .DB c1*$0006+s11/$0008
++  102 00:F6C0: 07             .DB c1*$0006+s11/$0008
    103                        	db_c_s	c1,s12					;C18
-+  103 00:F6BE: 07             .DB c1*$0006+s12/$0008
++  103 00:F6C1: 07             .DB c1*$0006+s12/$0008
    104                        	db_c_s	c0,s9					;C19
-+  104 00:F6BF: 01             .DB c0*$0006+s9/$0008
++  104 00:F6C2: 01             .DB c0*$0006+s9/$0008
    105                        	db_c_s	c0,s10					;C20
-+  105 00:F6C0: 01             .DB c0*$0006+s10/$0008
++  105 00:F6C3: 01             .DB c0*$0006+s10/$0008
    106                        	db_c_s	c0,s11					;C21
-+  106 00:F6C1: 01             .DB c0*$0006+s11/$0008
++  106 00:F6C4: 01             .DB c0*$0006+s11/$0008
    107                        
    108                        lcd_d4	.equ lcd_d3+21
    109                        	db_c_s	c4,s13					;D1
-+  109 00:F6C2: 19             .DB c4*$0006+s13/$0008
++  109 00:F6C5: 19             .DB c4*$0006+s13/$0008
    110                        	db_c_s	c4,s14					;D2
-+  110 00:F6C3: 19             .DB c4*$0006+s14/$0008
++  110 00:F6C6: 19             .DB c4*$0006+s14/$0008
    111                        	db_c_s	c4,s15					;D3
-+  111 00:F6C4: 19             .DB c4*$0006+s15/$0008
++  111 00:F6C7: 19             .DB c4*$0006+s15/$0008
    112                        	db_c_s	c4,s12					;D4
-+  112 00:F6C5: 19             .DB c4*$0006+s12/$0008
++  112 00:F6C8: 19             .DB c4*$0006+s12/$0008
    113                        	db_c_s	c3,s15					;D5
-+  113 00:F6C6: 13             .DB c3*$0006+s15/$0008
++  113 00:F6C9: 13             .DB c3*$0006+s15/$0008
    114                        	db_c_s	c3,s40					;D6
-+  114 00:F6C7: 17             .DB c3*$0006+s40/$0008
++  114 00:F6CA: 17             .DB c3*$0006+s40/$0008
    115                        	db_c_s	c3,s13					;D7
-+  115 00:F6C8: 13             .DB c3*$0006+s13/$0008
++  115 00:F6CB: 13             .DB c3*$0006+s13/$0008
    116                        	db_c_s	c3,s14					;D8
-+  116 00:F6C9: 13             .DB c3*$0006+s14/$0008
++  116 00:F6CC: 13             .DB c3*$0006+s14/$0008
    117                        	db_c_s	c2,s40					;D9
-+  117 00:F6CA: 11             .DB c2*$0006+s40/$0008
++  117 00:F6CD: 11             .DB c2*$0006+s40/$0008
    118                        	db_c_s	c2,s13					;D10
-+  118 00:F6CB: 0D             .DB c2*$0006+s13/$0008
++  118 00:F6CE: 0D             .DB c2*$0006+s13/$0008
    119                        	db_c_s	c2,s14					;D11
-+  119 00:F6CC: 0D             .DB c2*$0006+s14/$0008
++  119 00:F6CF: 0D             .DB c2*$0006+s14/$0008
    120                        	db_c_s	c2,s15					;D12
-+  120 00:F6CD: 0D             .DB c2*$0006+s15/$0008
++  120 00:F6D0: 0D             .DB c2*$0006+s15/$0008
    121                        	db_c_s	c1,s14					;D13
-+  121 00:F6CE: 07             .DB c1*$0006+s14/$0008
++  121 00:F6D1: 07             .DB c1*$0006+s14/$0008
    122                        	db_c_s	c1,s15					;D14
-+  122 00:F6CF: 07             .DB c1*$0006+s15/$0008
++  122 00:F6D2: 07             .DB c1*$0006+s15/$0008
    123                        	db_c_s	c1,s40					;D15
-+  123 00:F6D0: 0B             .DB c1*$0006+s40/$0008
++  123 00:F6D3: 0B             .DB c1*$0006+s40/$0008
    124                        	db_c_s	c1,s13					;D16
-+  124 00:F6D1: 07             .DB c1*$0006+s13/$0008
++  124 00:F6D4: 07             .DB c1*$0006+s13/$0008
    125                        	db_c_s	c0,s14					;D17
-+  125 00:F6D2: 01             .DB c0*$0006+s14/$0008
++  125 00:F6D5: 01             .DB c0*$0006+s14/$0008
    126                        	db_c_s	c0,s15					;D18
-+  126 00:F6D3: 01             .DB c0*$0006+s15/$0008
++  126 00:F6D6: 01             .DB c0*$0006+s15/$0008
    127                        	db_c_s	c0,s12					;D19
-+  127 00:F6D4: 01             .DB c0*$0006+s12/$0008
++  127 00:F6D7: 01             .DB c0*$0006+s12/$0008
    128                        	db_c_s	c0,s13					;D20
-+  128 00:F6D5: 01             .DB c0*$0006+s13/$0008
++  128 00:F6D8: 01             .DB c0*$0006+s13/$0008
    129                        	db_c_s	c0,s40					;D21
-+  129 00:F6D6: 05             .DB c0*$0006+s40/$0008
++  129 00:F6D9: 05             .DB c0*$0006+s40/$0008
    130                        
    131                        lcd_dot:
    132                        lcd_MS .equ lcd_dot-lcd_table1
    133                        	db_c_s	c4,s40					;MS
-+  133 00:F6D7: 1D             .DB c4*$0006+s40/$0008
++  133 00:F6DA: 1D             .DB c4*$0006+s40/$0008
    134                        
    135                        ;==========================================================
    136                        ;==========================================================
    137                        
    138                        Lcd_bit:
    139                        	db_c_y	c4,s0					;A1
-+  139 00:F6D8: 01             .DB $0001<<(s0-s0/$0008*$0008)
++  139 00:F6DB: 01             .DB $0001<<(s0-s0/$0008*$0008)
    140                        	db_c_y	c4,s1					;A2
-+  140 00:F6D9: 02             .DB $0001<<(s1-s1/$0008*$0008)
++  140 00:F6DC: 02             .DB $0001<<(s1-s1/$0008*$0008)
    141                        	db_c_y	c4,s2					;A3
-+  141 00:F6DA: 04             .DB $0001<<(s2-s2/$0008*$0008)
++  141 00:F6DD: 04             .DB $0001<<(s2-s2/$0008*$0008)
    142                        	db_c_y	c3,s0					;A4
-+  142 00:F6DB: 01             .DB $0001<<(s0-s0/$0008*$0008)
++  142 00:F6DE: 01             .DB $0001<<(s0-s0/$0008*$0008)
    143                        	db_c_y	c3,s1					;A5
-+  143 00:F6DC: 02             .DB $0001<<(s1-s1/$0008*$0008)
++  143 00:F6DF: 02             .DB $0001<<(s1-s1/$0008*$0008)
    144                        	db_c_y	c4,s3					;A6
-+  144 00:F6DD: 08             .DB $0001<<(s3-s3/$0008*$0008)
++  144 00:F6E0: 08             .DB $0001<<(s3-s3/$0008*$0008)
    145                        	db_c_y	c2,s0					;A7
-+  145 00:F6DE: 01             .DB $0001<<(s0-s0/$0008*$0008)
++  145 00:F6E1: 01             .DB $0001<<(s0-s0/$0008*$0008)
    146                        	db_c_y	c3,s2					;A8
-+  146 00:F6DF: 04             .DB $0001<<(s2-s2/$0008*$0008)
++  146 00:F6E2: 04             .DB $0001<<(s2-s2/$0008*$0008)
    147                        	db_c_y	c3,s3					;A9
-+  147 00:F6E0: 08             .DB $0001<<(s3-s3/$0008*$0008)
++  147 00:F6E3: 08             .DB $0001<<(s3-s3/$0008*$0008)
    148                        	db_c_y	c2,s1					;A10
-+  148 00:F6E1: 02             .DB $0001<<(s1-s1/$0008*$0008)
++  148 00:F6E4: 02             .DB $0001<<(s1-s1/$0008*$0008)
    149                        	db_c_y	c2,s2					;A11
-+  149 00:F6E2: 04             .DB $0001<<(s2-s2/$0008*$0008)
++  149 00:F6E5: 04             .DB $0001<<(s2-s2/$0008*$0008)
    150                        	db_c_y	c2,s3					;A12
-+  150 00:F6E3: 08             .DB $0001<<(s3-s3/$0008*$0008)
++  150 00:F6E6: 08             .DB $0001<<(s3-s3/$0008*$0008)
    151                        	db_c_y	c1,s0					;A13
-+  151 00:F6E4: 01             .DB $0001<<(s0-s0/$0008*$0008)
++  151 00:F6E7: 01             .DB $0001<<(s0-s0/$0008*$0008)
    152                        	db_c_y	c1,s3					;A14
-+  152 00:F6E5: 08             .DB $0001<<(s3-s3/$0008*$0008)
++  152 00:F6E8: 08             .DB $0001<<(s3-s3/$0008*$0008)
    153                        	db_c_y	c1,s4					;A15
-+  153 00:F6E6: 10             .DB $0001<<(s4-s4/$0008*$0008)
++  153 00:F6E9: 10             .DB $0001<<(s4-s4/$0008*$0008)
    154                        	db_c_y	c1,s1					;A16
-+  154 00:F6E7: 02             .DB $0001<<(s1-s1/$0008*$0008)
++  154 00:F6EA: 02             .DB $0001<<(s1-s1/$0008*$0008)
    155                        	db_c_y	c1,s2					;A17
-+  155 00:F6E8: 04             .DB $0001<<(s2-s2/$0008*$0008)
++  155 00:F6EB: 04             .DB $0001<<(s2-s2/$0008*$0008)
    156                        	db_c_y	c0,s3					;A18
-+  156 00:F6E9: 08             .DB $0001<<(s3-s3/$0008*$0008)
++  156 00:F6EC: 08             .DB $0001<<(s3-s3/$0008*$0008)
    157                        	db_c_y	c0,s0					;A19
-+  157 00:F6EA: 01             .DB $0001<<(s0-s0/$0008*$0008)
++  157 00:F6ED: 01             .DB $0001<<(s0-s0/$0008*$0008)
    158                        	db_c_y	c0,s1					;A20
-+  158 00:F6EB: 02             .DB $0001<<(s1-s1/$0008*$0008)
++  158 00:F6EE: 02             .DB $0001<<(s1-s1/$0008*$0008)
    159                        	db_c_y	c0,s2					;A21
-+  159 00:F6EC: 04             .DB $0001<<(s2-s2/$0008*$0008)
++  159 00:F6EF: 04             .DB $0001<<(s2-s2/$0008*$0008)
    160                        
    161                        	db_c_y	c4,s5					;B1
-+  161 00:F6ED: 20             .DB $0001<<(s5-s5/$0008*$0008)
++  161 00:F6F0: 20             .DB $0001<<(s5-s5/$0008*$0008)
    162                        	db_c_y	c4,s6					;B2
-+  162 00:F6EE: 40             .DB $0001<<(s6-s6/$0008*$0008)
++  162 00:F6F1: 40             .DB $0001<<(s6-s6/$0008*$0008)
    163                        	db_c_y	c4,s7					;B3
-+  163 00:F6EF: 80             .DB $0001<<(s7-s7/$0008*$0008)
++  163 00:F6F2: 80             .DB $0001<<(s7-s7/$0008*$0008)
    164                        	db_c_y	c4,s4					;B4
-+  164 00:F6F0: 10             .DB $0001<<(s4-s4/$0008*$0008)
++  164 00:F6F3: 10             .DB $0001<<(s4-s4/$0008*$0008)
    165                        	db_c_y	c3,s6					;B5
-+  165 00:F6F1: 40             .DB $0001<<(s6-s6/$0008*$0008)
++  165 00:F6F4: 40             .DB $0001<<(s6-s6/$0008*$0008)
    166                        	db_c_y	c3,s7					;B6
-+  166 00:F6F2: 80             .DB $0001<<(s7-s7/$0008*$0008)
++  166 00:F6F5: 80             .DB $0001<<(s7-s7/$0008*$0008)
    167                        	db_c_y	c3,s4					;B7
-+  167 00:F6F3: 10             .DB $0001<<(s4-s4/$0008*$0008)
++  167 00:F6F6: 10             .DB $0001<<(s4-s4/$0008*$0008)
    168                        	db_c_y	c3,s5					;B8
-+  168 00:F6F4: 20             .DB $0001<<(s5-s5/$0008*$0008)
++  168 00:F6F7: 20             .DB $0001<<(s5-s5/$0008*$0008)
    169                        	db_c_y	c2,s8					;B9
-+  169 00:F6F5: 01             .DB $0001<<(s8-s8/$0008*$0008)
++  169 00:F6F8: 01             .DB $0001<<(s8-s8/$0008*$0008)
    170                        	db_c_y	c2,s4					;B10
-+  170 00:F6F6: 10             .DB $0001<<(s4-s4/$0008*$0008)
++  170 00:F6F9: 10             .DB $0001<<(s4-s4/$0008*$0008)
    171                        	db_c_y	c2,s6					;B11
-+  171 00:F6F7: 40             .DB $0001<<(s6-s6/$0008*$0008)
++  171 00:F6FA: 40             .DB $0001<<(s6-s6/$0008*$0008)
    172                        	db_c_y	c2,s7					;B12
-+  172 00:F6F8: 80             .DB $0001<<(s7-s7/$0008*$0008)
++  172 00:F6FB: 80             .DB $0001<<(s7-s7/$0008*$0008)
    173                        	db_c_y	c2,s5					;B13
-+  173 00:F6F9: 20             .DB $0001<<(s5-s5/$0008*$0008)
++  173 00:F6FC: 20             .DB $0001<<(s5-s5/$0008*$0008)
    174                        	db_c_y	c1,s7					;B14
-+  174 00:F6FA: 80             .DB $0001<<(s7-s7/$0008*$0008)
++  174 00:F6FD: 80             .DB $0001<<(s7-s7/$0008*$0008)
    175                        	db_c_y	c1,s8					;B15
-+  175 00:F6FB: 01             .DB $0001<<(s8-s8/$0008*$0008)
++  175 00:F6FE: 01             .DB $0001<<(s8-s8/$0008*$0008)
    176                        	db_c_y	c1,s5					;B16
-+  176 00:F6FC: 20             .DB $0001<<(s5-s5/$0008*$0008)
++  176 00:F6FF: 20             .DB $0001<<(s5-s5/$0008*$0008)
    177                        	db_c_y	c1,s6					;B17
-+  177 00:F6FD: 40             .DB $0001<<(s6-s6/$0008*$0008)
++  177 00:F700: 40             .DB $0001<<(s6-s6/$0008*$0008)
    178                        	db_c_y	c0,s7					;B18
-+  178 00:F6FE: 80             .DB $0001<<(s7-s7/$0008*$0008)
++  178 00:F701: 80             .DB $0001<<(s7-s7/$0008*$0008)
    179                        	db_c_y	c0,s4					;B19
-+  179 00:F6FF: 10             .DB $0001<<(s4-s4/$0008*$0008)
++  179 00:F702: 10             .DB $0001<<(s4-s4/$0008*$0008)
    180                        	db_c_y	c0,s5					;B20
-+  180 00:F700: 20             .DB $0001<<(s5-s5/$0008*$0008)
++  180 00:F703: 20             .DB $0001<<(s5-s5/$0008*$0008)
    181                        	db_c_y	c0,s6					;B21
-+  181 00:F701: 40             .DB $0001<<(s6-s6/$0008*$0008)
++  181 00:F704: 40             .DB $0001<<(s6-s6/$0008*$0008)
    182                        
    183                        	db_c_y	c4,s8					;C1
-+  183 00:F702: 01             .DB $0001<<(s8-s8/$0008*$0008)
++  183 00:F705: 01             .DB $0001<<(s8-s8/$0008*$0008)
    184                        	db_c_y	c4,s9					;C2
-+  184 00:F703: 02             .DB $0001<<(s9-s9/$0008*$0008)
++  184 00:F706: 02             .DB $0001<<(s9-s9/$0008*$0008)
    185                        	db_c_y	c4,s10					;C3
-+  185 00:F704: 04             .DB $0001<<(s10-s10/$0008*$0008)
++  185 00:F707: 04             .DB $0001<<(s10-s10/$0008*$0008)
    186                        	db_c_y	c3,s8					;C4
-+  186 00:F705: 01             .DB $0001<<(s8-s8/$0008*$0008)
++  186 00:F708: 01             .DB $0001<<(s8-s8/$0008*$0008)
    187                        	db_c_y	c3,s11					;C5
-+  187 00:F706: 08             .DB $0001<<(s11-s11/$0008*$0008)
++  187 00:F709: 08             .DB $0001<<(s11-s11/$0008*$0008)
    188                        	db_c_y	c4,s11					;C6
-+  188 00:F707: 08             .DB $0001<<(s11-s11/$0008*$0008)
++  188 00:F70A: 08             .DB $0001<<(s11-s11/$0008*$0008)
    189                        	db_c_y	c3,s9					;C7
-+  189 00:F708: 02             .DB $0001<<(s9-s9/$0008*$0008)
++  189 00:F70B: 02             .DB $0001<<(s9-s9/$0008*$0008)
    190                        	db_c_y	c3,s10					;C8
-+  190 00:F709: 04             .DB $0001<<(s10-s10/$0008*$0008)
++  190 00:F70C: 04             .DB $0001<<(s10-s10/$0008*$0008)
    191                        	db_c_y	c3,s12					;C9
-+  191 00:F70A: 10             .DB $0001<<(s12-s12/$0008*$0008)
++  191 00:F70D: 10             .DB $0001<<(s12-s12/$0008*$0008)
    192                        	db_c_y	c2,s9					;C10
-+  192 00:F70B: 02             .DB $0001<<(s9-s9/$0008*$0008)
++  192 00:F70E: 02             .DB $0001<<(s9-s9/$0008*$0008)
    193                        	db_c_y	c2,s10					;C11
-+  193 00:F70C: 04             .DB $0001<<(s10-s10/$0008*$0008)
++  193 00:F70F: 04             .DB $0001<<(s10-s10/$0008*$0008)
    194                        	db_c_y	c2,s11					;C12
-+  194 00:F70D: 08             .DB $0001<<(s11-s11/$0008*$0008)
++  194 00:F710: 08             .DB $0001<<(s11-s11/$0008*$0008)
    195                        	db_c_y	c1,s9					;C13
-+  195 00:F70E: 02             .DB $0001<<(s9-s9/$0008*$0008)
++  195 00:F711: 02             .DB $0001<<(s9-s9/$0008*$0008)
    196                        	db_c_y	c1,s10					;C14
-+  196 00:F70F: 04             .DB $0001<<(s10-s10/$0008*$0008)
++  196 00:F712: 04             .DB $0001<<(s10-s10/$0008*$0008)
    197                        	db_c_y	c2,s12					;C15
-+  197 00:F710: 10             .DB $0001<<(s12-s12/$0008*$0008)
++  197 00:F713: 10             .DB $0001<<(s12-s12/$0008*$0008)
    198                        	db_c_y	c0,s8					;C16
-+  198 00:F711: 01             .DB $0001<<(s8-s8/$0008*$0008)
++  198 00:F714: 01             .DB $0001<<(s8-s8/$0008*$0008)
    199                        	db_c_y	c1,s11					;C17
-+  199 00:F712: 08             .DB $0001<<(s11-s11/$0008*$0008)
++  199 00:F715: 08             .DB $0001<<(s11-s11/$0008*$0008)
    200                        	db_c_y	c1,s12					;C18
-+  200 00:F713: 10             .DB $0001<<(s12-s12/$0008*$0008)
++  200 00:F716: 10             .DB $0001<<(s12-s12/$0008*$0008)
    201                        	db_c_y	c0,s9					;C19
-+  201 00:F714: 02             .DB $0001<<(s9-s9/$0008*$0008)
++  201 00:F717: 02             .DB $0001<<(s9-s9/$0008*$0008)
    202                        	db_c_y	c0,s10					;C20
-+  202 00:F715: 04             .DB $0001<<(s10-s10/$0008*$0008)
++  202 00:F718: 04             .DB $0001<<(s10-s10/$0008*$0008)
    203                        	db_c_y	c0,s11					;C21
-+  203 00:F716: 08             .DB $0001<<(s11-s11/$0008*$0008)
++  203 00:F719: 08             .DB $0001<<(s11-s11/$0008*$0008)
    204                        
    205                        	db_c_y	c4,s13					;D1
-+  205 00:F717: 20             .DB $0001<<(s13-s13/$0008*$0008)
++  205 00:F71A: 20             .DB $0001<<(s13-s13/$0008*$0008)
    206                        	db_c_y	c4,s14					;D2
-+  206 00:F718: 40             .DB $0001<<(s14-s14/$0008*$0008)
++  206 00:F71B: 40             .DB $0001<<(s14-s14/$0008*$0008)
    207                        	db_c_y	c4,s15					;D3
-+  207 00:F719: 80             .DB $0001<<(s15-s15/$0008*$0008)
++  207 00:F71C: 80             .DB $0001<<(s15-s15/$0008*$0008)
    208                        	db_c_y	c4,s12					;D4
-+  208 00:F71A: 10             .DB $0001<<(s12-s12/$0008*$0008)
++  208 00:F71D: 10             .DB $0001<<(s12-s12/$0008*$0008)
    209                        	db_c_y	c3,s15					;D5
-+  209 00:F71B: 80             .DB $0001<<(s15-s15/$0008*$0008)
++  209 00:F71E: 80             .DB $0001<<(s15-s15/$0008*$0008)
    210                        	db_c_y	c3,s40					;D6
-+  210 00:F71C: 01             .DB $0001<<(s40-s40/$0008*$0008)
++  210 00:F71F: 01             .DB $0001<<(s40-s40/$0008*$0008)
    211                        	db_c_y	c3,s13					;D7
-+  211 00:F71D: 20             .DB $0001<<(s13-s13/$0008*$0008)
++  211 00:F720: 20             .DB $0001<<(s13-s13/$0008*$0008)
    212                        	db_c_y	c3,s14					;D8
-+  212 00:F71E: 40             .DB $0001<<(s14-s14/$0008*$0008)
++  212 00:F721: 40             .DB $0001<<(s14-s14/$0008*$0008)
    213                        	db_c_y	c2,s40					;D9
-+  213 00:F71F: 01             .DB $0001<<(s40-s40/$0008*$0008)
++  213 00:F722: 01             .DB $0001<<(s40-s40/$0008*$0008)
    214                        	db_c_y	c2,s13					;D10
-+  214 00:F720: 20             .DB $0001<<(s13-s13/$0008*$0008)
++  214 00:F723: 20             .DB $0001<<(s13-s13/$0008*$0008)
    215                        	db_c_y	c2,s14					;D11
-+  215 00:F721: 40             .DB $0001<<(s14-s14/$0008*$0008)
++  215 00:F724: 40             .DB $0001<<(s14-s14/$0008*$0008)
    216                        	db_c_y	c2,s15					;D12
-+  216 00:F722: 80             .DB $0001<<(s15-s15/$0008*$0008)
++  216 00:F725: 80             .DB $0001<<(s15-s15/$0008*$0008)
    217                        	db_c_y	c1,s14					;D13
-+  217 00:F723: 40             .DB $0001<<(s14-s14/$0008*$0008)
++  217 00:F726: 40             .DB $0001<<(s14-s14/$0008*$0008)
    218                        	db_c_y	c1,s15					;D14
-+  218 00:F724: 80             .DB $0001<<(s15-s15/$0008*$0008)
++  218 00:F727: 80             .DB $0001<<(s15-s15/$0008*$0008)
    219                        	db_c_y	c1,s40					;D15
-+  219 00:F725: 01             .DB $0001<<(s40-s40/$0008*$0008)
++  219 00:F728: 01             .DB $0001<<(s40-s40/$0008*$0008)
    220                        	db_c_y	c1,s13					;D16
-+  220 00:F726: 20             .DB $0001<<(s13-s13/$0008*$0008)
++  220 00:F729: 20             .DB $0001<<(s13-s13/$0008*$0008)
    221                        	db_c_y	c0,s14					;D17
-+  221 00:F727: 40             .DB $0001<<(s14-s14/$0008*$0008)
++  221 00:F72A: 40             .DB $0001<<(s14-s14/$0008*$0008)
    222                        	db_c_y	c0,s15					;D18
-+  222 00:F728: 80             .DB $0001<<(s15-s15/$0008*$0008)
++  222 00:F72B: 80             .DB $0001<<(s15-s15/$0008*$0008)
    223                        	db_c_y	c0,s12					;D19
-+  223 00:F729: 10             .DB $0001<<(s12-s12/$0008*$0008)
++  223 00:F72C: 10             .DB $0001<<(s12-s12/$0008*$0008)
    224                        	db_c_y	c0,s13					;D20
-+  224 00:F72A: 20             .DB $0001<<(s13-s13/$0008*$0008)
++  224 00:F72D: 20             .DB $0001<<(s13-s13/$0008*$0008)
    225                        	db_c_y	c0,s40					;D21
-+  225 00:F72B: 01             .DB $0001<<(s40-s40/$0008*$0008)
++  225 00:F72E: 01             .DB $0001<<(s40-s40/$0008*$0008)
    226                        
    227                        	db_c_y	c4,s40					;MS
-+  227 00:F72C: 01             .DB $0001<<(s40-s40/$0008*$0008)
++  227 00:F72F: 01             .DB $0001<<(s40-s40/$0008*$0008)
    228                        ;=========================================
    228                        
    206                        .INCLUDE	Display.asm
      1                        F_Display_Time:
      2                            ; 调用显示函数显示当前时间
-     3 00:F72D: 15 BD F3      	JSR 	F_ClearScreen
-     4 00:F730: 15 37 F7          JSR 	L_DisTimer_Sec
-     5 00:F733: 15 4F F7          JSR 	L_DisTimer_Min
-     6 00:F736: 09                RTS
+     3 00:F730: 15 C0 F3      	JSR 	F_ClearScreen
+     4 00:F733: 15 3A F7          JSR 	L_DisTimer_Sec
+     5 00:F736: 15 52 F7          JSR 	L_DisTimer_Min
+     6 00:F739: 09                RTS
      7                        L_DisTimer_Sec:
-     8 00:F737: 73 B5         	LDA		R_Time_Sec
-     9 00:F739: 1B            	TAX
-    10 00:F73A: 63 D9 F7      	LDA		Table_Sec_DataDot,X
-    11 00:F73D: 0A            	PHA
-    12 00:F73E: 51 0F         	AND		#$0F
-    13 00:F740: 5E 3F         	LDX		#lcd_d4
-    14 00:F742: 15 ED F3      	JSR		L_Dis_21Bit_DigitDot_Prog
-    15 00:F745: 0C            	PLA
-    16 00:F746: 15 C1 F7      	JSR		L_ROR_4Bit_Prog
-    17 00:F749: 5E 2A         	LDX		#lcd_d3
-    18 00:F74B: 15 ED F3      	JSR		L_Dis_21Bit_DigitDot_Prog
-    19 00:F74E: 09            	RTS
+     8 00:F73A: 73 B5         	LDA		R_Time_Sec
+     9 00:F73C: 1B            	TAX
+    10 00:F73D: 63 E2 F7      	LDA		Table_Sec_DataDot,X
+    11 00:F740: 0A            	PHA
+    12 00:F741: 51 0F         	AND		#$0F
+    13 00:F743: 5E 3F         	LDX		#lcd_d4
+    14 00:F745: 15 F0 F3      	JSR		L_Dis_21Bit_DigitDot_Prog
+    15 00:F748: 0C            	PLA
+    16 00:F749: 15 CA F7      	JSR		L_ROR_4Bit_Prog
+    17 00:F74C: 5E 2A         	LDX		#lcd_d3
+    18 00:F74E: 15 F0 F3      	JSR		L_Dis_21Bit_DigitDot_Prog
+    19 00:F751: 09            	RTS
     20                        L_DisTimer_Min:
-    21 00:F74F: 73 B6         	LDA		R_Time_Min
-    22 00:F751: 1B            	TAX
-    23 00:F752: 63 16 F8      	LDA		Table_Min_DataDot,X
-    24 00:F755: 0A            	PHA
-    25 00:F756: 51 0F         	AND		#$0F
-    26 00:F758: 5E 15         	LDX		#lcd_d2
-    27 00:F75A: 15 ED F3      	JSR		L_Dis_21Bit_DigitDot_Prog
-    28 00:F75D: 0C            	PLA
-    29 00:F75E: 51 F0         	AND		#$F0
-    30 00:F760: 15 C1 F7      	JSR		L_ROR_4Bit_Prog
-    31 00:F763: 5E 00         	LDX		#lcd_d1
-    32 00:F765: 15 ED F3      	JSR		L_Dis_21Bit_DigitDot_Prog
-    33 00:F768: 09            	RTS
+    21 00:F752: 73 B6         	LDA		R_Time_Min
+    22 00:F754: 1B            	TAX
+    23 00:F755: 63 1F F8      	LDA		Table_Min_DataDot,X
+    24 00:F758: 0A            	PHA
+    25 00:F759: 51 0F         	AND		#$0F
+    26 00:F75B: 5E 15         	LDX		#lcd_d2
+    27 00:F75D: 15 F0 F3      	JSR		L_Dis_21Bit_DigitDot_Prog
+    28 00:F760: 0C            	PLA
+    29 00:F761: 51 F0         	AND		#$F0
+    30 00:F763: 15 CA F7      	JSR		L_ROR_4Bit_Prog
+    31 00:F766: 5E 00         	LDX		#lcd_d1
+    32 00:F768: 15 F0 F3      	JSR		L_Dis_21Bit_DigitDot_Prog
+    33 00:F76B: 09            	RTS
     34                        
     35                        F_DisFrame_Sec_d4:
-    36 00:F769: 73 B5         	lda		R_Time_Sec
-    37 00:F76B: 07            	dea
-    38 00:F76C: 1B            	tax
-    39 00:F76D: 63 D9 F7      	lda		Table_Sec_DataDot,X
-    40 00:F770: 51 0F         	and		#$0f								; 个位数字
-    41 00:F772: 04            	clc
-    42 00:F773: 18            	rol											; 乘8
-    43 00:F774: 18            	rol
-    44 00:F775: 18            	rol
-    45 00:F776: 04            	clc
-    46 00:F777: 74 AA         	adc		Frame_Counter
-    47 00:F779: 5E 3F         	ldx		#lcd_d4
-    48 00:F77B: 15 5B F4      	jsr		L_Dis_21Bit_DigitFrame_Prog
-    49 00:F77E: 09            	rts
+    36 00:F76C: 73 B5         	lda		R_Time_Sec
+    37 00:F76E: 07            	dea
+    38 00:F76F: 1B            	tax
+    39 00:F770: 63 E2 F7      	lda		Table_Sec_DataDot,X
+    40 00:F773: 51 0F         	and		#$0f								; 个位数字
+    41 00:F775: 04            	clc
+    42 00:F776: 18            	rol											; 乘8
+    43 00:F777: 18            	rol
+    44 00:F778: 18            	rol
+    45 00:F779: 04            	clc
+    46 00:F77A: 74 AA         	adc		Frame_Counter
+    47 00:F77C: 5E 3F         	ldx		#lcd_d4
+    48 00:F77E: 15 5E F4      	jsr		L_Dis_21Bit_DigitFrame_Prog
+    49 00:F781: 09            	rts
     50                        
     51                        F_DisFrame_Sec_d3:
-    52 00:F77F: 73 B5         	lda		R_Time_Sec
-    53 00:F781: 1B            	tax
-    54 00:F782: 63 D9 F7      	lda		Table_Sec_DataDot,X
-    55 00:F785: 51 F0         	and		#$f0								; 十位数字
-    56 00:F787: 15 C1 F7      	jsr		L_ROR_4Bit_Prog
-    57 00:F78A: 07            	dea
-    58 00:F78B: 04            	clc
-    59 00:F78C: 18            	rol											; 乘8
-    60 00:F78D: 18            	rol
-    61 00:F78E: 18            	rol
-    62 00:F78F: 04            	clc
-    63 00:F790: 74 AA         	adc		Frame_Counter
-    64 00:F792: 5E 2A         	ldx		#lcd_d3
-    65 00:F794: 15 AC F4      	jsr		L_Dis_21Bit_DigitFrame_Prog_1
-    66 00:F797: 09            	rts
+    52 00:F782: 73 B5         	lda		R_Time_Sec
+    53 00:F784: 1B            	tax
+    54 00:F785: 63 E2 F7      	lda		Table_Sec_DataDot,X
+    55 00:F788: 51 F0         	and		#$f0								; 十位数字
+    56 00:F78A: 15 CA F7      	jsr		L_ROR_4Bit_Prog
+    57 00:F78D: 07            	dea
+    58 00:F78E: 04            	clc
+    59 00:F78F: 18            	rol											; 乘8
+    60 00:F790: 18            	rol
+    61 00:F791: 18            	rol
+    62 00:F792: 04            	clc
+    63 00:F793: 74 AA         	adc		Frame_Counter
+    64 00:F795: 5E 2A         	ldx		#lcd_d3
+    65 00:F797: 15 AF F4      	jsr		L_Dis_21Bit_DigitFrame_Prog_1
+    66 00:F79A: 09            	rts
     67                        
     68                        F_DisFrame_Min_d2:
-    69 00:F798: 73 B6         	lda		R_Time_Min
-    70 00:F79A: 07            	dea
-    71 00:F79B: 1B            	tax
-    72 00:F79C: 63 16 F8      	lda		Table_Min_DataDot,X
-    73 00:F79F: 51 0F         	and		#$0f
-    74 00:F7A1: 04            	clc
-    75 00:F7A2: 18            	rol											; 乘8
-    76 00:F7A3: 18            	rol
-    77 00:F7A4: 18            	rol
-    78 00:F7A5: 04            	clc
-    79 00:F7A6: 74 AA         	adc		Frame_Counter
-    80 00:F7A8: 5E 15         	ldx		#lcd_d2
-    81 00:F7AA: 15 5B F4      	jsr		L_Dis_21Bit_DigitFrame_Prog
-    82 00:F7AD: 09            	rts
+    69 00:F79B: 73 B6         	lda		R_Time_Min
+    70 00:F79D: 07            	dea
+    71 00:F79E: 1B            	tax
+    72 00:F79F: 63 1F F8      	lda		Table_Min_DataDot,X
+    73 00:F7A2: 51 0F         	and		#$0f
+    74 00:F7A4: 04            	clc
+    75 00:F7A5: 18            	rol											; 乘8
+    76 00:F7A6: 18            	rol
+    77 00:F7A7: 18            	rol
+    78 00:F7A8: 04            	clc
+    79 00:F7A9: 74 AA         	adc		Frame_Counter
+    80 00:F7AB: 5E 15         	ldx		#lcd_d2
+    81 00:F7AD: 15 5E F4      	jsr		L_Dis_21Bit_DigitFrame_Prog
+    82 00:F7B0: 09            	rts
     83                        
     84                        F_DisFrame_Min_d1:
-    85 00:F7AE: 73 B6         	lda		R_Time_Min
-    86 00:F7B0: 1B            	tax
-    87 00:F7B1: 63 16 F8      	lda		Table_Min_DataDot,X
-    88 00:F7B4: 51 F0         	and		#$f0
-    89 00:F7B6: 04            	clc
-    90 00:F7B7: 19            	ror											; 右移4位再乘8,就是右移1位
-    91 00:F7B8: 04            	clc
-    92 00:F7B9: 74 AA         	adc		Frame_Counter
-    93 00:F7BB: 5E 00         	ldx		#lcd_d1
-    94 00:F7BD: 15 5B F4      	jsr		L_Dis_21Bit_DigitFrame_Prog
-    95                        
-    96 00:F7C0: 09            	rts
-    97                        
-    98                        L_ROR_4Bit_Prog:
-    99 00:F7C1: 19            	ROR
-   100 00:F7C2: 19            	ROR
-   101 00:F7C3: 19            	ROR
-   102 00:F7C4: 19            	ROR
-   103 00:F7C5: 51 0F         	AND		#$0F
-   104                        
-   105 00:F7C7: 09            	RTS
-   106                        
-   107                        ;a = num
-   108                        L_Multi_24_Prog:
-   109 00:F7C8: 04            	CLC									; 清除进位标志，确保进位为 0
-   110 00:F7C9: 1B            	TAX									; 将 A 保存到 X 中
-   111                            ; 进行乘以 8 的操作
-   112 00:F7CA: 18            	ROL									; A = A * 2
-   113 00:F7CB: 18            	ROL									; A = A * 4
-   114 00:F7CC: 18            	ROL									; A = A * 8
-   115 00:F7CD: 7F B8         	STA		P_Temp+1
-   116                        	; 进行乘以 16 的操作
-   117 00:F7CF: 1C            	TXA									; 恢复 X 中的原始 A 值
-   118 00:F7D0: 04            	CLC
-   119 00:F7D1: 18            	ROL									; A = A * 2
-   120 00:F7D2: 18            	ROL									; A = A * 4
-   121 00:F7D3: 18            	ROL									; A = A * 8
-   122 00:F7D4: 18            	ROL									; A = A * 16
-   123 00:F7D5: 04            	CLC
-   124 00:F7D6: 74 B8         	ADC		P_Temp+1					; 乘24得到表中0-9数字
-   125 00:F7D8: 09            	rts
-   126                        ;================================================
-   127                        ;********************************************
-   128                        Table_Sec_DataDot:		;显示秒对应显示的16进制
-   129 00:F7D9: 00            	.BYTE 	00h	;0
-   130 00:F7DA: 01            	.BYTE 	01h	;1
-   131 00:F7DB: 02            	.BYTE	02h	;2
-   132 00:F7DC: 03            	.BYTE	03h	;3
-   133 00:F7DD: 04            	.BYTE	04h	;4
-   134 00:F7DE: 05            	.BYTE	05h	;5
-   135 00:F7DF: 06            	.BYTE	06h	;6
-   136 00:F7E0: 07            	.BYTE	07h	;7
-   137 00:F7E1: 08            	.BYTE	08h	;8
-   138 00:F7E2: 09            	.BYTE	09h	;9
-   139 00:F7E3: 10            	.BYTE	10h	;10
-   140 00:F7E4: 11            	.BYTE 	11h	;11
-   141 00:F7E5: 12            	.BYTE	12h	;12
-   142 00:F7E6: 13            	.BYTE	13h	;13
-   143 00:F7E7: 14            	.BYTE	14h	;14
-   144 00:F7E8: 15            	.BYTE	15h	;15
-   145 00:F7E9: 16            	.BYTE 	16h	;16
-   146 00:F7EA: 17            	.BYTE 	17h	;17
-   147 00:F7EB: 18            	.BYTE	18h	;18
-   148 00:F7EC: 19            	.BYTE	19h	;19
-   149 00:F7ED: 20            	.BYTE	20h	;20
-   150 00:F7EE: 21            	.BYTE	21h	;21
-   151 00:F7EF: 22            	.BYTE	22h	;22
-   152 00:F7F0: 23            	.BYTE	23h	;23
-   153 00:F7F1: 24            	.BYTE	24h	;24
-   154 00:F7F2: 25            	.BYTE	25h	;25
-   155 00:F7F3: 26            	.BYTE	26h	;26
-   156 00:F7F4: 27            	.BYTE 	27h	;27
-   157 00:F7F5: 28            	.BYTE	28h	;28
-   158 00:F7F6: 29            	.BYTE	29h	;29
-   159 00:F7F7: 30            	.BYTE	30h	;30
-   160 00:F7F8: 31            	.BYTE	31h	;31
-   161 00:F7F9: 32            	.BYTE 	32h	;32
-   162 00:F7FA: 33            	.BYTE 	33h	;33
-   163 00:F7FB: 34            	.BYTE	34h	;34
-   164 00:F7FC: 35            	.BYTE	35h	;35
-   165 00:F7FD: 36            	.BYTE	36h	;36
-   166 00:F7FE: 37            	.BYTE	37h	;37
-   167 00:F7FF: 38            	.BYTE	38h	;38
-   168 00:F800: 39            	.BYTE	39h	;39
-   169 00:F801: 40            	.BYTE	40h	;40
-   170 00:F802: 41            	.BYTE	41h	;41
-   171 00:F803: 42            	.BYTE	42h	;42
-   172 00:F804: 43            	.BYTE 	43h	;43
-   173 00:F805: 44            	.BYTE	44h	;44
-   174 00:F806: 45            	.BYTE	45h	;45
-   175 00:F807: 46            	.BYTE	46h	;46
-   176 00:F808: 47            	.BYTE	47h	;47
-   177 00:F809: 48            	.BYTE 	48h	;48
-   178 00:F80A: 49            	.BYTE 	49h	;49
-   179 00:F80B: 50            	.BYTE	50h	;50
-   180 00:F80C: 51            	.BYTE	51h	;51
-   181 00:F80D: 52            	.BYTE	52h	;52
-   182 00:F80E: 53            	.BYTE	53h	;53
-   183 00:F80F: 54            	.BYTE	54h	;54
-   184 00:F810: 55            	.BYTE	55h	;55
-   185 00:F811: 56            	.BYTE	56h	;56
-   186 00:F812: 57            	.BYTE	57h	;57
-   187 00:F813: 58            	.BYTE	58h	;58
-   188 00:F814: 59            	.BYTE 	59h	;59
-   189 00:F815: 60            	.BYTE 	60h	;60
-   190                        
-   191                        Table_Min_DataDot:		;显示分钟对应显示的16进制
-   192 00:F816: 00            	.BYTE 	00h	;0
-   193 00:F817: 01            	.BYTE 	01h	;1
-   194 00:F818: 02            	.BYTE	02h	;2
-   195 00:F819: 03            	.BYTE	03h	;3
-   196 00:F81A: 04            	.BYTE	04h	;4
-   197 00:F81B: 05            	.BYTE	05h	;5
-   198 00:F81C: 06            	.BYTE	06h	;6
-   199 00:F81D: 07            	.BYTE	07h	;7
-   200 00:F81E: 08            	.BYTE	08h	;8
-   201 00:F81F: 09            	.BYTE	09h	;9
-   202 00:F820: 10            	.BYTE	10h	;10
-   203 00:F821: 11            	.BYTE 	11h	;11
-   204 00:F822: 12            	.BYTE	12h	;12
-   205 00:F823: 13            	.BYTE	13h	;13
-   206 00:F824: 14            	.BYTE	14h	;14
-   207 00:F825: 15            	.BYTE	15h	;15
-   208 00:F826: 16            	.BYTE 	16h	;16
-   209 00:F827: 17            	.BYTE 	17h	;17
-   210 00:F828: 18            	.BYTE	18h	;18
-   211 00:F829: 19            	.BYTE	19h	;19
-   212 00:F82A: 20            	.BYTE	20h	;20
-   213 00:F82B: 21            	.BYTE	21h	;21
-   214 00:F82C: 22            	.BYTE	22h	;22
-   215 00:F82D: 23            	.BYTE	23h	;23
-   216 00:F82E: 24            	.BYTE	24h	;24
-   217 00:F82F: 25            	.BYTE	25h	;25
-   218 00:F830: 26            	.BYTE	26h	;26
-   219 00:F831: 27            	.BYTE 	27h	;27
-   220 00:F832: 28            	.BYTE	28h	;28
-   221 00:F833: 29            	.BYTE	29h	;29
-   222 00:F834: 30            	.BYTE	30h	;30
-   223 00:F835: 31            	.BYTE	31h	;31
-   224 00:F836: 32            	.BYTE 	32h	;32
-   225 00:F837: 33            	.BYTE 	33h	;33
-   226 00:F838: 34            	.BYTE	34h	;34
-   227 00:F839: 35            	.BYTE	35h	;35
-   228 00:F83A: 36            	.BYTE	36h	;36
-   229 00:F83B: 37            	.BYTE	37h	;37
-   230 00:F83C: 38            	.BYTE	38h	;38
-   231 00:F83D: 39            	.BYTE	39h	;39
-   232 00:F83E: 40            	.BYTE	40h	;40
-   233 00:F83F: 41            	.BYTE	41h	;41
-   234 00:F840: 42            	.BYTE	42h	;42
-   235 00:F841: 43            	.BYTE 	43h	;43
-   236 00:F842: 44            	.BYTE	44h	;44
-   237 00:F843: 45            	.BYTE	45h	;45
-   238 00:F844: 46            	.BYTE	46h	;46
-   239 00:F845: 47            	.BYTE	47h	;47
-   240 00:F846: 48            	.BYTE 	48h	;48
-   241 00:F847: 49            	.BYTE 	49h	;49
-   242 00:F848: 50            	.BYTE	50h	;50
-   243 00:F849: 51            	.BYTE	51h	;51
-   244 00:F84A: 52            	.BYTE	52h	;52
-   245 00:F84B: 53            	.BYTE	53h	;53
-   246 00:F84C: 54            	.BYTE	54h	;54
-   247 00:F84D: 55            	.BYTE	55h	;55
-   248 00:F84E: 56            	.BYTE	56h	;56
-   249 00:F84F: 57            	.BYTE	57h	;57
-   250 00:F850: 58            	.BYTE	58h	;58
-   251 00:F851: 59            	.BYTE 	59h	;59
-   252 00:F852: 60            	.BYTE 	60h	;60
-   253 00:F853: 61            	.BYTE 	61h	;61
-   254 00:F854: 62            	.BYTE	62h	;62
-   255 00:F855: 63            	.BYTE	63h	;63
-   256 00:F856: 64            	.BYTE	64h	;64
-   257 00:F857: 65            	.BYTE	65h	;65
-   258 00:F858: 66            	.BYTE 	66h	;66
-   259 00:F859: 67            	.BYTE 	67h	;67
-   260 00:F85A: 68            	.BYTE	68h	;68
-   261 00:F85B: 69            	.BYTE	69h	;69
-   262 00:F85C: 70            	.BYTE	70h	;70
-   263 00:F85D: 71            	.BYTE	71h	;71
-   264 00:F85E: 72            	.BYTE	72h	;72
-   265 00:F85F: 73            	.BYTE	73h	;73
-   266 00:F860: 74            	.BYTE	74h	;74
-   267 00:F861: 75            	.BYTE	75h	;75
-   268 00:F862: 76            	.BYTE	76h	;76
-   269 00:F863: 77            	.BYTE 	77h	;77
-   270 00:F864: 78            	.BYTE	78h	;78
-   271 00:F865: 79            	.BYTE	79h	;79
-   272 00:F866: 80            	.BYTE	80h	;80
-   273 00:F867: 81            	.BYTE	81h	;81
-   274 00:F868: 82            	.BYTE 	82h	;82
-   275 00:F869: 83            	.BYTE 	83h	;83
-   276 00:F86A: 84            	.BYTE	84h	;84
-   277 00:F86B: 85            	.BYTE	85h	;85
-   278 00:F86C: 86            	.BYTE	86h	;86
-   279 00:F86D: 87            	.BYTE	87h	;87
-   280 00:F86E: 88            	.BYTE	88h	;88
-   281 00:F86F: 89            	.BYTE	89h	;89
-   282 00:F870: 90            	.BYTE	90h	;90
-   283 00:F871: 91            	.BYTE	91h	;91
-   284 00:F872: 92            	.BYTE	92h	;92
-   285 00:F873: 93            	.BYTE 	93h	;93
-   286 00:F874: 94            	.BYTE	94h	;94
-   287 00:F875: 95            	.BYTE	95h	;95
-   288 00:F876: 96            	.BYTE	96h	;96
-   289 00:F877: 97            	.BYTE	97h	;97
-   290 00:F878: 98            	.BYTE 	98h	;98
-   291 00:F879: 99            	.BYTE 	99h	;99
-   292 00:F87A: 00            	.BYTE 	00h	;100
-   292                        
+    85 00:F7B1: 73 B6         	lda		R_Time_Min
+    86 00:F7B3: 1B            	tax
+    87 00:F7B4: 63 1F F8      	lda		Table_Min_DataDot,X
+    88 00:F7B7: 51 F0         	and		#$f0
+    89 00:F7B9: 15 CA F7      	jsr		L_ROR_4Bit_Prog
+    90 00:F7BC: 07            	dea
+    91 00:F7BD: 04            	clc
+    92 00:F7BE: 18            	rol											; 乘8
+    93 00:F7BF: 18            	rol
+    94 00:F7C0: 18            	rol											; 右移4位再乘8,就是右移1位
+    95 00:F7C1: 04            	clc
+    96 00:F7C2: 74 AA         	adc		Frame_Counter
+    97 00:F7C4: 5E 00         	ldx		#lcd_d1
+    98 00:F7C6: 15 5E F4      	jsr		L_Dis_21Bit_DigitFrame_Prog
+    99                        
+   100 00:F7C9: 09            	rts
+   101                        
+   102                        L_ROR_4Bit_Prog:
+   103 00:F7CA: 19            	ROR
+   104 00:F7CB: 19            	ROR
+   105 00:F7CC: 19            	ROR
+   106 00:F7CD: 19            	ROR
+   107 00:F7CE: 51 0F         	AND		#$0F
+   108                        
+   109 00:F7D0: 09            	RTS
+   110                        
+   111                        ;a = num
+   112                        L_Multi_24_Prog:
+   113 00:F7D1: 04            	CLC									; 清除进位标志，确保进位为 0
+   114 00:F7D2: 1B            	TAX									; 将 A 保存到 X 中
+   115                            ; 进行乘以 8 的操作
+   116 00:F7D3: 18            	ROL									; A = A * 2
+   117 00:F7D4: 18            	ROL									; A = A * 4
+   118 00:F7D5: 18            	ROL									; A = A * 8
+   119 00:F7D6: 7F B8         	STA		P_Temp+1
+   120                        	; 进行乘以 16 的操作
+   121 00:F7D8: 1C            	TXA									; 恢复 X 中的原始 A 值
+   122 00:F7D9: 04            	CLC
+   123 00:F7DA: 18            	ROL									; A = A * 2
+   124 00:F7DB: 18            	ROL									; A = A * 4
+   125 00:F7DC: 18            	ROL									; A = A * 8
+   126 00:F7DD: 18            	ROL									; A = A * 16
+   127 00:F7DE: 04            	CLC
+   128 00:F7DF: 74 B8         	ADC		P_Temp+1					; 乘24得到表中0-9数字
+   129 00:F7E1: 09            	rts
+   130                        ;================================================
+   131                        ;********************************************
+   132                        Table_Sec_DataDot:		;显示秒对应显示的16进制
+   133 00:F7E2: 00            	.BYTE 	00h	;0
+   134 00:F7E3: 01            	.BYTE 	01h	;1
+   135 00:F7E4: 02            	.BYTE	02h	;2
+   136 00:F7E5: 03            	.BYTE	03h	;3
+   137 00:F7E6: 04            	.BYTE	04h	;4
+   138 00:F7E7: 05            	.BYTE	05h	;5
+   139 00:F7E8: 06            	.BYTE	06h	;6
+   140 00:F7E9: 07            	.BYTE	07h	;7
+   141 00:F7EA: 08            	.BYTE	08h	;8
+   142 00:F7EB: 09            	.BYTE	09h	;9
+   143 00:F7EC: 10            	.BYTE	10h	;10
+   144 00:F7ED: 11            	.BYTE 	11h	;11
+   145 00:F7EE: 12            	.BYTE	12h	;12
+   146 00:F7EF: 13            	.BYTE	13h	;13
+   147 00:F7F0: 14            	.BYTE	14h	;14
+   148 00:F7F1: 15            	.BYTE	15h	;15
+   149 00:F7F2: 16            	.BYTE 	16h	;16
+   150 00:F7F3: 17            	.BYTE 	17h	;17
+   151 00:F7F4: 18            	.BYTE	18h	;18
+   152 00:F7F5: 19            	.BYTE	19h	;19
+   153 00:F7F6: 20            	.BYTE	20h	;20
+   154 00:F7F7: 21            	.BYTE	21h	;21
+   155 00:F7F8: 22            	.BYTE	22h	;22
+   156 00:F7F9: 23            	.BYTE	23h	;23
+   157 00:F7FA: 24            	.BYTE	24h	;24
+   158 00:F7FB: 25            	.BYTE	25h	;25
+   159 00:F7FC: 26            	.BYTE	26h	;26
+   160 00:F7FD: 27            	.BYTE 	27h	;27
+   161 00:F7FE: 28            	.BYTE	28h	;28
+   162 00:F7FF: 29            	.BYTE	29h	;29
+   163 00:F800: 30            	.BYTE	30h	;30
+   164 00:F801: 31            	.BYTE	31h	;31
+   165 00:F802: 32            	.BYTE 	32h	;32
+   166 00:F803: 33            	.BYTE 	33h	;33
+   167 00:F804: 34            	.BYTE	34h	;34
+   168 00:F805: 35            	.BYTE	35h	;35
+   169 00:F806: 36            	.BYTE	36h	;36
+   170 00:F807: 37            	.BYTE	37h	;37
+   171 00:F808: 38            	.BYTE	38h	;38
+   172 00:F809: 39            	.BYTE	39h	;39
+   173 00:F80A: 40            	.BYTE	40h	;40
+   174 00:F80B: 41            	.BYTE	41h	;41
+   175 00:F80C: 42            	.BYTE	42h	;42
+   176 00:F80D: 43            	.BYTE 	43h	;43
+   177 00:F80E: 44            	.BYTE	44h	;44
+   178 00:F80F: 45            	.BYTE	45h	;45
+   179 00:F810: 46            	.BYTE	46h	;46
+   180 00:F811: 47            	.BYTE	47h	;47
+   181 00:F812: 48            	.BYTE 	48h	;48
+   182 00:F813: 49            	.BYTE 	49h	;49
+   183 00:F814: 50            	.BYTE	50h	;50
+   184 00:F815: 51            	.BYTE	51h	;51
+   185 00:F816: 52            	.BYTE	52h	;52
+   186 00:F817: 53            	.BYTE	53h	;53
+   187 00:F818: 54            	.BYTE	54h	;54
+   188 00:F819: 55            	.BYTE	55h	;55
+   189 00:F81A: 56            	.BYTE	56h	;56
+   190 00:F81B: 57            	.BYTE	57h	;57
+   191 00:F81C: 58            	.BYTE	58h	;58
+   192 00:F81D: 59            	.BYTE 	59h	;59
+   193 00:F81E: 60            	.BYTE 	60h	;60
+   194                        
+   195                        Table_Min_DataDot:		;显示分钟对应显示的16进制
+   196 00:F81F: 00            	.BYTE 	00h	;0
+   197 00:F820: 01            	.BYTE 	01h	;1
+   198 00:F821: 02            	.BYTE	02h	;2
+   199 00:F822: 03            	.BYTE	03h	;3
+   200 00:F823: 04            	.BYTE	04h	;4
+   201 00:F824: 05            	.BYTE	05h	;5
+   202 00:F825: 06            	.BYTE	06h	;6
+   203 00:F826: 07            	.BYTE	07h	;7
+   204 00:F827: 08            	.BYTE	08h	;8
+   205 00:F828: 09            	.BYTE	09h	;9
+   206 00:F829: 10            	.BYTE	10h	;10
+   207 00:F82A: 11            	.BYTE 	11h	;11
+   208 00:F82B: 12            	.BYTE	12h	;12
+   209 00:F82C: 13            	.BYTE	13h	;13
+   210 00:F82D: 14            	.BYTE	14h	;14
+   211 00:F82E: 15            	.BYTE	15h	;15
+   212 00:F82F: 16            	.BYTE 	16h	;16
+   213 00:F830: 17            	.BYTE 	17h	;17
+   214 00:F831: 18            	.BYTE	18h	;18
+   215 00:F832: 19            	.BYTE	19h	;19
+   216 00:F833: 20            	.BYTE	20h	;20
+   217 00:F834: 21            	.BYTE	21h	;21
+   218 00:F835: 22            	.BYTE	22h	;22
+   219 00:F836: 23            	.BYTE	23h	;23
+   220 00:F837: 24            	.BYTE	24h	;24
+   221 00:F838: 25            	.BYTE	25h	;25
+   222 00:F839: 26            	.BYTE	26h	;26
+   223 00:F83A: 27            	.BYTE 	27h	;27
+   224 00:F83B: 28            	.BYTE	28h	;28
+   225 00:F83C: 29            	.BYTE	29h	;29
+   226 00:F83D: 30            	.BYTE	30h	;30
+   227 00:F83E: 31            	.BYTE	31h	;31
+   228 00:F83F: 32            	.BYTE 	32h	;32
+   229 00:F840: 33            	.BYTE 	33h	;33
+   230 00:F841: 34            	.BYTE	34h	;34
+   231 00:F842: 35            	.BYTE	35h	;35
+   232 00:F843: 36            	.BYTE	36h	;36
+   233 00:F844: 37            	.BYTE	37h	;37
+   234 00:F845: 38            	.BYTE	38h	;38
+   235 00:F846: 39            	.BYTE	39h	;39
+   236 00:F847: 40            	.BYTE	40h	;40
+   237 00:F848: 41            	.BYTE	41h	;41
+   238 00:F849: 42            	.BYTE	42h	;42
+   239 00:F84A: 43            	.BYTE 	43h	;43
+   240 00:F84B: 44            	.BYTE	44h	;44
+   241 00:F84C: 45            	.BYTE	45h	;45
+   242 00:F84D: 46            	.BYTE	46h	;46
+   243 00:F84E: 47            	.BYTE	47h	;47
+   244 00:F84F: 48            	.BYTE 	48h	;48
+   245 00:F850: 49            	.BYTE 	49h	;49
+   246 00:F851: 50            	.BYTE	50h	;50
+   247 00:F852: 51            	.BYTE	51h	;51
+   248 00:F853: 52            	.BYTE	52h	;52
+   249 00:F854: 53            	.BYTE	53h	;53
+   250 00:F855: 54            	.BYTE	54h	;54
+   251 00:F856: 55            	.BYTE	55h	;55
+   252 00:F857: 56            	.BYTE	56h	;56
+   253 00:F858: 57            	.BYTE	57h	;57
+   254 00:F859: 58            	.BYTE	58h	;58
+   255 00:F85A: 59            	.BYTE 	59h	;59
+   256 00:F85B: 60            	.BYTE 	60h	;60
+   257 00:F85C: 61            	.BYTE 	61h	;61
+   258 00:F85D: 62            	.BYTE	62h	;62
+   259 00:F85E: 63            	.BYTE	63h	;63
+   260 00:F85F: 64            	.BYTE	64h	;64
+   261 00:F860: 65            	.BYTE	65h	;65
+   262 00:F861: 66            	.BYTE 	66h	;66
+   263 00:F862: 67            	.BYTE 	67h	;67
+   264 00:F863: 68            	.BYTE	68h	;68
+   265 00:F864: 69            	.BYTE	69h	;69
+   266 00:F865: 70            	.BYTE	70h	;70
+   267 00:F866: 71            	.BYTE	71h	;71
+   268 00:F867: 72            	.BYTE	72h	;72
+   269 00:F868: 73            	.BYTE	73h	;73
+   270 00:F869: 74            	.BYTE	74h	;74
+   271 00:F86A: 75            	.BYTE	75h	;75
+   272 00:F86B: 76            	.BYTE	76h	;76
+   273 00:F86C: 77            	.BYTE 	77h	;77
+   274 00:F86D: 78            	.BYTE	78h	;78
+   275 00:F86E: 79            	.BYTE	79h	;79
+   276 00:F86F: 80            	.BYTE	80h	;80
+   277 00:F870: 81            	.BYTE	81h	;81
+   278 00:F871: 82            	.BYTE 	82h	;82
+   279 00:F872: 83            	.BYTE 	83h	;83
+   280 00:F873: 84            	.BYTE	84h	;84
+   281 00:F874: 85            	.BYTE	85h	;85
+   282 00:F875: 86            	.BYTE	86h	;86
+   283 00:F876: 87            	.BYTE	87h	;87
+   284 00:F877: 88            	.BYTE	88h	;88
+   285 00:F878: 89            	.BYTE	89h	;89
+   286 00:F879: 90            	.BYTE	90h	;90
+   287 00:F87A: 91            	.BYTE	91h	;91
+   288 00:F87B: 92            	.BYTE	92h	;92
+   289 00:F87C: 93            	.BYTE 	93h	;93
+   290 00:F87D: 94            	.BYTE	94h	;94
+   291 00:F87E: 95            	.BYTE	95h	;95
+   292 00:F87F: 96            	.BYTE	96h	;96
+   293 00:F880: 97            	.BYTE	97h	;97
+   294 00:F881: 98            	.BYTE 	98h	;98
+   295 00:F882: 99            	.BYTE 	99h	;99
+   296 00:F883: 00            	.BYTE 	00h	;100
+   296                        
    207                        .INCLUDE	Delay.asm
      1                        F_Delay_100ms:
-     2 00:F87B: 0A            	pha
+     2 00:F884: 0A            	pha
      3                        	TMR2_ON
-+    3 00:F87C: 2A 16          SMB2 TMRC
-     4 00:F87E: 53 01         	lda			#$1
++    3 00:F885: 2A 16          SMB2 TMRC
+     4 00:F887: 53 01         	lda			#$1
      5                        L_Delay_Tmp:
-     6 00:F880: 37 AC FD      	bbr7		Timer_Flag,L_Delay_Tmp
-     7 00:F883: 27 AC         	rmb7		Timer_Flag
-     8 00:F885: 07            	dea
-     9 00:F886: 12 F8         	bne			L_Delay_Tmp
+     6 00:F889: 37 AC FD      	bbr7		Timer_Flag,L_Delay_Tmp
+     7 00:F88C: 27 AC         	rmb7		Timer_Flag
+     8 00:F88E: 07            	dea
+     9 00:F88F: 12 F8         	bne			L_Delay_Tmp
     10                        
     11                        	TMR2_OFF
-+   11 00:F888: 22 16          RMB2 TMRC
-    12 00:F88A: 0C            	pla
-    13 00:F88B: 09            	rts
++   11 00:F891: 22 16          RMB2 TMRC
+    12 00:F893: 0C            	pla
+    13 00:F894: 09            	rts
     14                        
     14                        
    208                        ;--------------------------------------------------------
    209                        ;***********************************************************************
-   210 00:F88C: FF FF FF FF   	.BLKB	$FFFF-$,$FF
-   210 00:F88C: FF FF FF FF   
-   210 00:F88C: FF FF FF FF   
+   210 00:F895: FF FF FF FF   	.BLKB	$FFFF-$,$FF
+   210 00:F895: FF FF FF FF   
+   210 00:F895: FF FF FF FF   
    211                        
    212                        	.ORG	0FFF8H
    213 00:FFF8: DF            	DB		11011111B	;3DH	;AC=PA3,bit54=01,4KBRom ;BR4M ;PA上拉或悬空

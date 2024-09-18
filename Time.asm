@@ -44,8 +44,8 @@ L_Sec_Pos_rts:
 
 L_CarryToMin:
 	lda		R_Time_Min
-	cmp		#99
-	beq		L_Time_Overflow					; 分钟溢出动画
+	cmp		#100
+	beq		L_Time_Overflow					; 计满99min59s则为溢出
 
 	jsr		F_DisFrame_Sec_d4				; Sec个位走时动画
 	jsr		F_DisFrame_Sec_d3				; Sec十位走时动画
@@ -65,7 +65,6 @@ L_Min_D1_Out:
 	lda		Frame_Counter
 	cmp		#$08
 	beq		L_Min_Pos_Out
-	
 	ldx		#lcd_MS
 	jsr		F_ClrpSymbol
 	rts
@@ -80,10 +79,11 @@ L_Min_Pos_Out:
 L_Time_Overflow:
 	lda		#$0c							; 正计时溢出则进入倒计时暂停态
 	sta		Sys_Status_Flag
-	jsr		F_DisFrame_Min_d1
-	jsr		F_DisFrame_Min_d2
-	jsr		F_DisFrame_Sec_d3
-	jsr		F_DisFrame_Sec_d4
+	lda		#99
+	sta		R_Time_Min
+	lda		#59
+	sta		R_Time_Sec
+	jsr		F_Display_Time
 	rts
 
 ; 增时独立于动画显示进行

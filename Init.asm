@@ -1,8 +1,6 @@
 L_Init_SystemRam_Prog:							; 系统初始化
-	LDA		#0
-	STA		R_Time_Sec
-	STA		R_Time_Min
-	STA		Key_Flag
+	lda		#0
+	sta		Key_Flag
 	sta		Beep_Serial
 	sta		Counter_4Hz
 	sta		Counter_1Hz
@@ -11,10 +9,15 @@ L_Init_SystemRam_Prog:							; 系统初始化
 	sta		TimeCnt
 	sta		CC1
 	lda		#$01
-	STA		Timer_Flag
+	sta		Timer_Flag
 	sta		Sys_Status_Flag
 
-	RTS
+	lda		#0
+	sta		R_Time_Min
+	lda		#0
+	sta		R_Time_Sec
+
+	rts
 
 
 F_LCD_Init:

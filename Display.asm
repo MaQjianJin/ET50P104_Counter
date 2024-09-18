@@ -86,8 +86,12 @@ F_DisFrame_Min_d1:
 	tax
 	lda		Table_Min_DataDot,X
 	and		#$f0
+	jsr		L_ROR_4Bit_Prog
+	dea
 	clc
-	ror											; 右移4位再乘8,就是右移1位
+	rol											; 乘8
+	rol
+	rol											; 右移4位再乘8,就是右移1位
 	clc
 	adc		Frame_Counter
 	ldx		#lcd_d1
