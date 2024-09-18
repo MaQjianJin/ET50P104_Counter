@@ -47,17 +47,30 @@ L_CarryToMin:
 	cmp		#99
 	beq		L_Time_Overflow					; 分钟溢出动画
 
-	jsr		F_DisFrame_Min_d1
-	jsr		F_DisFrame_Min_d2
-	jsr		F_DisFrame_Sec_d3
-	jsr		F_DisFrame_Sec_d4
+	jsr		F_DisFrame_Sec_d4				; Sec个位走时动画
+	jsr		F_DisFrame_Sec_d3				; Sec十位走时动画
+	jsr		F_DisFrame_Min_d2				; Min个位走时动画
 
+	lda		R_Time_Min						; 检测十位有没有进位
+	jsr		F_DivideBy10					; 除以10的结果不为零，且余数为0才执行十位的动画
+	cmp		#0								; 商为0则一定无十位，d3无动画
+	beq		L_Min_D1_Out
+	lda		P_Temp							; 余数不为0也不更新十位
+	cmp		#0
+	bne		L_Min_D1_Out
+
+	jsr		F_DisFrame_Min_d1				; Min十位走时动画
+
+L_Min_D1_Out:
 	lda		Frame_Counter
 	cmp		#$08
-	beq		L_Carry_Out
+	beq		L_Min_Pos_Out
+	
+	ldx		#lcd_MS
+	jsr		F_ClrpSymbol
 	rts
 
-L_Carry_Out:
+L_Min_Pos_Out:
 	ldx		#lcd_MS
 	jsr		F_DispSymbol
 	lda		#0
@@ -77,6 +90,8 @@ L_Time_Overflow:
 Pos_Time_Count:
 	rmb1	Timer_Flag
 	lda		R_Time_Sec
+	cmp		#59
+	beq		Count_Add_Min
 	cmp		#60
 	beq		Count_CarryToMin				; 秒数满则进位分钟数
 	inc		R_Time_Sec
@@ -85,8 +100,11 @@ Count_CarryToMin:
 	lda		R_Time_Min
 	cmp		#99
 	beq		Count_Overflow
-	lda		#$0
+	lda		#$1
 	sta		R_Time_Sec
+	rts
+Count_Add_Min:
+	inc		R_Time_Sec
 	inc		R_Time_Min
 	rts
 Count_Overflow:
@@ -116,13 +134,7 @@ Done:
 
 
 
-
-
-
-
-
-
-
+; 倒计时部分
 F_Sec_Des_Counter:
 	bbs0	Timer_Flag, L_Sec_des_Out	; 若有半秒标志，说明还没到计数时候，闪MS并退出
 

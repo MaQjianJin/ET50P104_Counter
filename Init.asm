@@ -1,4 +1,4 @@
-L_Init_SystemRam_Prog:							; ï¿½Ú´ï¿½ï¿½Ê¼ï¿½ï¿½
+L_Init_SystemRam_Prog:							; ÏµÍ³³õÊ¼»¯
 	LDA		#0
 	STA		R_Time_Sec
 	STA		R_Time_Min
@@ -18,30 +18,30 @@ L_Init_SystemRam_Prog:							; ï¿½Ú´ï¿½ï¿½Ê¼ï¿½ï¿½
 
 
 F_LCD_Init:
-	jsr		F_ClearScreen						;ï¿½ï¿½ï¿½Ô´ï¿½
+	jsr		F_ClearScreen						; LCD³õÊ¼»¯
 	CHECK_LCD
 
-	PC45_SEG									; PCï¿½ï¿½PDï¿½ï¿½ï¿½ï¿½SEGÄ£Ê½
+	PC45_SEG									; ÅäÖÃIO¿ÚÎªSEGÏßÄ£Ê½
 	PC67_SEG
 	PD03_SEG
 	PD47_SEG
 
-	RMB0	P_LCD_COM							; ï¿½ï¿½ï¿½ï¿½COMï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½5ï¿½ï¿½ï¿½ï¿½
+	RMB0	P_LCD_COM							; ÅäÖÃCOMÏßÊýÁ¿
 	SMB1	P_LCD_COM
 
 	LCD_ON
-	jsr		F_ClearScreen						;ï¿½ï¿½ï¿½Ô´ï¿½
+	jsr		F_ClearScreen						; ÇåÆÁ
 
 	rts
 
 
 F_Port_Init:
-	LDA		#$A4								; PA2\5\7ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½
+	LDA		#$A4								; PA2\5\7×÷°´¼üÊäÈë
 	STA		P_PA_WAKE
-	STA		P_PA_IO								; ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½Ä´ï¿½ï¿½ï¿½
+	STA		P_PA_IO
 	LDA		#$FF
 	STA		P_PA
-	EN_PA_IRQ									; ï¿½ï¿½PAï¿½Ë¿ï¿½ï¿½â²¿ï¿½Ð¶ï¿½
+	EN_PA_IRQ									; ´ò¿ªPA¿ÚÍâ²¿ÖÐ¶Ï
 
 	PB2_PWM
 	PB3_PB3_COMS
@@ -50,20 +50,20 @@ F_Port_Init:
 
 
 F_Timer_Init:
-	TMR1_CLK_512Hz								; TIM1Ê±ï¿½ï¿½Ô´ÎªFsub/64ï¿½ï¿½512Hzï¿½ï¿½
-	TMR0_CLK_FSUB								; TIM0Ê±ï¿½ï¿½Ô´ÎªFsubï¿½ï¿½32768ï¿½ï¿½
-	DIV_512HZ									; DIVÔ¤ï¿½ï¿½ÆµÎª512Hz
+	TMR1_CLK_512Hz								; TIM1Ê±ÖÓÔ´Fsub/64(512Hz)
+	TMR0_CLK_FSUB								; TIM0Ê±ÖÓÔ´Fsub(32768Hz)
+	DIV_512HZ									; DIV·ÖÆµ512Hz
 
-	lda		#$0									; ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×°ï¿½ï¿½Öµ
+	lda		#$0									; ÖØ×°ÔØ¼ÆÊýÉèÖÃÎª0
 	sta		TMR0
 	sta		TMR2
 
 	lda		#$ef
 	sta		TMR1
 
-	rmb6	DIVC								; ï¿½ï¿½Ö¹ï¿½ï¿½Ê±ï¿½ï¿½Í¬ï¿½ï¿½
+	rmb6	DIVC								; ¹Ø±Õ¶¨Ê±Æ÷Í¬²½
 
-	EN_TMR1_IRQ									; ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½Ð¶ï¿½
+	EN_TMR1_IRQ									; ¿ª¶¨Ê±Æ÷ÖÐ¶Ï
 	EN_TMR2_IRQ
 	EN_TMR0_IRQ
 	TMR0_ON
@@ -74,7 +74,7 @@ F_Timer_Init:
 
 
 F_Beep_Init:
-	TONE_2KHZ
+	TONE_2KHZ									; ÅäÖÃ·äÃùÆ÷Òôµ÷ÆµÂÊ
 	lda		#$0
 	sta		AUDCR
 	lda		#$ff

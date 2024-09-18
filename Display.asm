@@ -37,7 +37,6 @@ F_DisFrame_Sec_d4:
 	dea
 	tax
 	lda		Table_Sec_DataDot,X
-
 	and		#$0f								; 个位数字
 	clc
 	rol											; 乘8
@@ -64,16 +63,18 @@ F_DisFrame_Sec_d3:
 	adc		Frame_Counter
 	ldx		#lcd_d3
 	jsr		L_Dis_21Bit_DigitFrame_Prog_1
-
 	rts
 
 F_DisFrame_Min_d2:
-	lda		R_Time_Sec
+	lda		R_Time_Min
+	dea
 	tax
-	lda		Table_Sec_DataDot,X
-
+	lda		Table_Min_DataDot,X
 	and		#$0f
-	jsr		L_Multi_24_Prog
+	clc
+	rol											; 乘8
+	rol
+	rol
 	clc
 	adc		Frame_Counter
 	ldx		#lcd_d2
@@ -81,12 +82,12 @@ F_DisFrame_Min_d2:
 	rts
 
 F_DisFrame_Min_d1:
-	lda		R_Time_Sec
+	lda		R_Time_Min
 	tax
-	lda		Table_Sec_DataDot,X
+	lda		Table_Min_DataDot,X
 	and		#$f0
-	jsr		L_ROR_4Bit_Prog
-	jsr		L_Multi_24_Prog
+	clc
+	ror											; 右移4位再乘8,就是右移1位
 	clc
 	adc		Frame_Counter
 	ldx		#lcd_d1
@@ -108,7 +109,7 @@ L_Multi_24_Prog:
 	CLC									; 清除进位标志，确保进位为 0
 	TAX									; 将 A 保存到 X 中
     ; 进行乘以 8 的操作
-	ROL									; A = A * 2 
+	ROL									; A = A * 2
 	ROL									; A = A * 4
 	ROL									; A = A * 8
 	STA		P_Temp+1
@@ -185,7 +186,7 @@ Table_Sec_DataDot:		;显示秒对应显示的16进制
 	.BYTE	57h	;57
 	.BYTE	58h	;58
 	.BYTE 	59h	;59
-	.BYTE 	00h	;60
+	.BYTE 	60h	;60
 
 Table_Min_DataDot:		;显示分钟对应显示的16进制
 	.BYTE 	00h	;0
