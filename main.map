@@ -1,0 +1,23 @@
+Modules list:
+-------------
+main.o:
+    ZEROPAGE          Offs = 000000   Size = 000047
+    PROG              Offs = 000000   Size = 001005
+
+
+Segment list:
+-------------
+Name                  Start   End     Size
+--------------------------------------------
+ZEROPAGE              000080  0000C6  000047
+PROG                  00FFFC  011000  001005
+
+
+Exports list:
+-------------
+
+
+
+Imports list:
+-------------
+
