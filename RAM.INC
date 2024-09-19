@@ -54,9 +54,8 @@ Key_Flag				DS		1
 ;bit2 = 1 按键处理
 
 Frame_Flag				DS		1
-;bit0 = 1 帧更新标志位
-;bit1 = 1 首帧偏移
-;bit2 = 1 首次计时
+;bit0 = 1 计时开始
+
 
 P_PA_IO_Backup      	DS	1	;B
 P_PA_Backup         	DS	1	;C

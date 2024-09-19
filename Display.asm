@@ -34,7 +34,9 @@ L_DisTimer_Min:
 
 F_DisFrame_Sec_d4:
 	lda		R_Time_Sec
-	dea
+	bbs2	Sys_Status_Flag,Des_Revise4
+	dea											; 正计时计数动画要-1修正
+Des_Revise4:
 	tax
 	lda		Table_Sec_DataDot,X
 	and		#$0f								; 个位数字
@@ -53,7 +55,9 @@ F_DisFrame_Sec_d3:
 	lda		Table_Sec_DataDot,X
 	and		#$f0								; 十位数字
 	jsr		L_ROR_4Bit_Prog
-	dea
+	bbs2	Sys_Status_Flag,Des_Revise3
+	dea											; 正计时计数动画要-1修正
+Des_Revise3:
 	clc
 	rol											; 乘8
 	rol
@@ -65,7 +69,9 @@ F_DisFrame_Sec_d3:
 
 F_DisFrame_Min_d2:
 	lda		R_Time_Min
-	dea
+	bbs2	Sys_Status_Flag,Des_Revise2
+	dea											; 正计时计数动画要-1修正
+Des_Revise2:
 	tax
 	lda		Table_Min_DataDot,X
 	and		#$0f
@@ -84,7 +90,9 @@ F_DisFrame_Min_d1:
 	lda		Table_Min_DataDot,X
 	and		#$f0
 	jsr		L_ROR_4Bit_Prog
-	dea
+	bbs2	Sys_Status_Flag,Des_Revise1
+	dea											; 正计时计数动画要-1修正
+Des_Revise1:
 	clc
 	rol											; 乘8
 	rol
@@ -122,15 +130,15 @@ L_ROR_4Bit_Prog:
 
 ;a = num
 L_Multi_24_Prog:
-	CLC									; 清除进位标志，确保进位为 0
-	TAX									; 将 A 保存到 X 中
+	CLC									; 清除进位标志，确保进位为0
+	TAX									; 将A保存到X中
     ; 进行乘以 8 的操作
 	ROL									; A = A * 2
 	ROL									; A = A * 4
 	ROL									; A = A * 8
 	STA		P_Temp+1
 	; 进行乘以 16 的操作
-	TXA									; 恢复 X 中的原始 A 值
+	TXA									; 恢复X中的原始A值
 	CLC
 	ROL									; A = A * 2
 	ROL									; A = A * 4
