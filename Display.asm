@@ -42,8 +42,7 @@ F_DisFrame_Sec_d4:
 	rol											; ≥À8
 	rol
 	rol
-	clc
-	adc		Frame_Counter
+	jsr		L_Judge_Count_Oder
 	ldx		#lcd_d4
 	jsr		L_Dis_21Bit_DigitFrame_Prog  
 	rts
@@ -59,8 +58,7 @@ F_DisFrame_Sec_d3:
 	rol											; ≥À8
 	rol
 	rol
-	clc
-	adc		Frame_Counter
+	jsr		L_Judge_Count_Oder
 	ldx		#lcd_d3
 	jsr		L_Dis_21Bit_DigitFrame_Prog_1
 	rts
@@ -75,8 +73,7 @@ F_DisFrame_Min_d2:
 	rol											; ≥À8
 	rol
 	rol
-	clc
-	adc		Frame_Counter
+	jsr		L_Judge_Count_Oder
 	ldx		#lcd_d2
 	jsr		L_Dis_21Bit_DigitFrame_Prog
 	rts
@@ -92,12 +89,27 @@ F_DisFrame_Min_d1:
 	rol											; ≥À8
 	rol
 	rol											; ”““∆4Œª‘Ÿ≥À8,æÕ «”““∆1Œª
-	clc
-	adc		Frame_Counter
+	jsr		L_Judge_Count_Oder
 	ldx		#lcd_d1
 	jsr		L_Dis_21Bit_DigitFrame_Prog
 
 	rts
+
+
+L_Judge_Count_Oder:
+	bbs1	Sys_Status_Flag,L_Pos_Mode
+	bbs2	Sys_Status_Flag,L_Des_Mode
+	rts
+
+L_Pos_Mode:
+	clc
+	adc		Frame_Counter
+	rts
+L_Des_Mode:
+	sec
+	sbc		Frame_Counter
+	rts
+
 
 L_ROR_4Bit_Prog:
 	ROR		

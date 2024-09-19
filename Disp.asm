@@ -162,7 +162,7 @@ L_Dis_21Bit_DigitFrame_Prog_1:
 	ADC		P_Temp
 
 	TAX
-	LDA		Table_Digit_Anim_2,X			; 将显示的数字通过查表找到对应的段码存进A
+	LDA		Table_Digit_Anim_2,X		; 将显示的数字通过查表找到对应的段码存进A
 	STA		P_Temp						; 暂存低八位段码值到P_Temp
 	INX
 	LDA		Table_Digit_Anim_2,X			; 将显示的数字通过查表找到对应的段码存进A
@@ -185,11 +185,11 @@ L_Judge_Dis_21Bit_DigitFrame_1:				; 显示循环的开始
 	ROR		P_Temp						; 循环右移取得目标段是亮或者灭
 	ROR		P_Temp+1
 	ROR		P_Temp+2
-	BCC		L_CLR_Frame_1					; 当前段的值若是0则进清点子程序
+	BCC		L_CLR_Frame_1				; 当前段的值若是0则进清点子程序
 	LDA		LCD_RamAddr,X				; 将目标段的显存的特定bit位置1来打亮
 	ORA		P_Temp+5
 	STA		LCD_RamAddr,X
-	BRA		L_Inc_Dis_FrameIndex_Prog_1		; 跳转到显示索引增加的子程序。
+	BRA		L_Inc_Dis_FrameIndex_Prog_1	; 跳转到显示索引增加的子程序。
 L_CLR_Frame_1:	
 	LDA		LCD_RamAddr,X				; 加载LCD RAM的地址
 	ORA		P_Temp+5					; 将COM和SEG信息与LCD RAM地址进行逻辑或操作

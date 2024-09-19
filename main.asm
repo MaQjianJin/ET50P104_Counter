@@ -105,6 +105,8 @@ Status_Pos:
 	bra		MainLoop
 Status_Des:
 	jsr		F_Sec_Des_Counter
+	bbr1	Timer_Flag,MainLoop
+	jsr		Des_Time_Count
 	bra		MainLoop
 Status_Pause:
 
