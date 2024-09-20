@@ -34,9 +34,9 @@ L_DisTimer_Min:
 
 F_DisFrame_Sec_d4:
 	lda		R_Time_Sec
-	bbs2	Sys_Status_Flag,Des_Revise4
-	dea											; 正计时计数动画要-1修正
-Des_Revise4:
+	bbs2	Sys_Status_Flag,Des_Frame_Cnt4		; 倒计时预-1不需要修正
+	dea											; 计数动画要-1修正
+Des_Frame_Cnt4:										; 计数动画要-1修正
 	tax
 	lda		Table_Sec_DataDot,X
 	and		#$0f								; 个位数字
@@ -44,7 +44,8 @@ Des_Revise4:
 	rol											; 乘8
 	rol
 	rol
-	jsr		L_Judge_Count_Oder
+	clc
+	adc		Frame_Counter
 	ldx		#lcd_d4
 	jsr		L_Dis_21Bit_DigitFrame_Prog  
 	rts
@@ -55,23 +56,22 @@ F_DisFrame_Sec_d3:
 	lda		Table_Sec_DataDot,X
 	and		#$f0								; 十位数字
 	jsr		L_ROR_4Bit_Prog
-	bbs2	Sys_Status_Flag,Des_Revise3
-	dea											; 正计时计数动画要-1修正
-Des_Revise3:
+	bbs2	Sys_Status_Flag,Des_Frame_Cnt3		; 倒计时预-1不需要修正
+	dea											; 计数动画要-1修正
+Des_Frame_Cnt3:
 	clc
 	rol											; 乘8
 	rol
 	rol
-	jsr		L_Judge_Count_Oder
+	clc
+	adc		Frame_Counter
 	ldx		#lcd_d3
 	jsr		L_Dis_21Bit_DigitFrame_Prog_1
 	rts
 
 F_DisFrame_Min_d2:
 	lda		R_Time_Min
-	bbs2	Sys_Status_Flag,Des_Revise2
 	dea											; 正计时计数动画要-1修正
-Des_Revise2:
 	tax
 	lda		Table_Min_DataDot,X
 	and		#$0f
@@ -79,7 +79,8 @@ Des_Revise2:
 	rol											; 乘8
 	rol
 	rol
-	jsr		L_Judge_Count_Oder
+	clc
+	adc		Frame_Counter
 	ldx		#lcd_d2
 	jsr		L_Dis_21Bit_DigitFrame_Prog
 	rts
@@ -90,32 +91,16 @@ F_DisFrame_Min_d1:
 	lda		Table_Min_DataDot,X
 	and		#$f0
 	jsr		L_ROR_4Bit_Prog
-	bbs2	Sys_Status_Flag,Des_Revise1
 	dea											; 正计时计数动画要-1修正
-Des_Revise1:
 	clc
 	rol											; 乘8
 	rol
 	rol											; 右移4位再乘8,就是右移1位
-	jsr		L_Judge_Count_Oder
+	clc
+	adc		Frame_Counter
 	ldx		#lcd_d1
 	jsr		L_Dis_21Bit_DigitFrame_Prog
 
-	rts
-
-
-L_Judge_Count_Oder:
-	bbs1	Sys_Status_Flag,L_Pos_Mode
-	bbs2	Sys_Status_Flag,L_Des_Mode
-	rts
-
-L_Pos_Mode:
-	clc
-	adc		Frame_Counter
-	rts
-L_Des_Mode:
-	sec
-	sbc		Frame_Counter
 	rts
 
 

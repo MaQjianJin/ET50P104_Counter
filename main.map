@@ -1,7 +1,7 @@
 Modules list:
 -------------
 main.o:
-    ZEROPAGE          Offs = 000000   Size = 000047
+    ZEROPAGE          Offs = 000000   Size = 000046
     PROG              Offs = 000000   Size = 001005
 
 
@@ -9,7 +9,7 @@ Segment list:
 -------------
 Name                  Start   End     Size
 --------------------------------------------
-ZEROPAGE              000080  0000C6  000047
+ZEROPAGE              000080  0000C5  000046
 PROG                  00FFFC  011000  001005
 
 

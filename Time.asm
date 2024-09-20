@@ -111,6 +111,8 @@ Count_Overflow:
 	lda		#$0
 	sta		R_Time_Sec
 	sta		R_Time_Min
+	TMR2_OFF
+	TMR0_OFF
 	rts
 
 
@@ -136,21 +138,31 @@ Done:
 
 ; 倒计时部分
 F_Sec_Des_Counter:
-	lda		Timer_Flag
-	and		#$81							; 半秒和16hz计时必须有一个为1
-	cmp		#$80
-	bne		L_Sec_Des_rts
-	rmb7	Timer_Flag						; 每16Hz走一帧动画
+	bbs0	Timer_Flag, Is_Frame_Come		; 半秒为0时进判断帧
+	rts
+; 判断是否需要减时，还是单纯的动画帧
+Is_Frame_Come:
+	bbr1	Timer_Flag,Add_Sec_Out			; 有走时标志则减时
+	dec		R_Time_Sec
+	rmb1	Timer_Flag						; 动画要播放8帧，减时只减1次
+; 若16Hz没到，不进动画
+Add_Sec_Out:
+	bbs7	Timer_Flag, Count_Start			; 无16Hz标志则不走帧
+	rts
 
-	inc		Frame_Counter					; 帧计数
+Count_Start:
+	lda		Frame_Counter					; 测试用，监视帧计数的值
+	dec		Frame_Counter					; 帧计数
 
 	lda		R_Time_Sec						; 借位
-	cmp		#00
+	cmp		#59
 	beq		L_BorrowToMin					; 秒借位分动画
 
 	jsr		F_DisFrame_Sec_d4				; sec个位走时动画
 
 	lda		R_Time_Sec						; 检测秒十位有没有借位
+	clc
+	adc		#$01							; 由于是计时是减1才进动画，这里加1才是正常的当前秒数
 	jsr		F_DivideBy10					; 除以10的结果不为零，且余数为0才执行十位的动画
 	cmp		#0								; 商为0则一定无十位，d3无动画
 	beq		L_Sec_D3_Out_Des
@@ -162,26 +174,36 @@ F_Sec_Des_Counter:
 
 
 L_Sec_D3_Out_Des:
-	lda		Frame_Counter					; 走到第8帧就结束动画播放
-	cmp		#$08
+	lda		Frame_Counter					; 走到第8帧就重置帧计数
+	cmp		#$0
 	beq		L_Sec_Des_Out
 
 	ldx		#lcd_MS
 	jsr		F_ClrpSymbol					; 若没走完动画则熄MS
 
+	rmb7	Timer_Flag						; 清掉16Hz标志，避免没到16Hz就重复进入动画
+
 	rts
 
 L_Sec_Des_Out:
-	ldx		#lcd_MS							; 亮MS并清空帧计数
+	rmb0	Timer_Flag						; 所有动画帧走完后即为后半秒
+	rmb7	Timer_Flag						; 清掉16Hz标志
+	ldx		#lcd_MS							; 亮MS并重置帧计数
 	jsr		F_DispSymbol
-	lda		#0
+	lda		#$8
 	sta		Frame_Counter
 
 L_Sec_Des_rts:
 	rts
 
 L_BorrowToMin:
+	bbs1	Frame_Flag,Dec_Once_Min			; 借位减分钟，播放8帧动画，但减时只减1次
+	dec		R_Time_Min
+	smb1	Frame_Flag
+Dec_Once_Min:
 	lda		R_Time_Min
+	clc
+	adc		#01
 	cmp		#00
 	beq		L_Time_Stop						; 计到00:00则停止
 
@@ -201,20 +223,28 @@ L_BorrowToMin:
 
 L_Min_D1_Out_Des:
 	lda		Frame_Counter					; 还在走动画就熄MS
-	cmp		#$08
+	cmp		#$0
 	beq		L_Min_Des_Out
 	ldx		#lcd_MS
 	jsr		F_ClrpSymbol
+	dec		R_Time_Min
 	rts
 
 L_Min_Des_Out:
-	ldx		#lcd_MS							; 走到第8帧就清空帧计数
+	rmb1	Frame_Flag						; 借位动画完成，置0标志位以便下次借位
+	ldx		#lcd_MS							; 走到第8帧就重置帧计数
 	jsr		F_DispSymbol					; 不走动画了就亮MS
-	lda		#0
+	lda		#$8
 	sta		Frame_Counter
 	rts
 
 L_Time_Stop:
+	lda		Frame_Counter
+	cmp		#0
+	beq		L_Time_Stop_Over
+	jsr		F_DisFrame_Sec_d4
+	rts
+L_Time_Stop_Over:
 	lda		#$01							; 倒计时完成则回到初始态
 	sta		Sys_Status_Flag
 	smb3	Timer_Flag						; 计时完成标志位
@@ -227,10 +257,10 @@ L_Time_Stop:
 ; 减时独立于动画显示进行
 Des_Time_Count:
 	rmb1	Timer_Flag
+	lda		#$08
+	sta		Frame_Counter
 	lda		R_Time_Sec
 	cmp		#01
-	beq		Count_Dec_Min					; 减到1就需要发生借位
-	cmp		#00								; 因为这时播放的是1-0的动画
 	beq		Count_BorrowToMin				; 秒数满则借位分钟数
 	dec		R_Time_Sec
 	rts
@@ -238,15 +268,15 @@ Count_BorrowToMin:
 	lda		R_Time_Min
 	cmp		#00
 	beq		Count_Stop						; 若借位时分钟已经为0，则计数停止
-	lda		#$60
+	lda		#60
 	sta		R_Time_Sec
-	rts
-Count_Dec_Min:
-	dec		R_Time_Sec
 	dec		R_Time_Min
 	rts
+
 Count_Stop:		
 	lda		#$0
 	sta		R_Time_Sec
 	sta		R_Time_Min
+	TMR2_OFF
+	TMR0_OFF
 	rts

@@ -7,9 +7,9 @@ L_Init_SystemRam_Prog:							; 系统初始化
 	sta		Counter_16Hz
 	sta		Frame_Counter
 	sta		TimeCnt
-	sta		CC1
-	lda		#$01
 	sta		Timer_Flag
+
+	lda		#$01
 	sta		Sys_Status_Flag
 
 	lda		#0
@@ -55,7 +55,7 @@ F_Port_Init:
 F_Timer_Init:
 	TMR1_CLK_512Hz								; TIM1时钟源Fsub/64(512Hz)
 	TMR0_CLK_FSUB								; TIM0时钟源Fsub(32768Hz)
-	DIV_512HZ									; DIV分频512Hz
+	DIV_256HZ									; DIV分频512Hz
 
 	lda		#$0									; 重装载计数设置为0
 	sta		TMR0
@@ -69,9 +69,9 @@ F_Timer_Init:
 	EN_TMR1_IRQ									; 开定时器中断
 	EN_TMR2_IRQ
 	EN_TMR0_IRQ
-	TMR0_ON
+	TMR0_OFF
 	TMR1_OFF
-	TMR2_ON
+	TMR2_OFF
 
 	rts
 

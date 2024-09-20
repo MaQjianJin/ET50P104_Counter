@@ -62,16 +62,16 @@ V_RESET:
 ;***********************************************************************
 MainLoop:
 main:
-	lda		Timer_Flag				; 判断是否需要响铃
+	lda		Timer_Flag							; 判断是否需要响铃
 	and		#$0c
 	cmp		#$00
 	beq		Beep_Out
 	jsr		F_Beep_Manage
 
 Beep_Out:
-	bbs1	Key_Flag,Key_QA_Out		; 首次触发必定进扫键
-	bbr6	Timer_Flag,Key_Out		; 必须有4Hz计时标志才能进扫键
-	rmb6	Timer_Flag				; 清4Hz标志
+	bbs1	Key_Flag,Key_QA_Out					; 首次触发必定进扫键
+	bbr6	Timer_Flag,Key_Out					; 必须有4Hz计时标志才能进扫键
+	rmb6	Timer_Flag							; 清4Hz标志
 	bbs4	Timer_Flag,Key_QA_Out
 	inc		Counter_1Hz
 	lda		Counter_1Hz
@@ -79,14 +79,14 @@ Beep_Out:
 	bcc		Key_QA_Out
 	lda		#$0
 	sta		Counter_1Hz
-	smb4	Timer_Flag				; 长按1s就给快加标志
+	smb4	Timer_Flag							; 长按1s就给快加标志
 
 Key_QA_Out:
-	smb0	Key_Flag				; 扫键标志位
+	smb0	Key_Flag							; 扫键标志位
 
 Key_Flag_Out:
 	bbr0	Key_Flag,Key_Out 
-	jsr		F_Key_Trigger			; 有按键按下和长按延时到了才扫键
+	jsr		F_Key_Trigger						; 有按键按下和长按延时到了才扫键
 
 Key_Out:
 	; 判断处于那种状态，并进入对应状态的处理
@@ -105,8 +105,6 @@ Status_Pos:
 	bra		MainLoop
 Status_Des:
 	jsr		F_Sec_Des_Counter
-	bbr1	Timer_Flag,MainLoop
-	jsr		Des_Time_Count
 	bra		MainLoop
 Status_Pause:
 
@@ -136,24 +134,14 @@ L_DivIrq:
 
 L_Timer2Irq:
 	CLR_TMR2_IRQ_FLAG
-	lda		Timer_Flag				; 翻转半秒标志
-	eor		#$1
-	sta		Timer_Flag
-	lda		CC1
-	cmp		#$1
-	beq		Add_1s_Flag
-	inc		CC1
-	bra		L_EndIrq
-Add_1s_Flag:
-	smb1	Timer_Flag
-	lda		#0
-	sta		CC1
-	bra		L_EndIrq
+	smb0	Timer_Flag							; 半秒标志，定时器本身是1秒
+	smb1	Timer_Flag							; 走时标志，第一次进计数子程序需要走时
+	bra		L_EndIrq							; 下半秒由动画完成时定义
 
 L_Timer0Irq:
 	CLR_TMR0_IRQ_FLAG
-	lda		Counter_16Hz			; 帧计时
-	cmp		#8
+	lda		Counter_16Hz						; 帧计时
+	cmp		#4
 	bcc		L_16Hz_Count_Out
 	lda		#0
 	sta		Counter_16Hz
@@ -172,8 +160,8 @@ L_PaIrp:
 	CLR_KEY_IRQ_FLAG
 
 	smb0	Key_Flag
-	smb1	Key_Flag				; 首次触发
-	rmb4	Timer_Flag				; 快加标志位
+	smb1	Key_Flag							; 首次触发
+	rmb4	Timer_Flag							; 快加标志位
 	rmb6	Timer_Flag
 
 	EN_LCD_IRQ

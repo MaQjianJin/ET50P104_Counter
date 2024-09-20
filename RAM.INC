@@ -20,8 +20,6 @@ LCDRAM					DS		6*6
 
 R_Int_Backup			DS		1
 
-CC1						DS		1
-
 Counter_1Hz				DS		1
 Counter_4Hz				DS		1
 Counter_16Hz			DS		1
@@ -34,7 +32,7 @@ Beep_Serial				DS		1
 
 Timer_Flag				DS		1
 ;bit0 = 1 半秒标志
-;bit1 = 1 1秒标志
+;bit1 = 1 走时标志
 ;bit2 = 1 按键提示音标志位
 ;bit3 = 1 计时完成标志位
 ;bit4 = 1 快加标志位
@@ -55,6 +53,7 @@ Key_Flag				DS		1
 
 Frame_Flag				DS		1
 ;bit0 = 1 计时开始
+;bit1 = 1 分钟借位
 
 
 P_PA_IO_Backup      	DS	1	;B
