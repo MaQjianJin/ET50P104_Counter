@@ -7,7 +7,7 @@ F_Beep_Manage:
 	cmp		#$0
 	beq		L_Beep_Over
 	
-	bbr0	Beep_Serial,L_No_Beep			; 判断响铃序列第一位，为1就响，为0就不响
+	bbr0	Beep_Serial,L_No_Beep			; 判断响铃序列第1位，为1就响，为0就不响
 	smb7	TMRC
 	dec		Beep_Serial
 	bra		L_Beep_rts
