@@ -1,4 +1,15 @@
 F_Sec_Pos_Counter:
+	bbs0	Timer_Flag, Is_Frame_Come_Pos		; 半秒为0时，判断帧计时
+	rts
+; 判断是否需要减时，还是单纯的动画帧
+Is_Frame_Come_Pos:
+	bbr1	Timer_Flag,Add_Sec_Out_Pos			; 有走时标志则减时
+	inc		R_Time_Sec
+	rmb1	Timer_Flag						; 动画放8帧，减秒只减一次
+; 没有16Hz则不进动画
+Add_Sec_Out_Pos:
+	bbs7	Timer_Flag, Count_Start
+	rts
 	lda		Timer_Flag
 	and		#$81							; ?????16hz?????????????1
 	cmp		#$80
