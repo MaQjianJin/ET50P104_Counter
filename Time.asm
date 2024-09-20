@@ -155,7 +155,7 @@ Count_Start:
 	dec		Frame_Counter					; 帧计数
 
 	lda		R_Time_Sec						; 借位
-	cmp		#59
+	cmp		#00
 	beq		L_BorrowToMin					; 秒借位分动画
 
 	jsr		F_DisFrame_Sec_d4				; sec个位走时动画
