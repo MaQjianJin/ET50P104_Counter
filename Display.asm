@@ -34,9 +34,6 @@ L_DisTimer_Min:
 
 F_DisFrame_Sec_d4:
 	lda		R_Time_Sec
-	bbs2	Sys_Status_Flag,Des_Frame_Cnt4		; 倒计时预-1不需要修正
-	dea											; 计数动画要-1修正
-Des_Frame_Cnt4:										; 计数动画要-1修正
 	tax
 	lda		Table_Sec_DataDot,X
 	and		#$0f								; 个位数字

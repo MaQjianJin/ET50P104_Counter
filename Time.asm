@@ -1,38 +1,37 @@
 F_Sec_Pos_Counter:
-	bbs0	Timer_Flag, Is_Frame_Come_Pos		; åŠç§’ä¸º0æ—¶ï¼Œåˆ¤æ–­å¸§è®¡æ—¶
+	bbs0	Timer_Flag, Is_Frame_Come_Pos		; °ëÃëÎª1Ê±£¬ÅĞ¶ÏÖ¡¼ÆÊ±
 	rts
-; åˆ¤æ–­æ˜¯å¦éœ€è¦å‡æ—¶ï¼Œè¿˜æ˜¯å•çº¯çš„åŠ¨ç”»å¸§
+; ÅĞ¶ÏÊÇ·ñĞèÒªÔöÊ±£¬»¹ÊÇµ¥´¿µÄ¶¯»­Ö¡
 Is_Frame_Come_Pos:
-	bbr1	Timer_Flag,Add_Sec_Out_Pos			; æœ‰èµ°æ—¶æ ‡å¿—åˆ™å‡æ—¶
+	bbr1	Timer_Flag,Add_Sec_Out_Pos			; ÓĞ×ßÊ±±êÖ¾ÔòÔöÊ±
 	inc		R_Time_Sec
-	rmb1	Timer_Flag						; åŠ¨ç”»æ”¾8å¸§ï¼Œå‡ç§’åªå‡ä¸€æ¬¡
-; æ²¡æœ‰16Hzåˆ™ä¸è¿›åŠ¨ç”»
+	rmb1	Timer_Flag							; ¶¯»­·Å8Ö¡£¬¼õÃëÖ»¼õÒ»´Î
+; Ã»ÓĞ16HzÔò²»½ø¶¯»­
 Add_Sec_Out_Pos:
-	bbs7	Timer_Flag, Count_Start
+	bbs7	Timer_Flag, Count_Start_Pos
 	rts
-	lda		Timer_Flag
-	and		#$81							; ?????16hz?????????????1
-	cmp		#$80
-	bne		L_Sec_Pos_rts
-	rmb7	Timer_Flag
 
+Count_Start_Pos:
 	inc		Frame_Counter
-
 	lda		R_Time_Sec
 	cmp		#60
-	beq		L_CarryToMin					; ???ï¿½ï¿½?????
+	bne		Set_CarryFlag_Out
+	smb2	Frame_Flag							; ÖÃ½è(½ø)Î»·¢Éú±êÖ¾
+Set_CarryFlag_Out:
+	bbr2	Frame_Flag,Carry_Out				; ÅĞ¶ÏÊÇ·ñ´æÔÚ·ÖÖÓ½øÎ»
+	bra		L_CarryToMin
+Carry_Out:
+	jsr		F_DisFrame_Sec_d4					; sec¸öÎ»×ßÊ±¶¯»­
 
-	jsr		F_DisFrame_Sec_d4				; sec??ï¿½ï¿½???????
-
-	lda		R_Time_Sec						; ????ï¿½ï¿½????ï¿½ï¿½?ï¿½ï¿½
-	jsr		F_DivideBy10					; ????10????????????????0??????ï¿½ï¿½?????
-	cmp		#0								; ???0????????ï¿½ï¿½??d3?????
+	lda		R_Time_Sec							; ¼ì²âsecÊ®Î»ÓĞÎŞ½øÎ»
+	jsr		F_DivideBy10
+	cmp		#0									; ÉÌÎª0ÔòÒ»¶¨ÎŞÊ®Î»£¬Ê®Î»²»×ßÊ±
 	beq		L_Sec_D3_Out
-	lda		P_Temp							; ???????0????????ï¿½ï¿½
+	lda		P_Temp								; ÓàÊı²»Îª0Ò²²»¸üĞÂÊ®Î»
 	cmp		#0
 	bne		L_Sec_D3_Out
 
-	jsr		F_DisFrame_Sec_d3				; sec?ï¿½ï¿½???????
+	jsr		F_DisFrame_Sec_d3					; secÊ®Î»×ßÊ±¶¯»­
 
 L_Sec_D3_Out:
 	lda		Frame_Counter
@@ -42,9 +41,13 @@ L_Sec_D3_Out:
 	ldx		#lcd_MS
 	jsr		F_ClrpSymbol
 
+	rmb7	Timer_Flag							; Çå16Hz£¬±ÜÃâÖØ¸´²¥¶¯»­
+
 	rts
 
 L_Sec_Pos_Out:
+	rmb0	Timer_Flag							; ¶¯»­×ßÍê¼´Îªºó°ëS
+	rmb7	Timer_Flag							; Í¬ÑùÇå16Hz
 	ldx		#lcd_MS
 	jsr		F_DispSymbol
 	lda		#0
@@ -54,25 +57,27 @@ L_Sec_Pos_rts:
 	rts
 
 L_CarryToMin:
+	smb2	Frame_Flag
+
 	lda		R_Time_Min
 	cmp		#100
-	beq		L_Time_Overflow					; ????99min59s??????
+	beq		L_Time_Overflow						; ¼Æµ½99:59Í£Ö¹
 
-	jsr		F_DisFrame_Sec_d4				; Sec??ï¿½ï¿½???????
-	jsr		F_DisFrame_Sec_d3				; Sec?ï¿½ï¿½???????
-	jsr		F_DisFrame_Min_d2				; Min??ï¿½ï¿½???????
+	jsr		F_DisFrame_Sec_d4					; Sec¸öÎ»×ßÊ±
+	jsr		F_DisFrame_Sec_d3					; SecÊ®Î»×ßÊ±
+	jsr		F_DisFrame_Min_d2					; Min¸öÎ»×ßÊ±
 
-	lda		R_Time_Min						; ????ï¿½ï¿½????ï¿½ï¿½?ï¿½ï¿½
-	jsr		F_DivideBy10					; ????10????????????????0??????ï¿½ï¿½?????
-	cmp		#0								; ???0????????ï¿½ï¿½??d3?????
-	beq		L_Min_D1_Out
-	lda		P_Temp							; ???????0????????ï¿½ï¿½
+	lda		R_Time_Min							; ¼ì²âMinÊ®Î»ÓĞÎŞ½øÎ»
+	jsr		F_DivideBy10						; ³ı10ÅĞ¶ÏÊ®Î»ÊÇ·ñĞèÒª¶¯»­
 	cmp		#0
-	bne		L_Min_D1_Out
+	beq		L_Min_D1_Out_Pos
+	lda		P_Temp
+	cmp		#0
+	bne		L_Min_D1_Out_Pos
 
-	jsr		F_DisFrame_Min_d1				; Min?ï¿½ï¿½???????
+	jsr		F_DisFrame_Min_d1					; MinÊ®Î»×ßÊ±¶¯»­
 
-L_Min_D1_Out:
+L_Min_D1_Out_Pos:
 	lda		Frame_Counter
 	cmp		#$08
 	beq		L_Min_Pos_Out
@@ -81,6 +86,12 @@ L_Min_D1_Out:
 	rts
 
 L_Min_Pos_Out:
+	rmb2	Frame_Flag							; ½è(½ø)Î»±êÖ¾Î»
+
+	lda		#$00
+	sta		R_Time_Sec							; Çå¿ÕÃëÊı
+	inc		R_Time_Min							; Ôö·Ö
+
 	ldx		#lcd_MS
 	jsr		F_DispSymbol
 	lda		#0
@@ -88,7 +99,7 @@ L_Min_Pos_Out:
 	rts
 
 L_Time_Overflow:
-	lda		#$0c							; ????????????????????
+	lda		#$0c								; Õı¼ÆÊ±Íê³ÉÔò»Øµ½µ¹¼ÆÊ±ÔİÍ£
 	sta		Sys_Status_Flag
 	lda		#99
 	sta		R_Time_Min
@@ -97,48 +108,19 @@ L_Time_Overflow:
 	jsr		F_Display_Time
 	rts
 
-; ???????????????????
-Pos_Time_Count:
-	rmb1	Timer_Flag
-	lda		R_Time_Sec
-	cmp		#59
-	beq		Count_Add_Min
-	cmp		#60
-	beq		Count_CarryToMin				; ?????????ï¿½ï¿½??????
-	inc		R_Time_Sec
-	rts
-Count_CarryToMin:
-	lda		R_Time_Min
-	cmp		#99
-	beq		Count_Overflow
-	lda		#$1
-	sta		R_Time_Sec
-	rts
-Count_Add_Min:
-	inc		R_Time_Sec
-	inc		R_Time_Min
-	rts
-Count_Overflow:
-	lda		#$0
-	sta		R_Time_Sec
-	sta		R_Time_Min
-	TMR2_OFF
-	TMR0_OFF
-	rts
-
 
 F_DivideBy10:
-	ldx		#0								; åˆå§‹åŒ–Xå¯„å­˜å™¨ä¸º0
-	sta		P_Temp							; ä¸´æ—¶ä¿å­˜ä½™æ•°
+	ldx		#0									; ³õÊ¼»¯X¼Ä´æÆ÷Îª0
+	sta		P_Temp								; ÁÙÊ±±£´æÓàÊı
 DivideBy10:
-	cmp		#10								; æ£€æŸ¥Aæ˜¯å¦å¤§äºç­‰äº10
-	bcc		Done							; å¦‚æœAå°äº10ï¼Œè·³è½¬Done
-	sec										; è®¾ç½®è¿›ä½ï¼Œå‡†å¤‡å‡æ³•
-	sbc		#10								; A=A-10
-	inx										; X=X+1è®¡ç®—å•†
-	bra		DivideBy10						; å¦‚æœæ²¡æœ‰å€Ÿä½å°±ç»§ç»­å¾ªç¯
+	cmp		#10									; ¼ì²éAÊÇ·ñ´óÓÚµÈÓÚ10
+	bcc		Done								; Èç¹ûAĞ¡ÓÚ10£¬Ìø×ªDone
+	sec											; ÉèÖÃ½øÎ»£¬×¼±¸¼õ·¨
+	sbc		#10									; A=A-10
+	inx											; X=X+1¼ÆËãÉÌ
+	bra		DivideBy10							; Èç¹ûÃ»ÓĞ½èÎ»¾Í¼ÌĞøÑ­»·
 Done:
-	sta		P_Temp							; ä½™æ•°
+	sta		P_Temp								; ÓàÊı
 	txa
 	rts
 
@@ -147,63 +129,63 @@ Done:
 
 
 
-; å€’è®¡æ—¶éƒ¨åˆ†
+; µ¹¼ÆÊ±²¿·Ö
 F_Sec_Des_Counter:
-	bbs0	Timer_Flag, Is_Frame_Come		; åŠç§’ä¸º0æ—¶ï¼Œåˆ¤æ–­å¸§è®¡æ—¶
+	bbs0	Timer_Flag, Is_Frame_Come_Des		; °ëÃëÎª1Ê±£¬ÅĞ¶ÏÖ¡¼ÆÊ±
 	rts
-; åˆ¤æ–­æ˜¯å¦éœ€è¦å‡æ—¶ï¼Œè¿˜æ˜¯å•çº¯çš„åŠ¨ç”»å¸§
-Is_Frame_Come:
-	bbr1	Timer_Flag,Add_Sec_Out			; æœ‰èµ°æ—¶æ ‡å¿—åˆ™å‡æ—¶
+; ÅĞ¶ÏÊÇ·ñĞèÒª¼õÊ±£¬»¹ÊÇµ¥´¿µÄ¶¯»­Ö¡
+Is_Frame_Come_Des:
+	bbr1	Timer_Flag,Add_Sec_Out_Des			; ÓĞ×ßÊ±±êÖ¾Ôò¼õÊ±
 	dec		R_Time_Sec
-	rmb1	Timer_Flag						; åŠ¨ç”»æ”¾8å¸§ï¼Œå‡ç§’åªå‡ä¸€æ¬¡
-; æ²¡æœ‰16Hzåˆ™ä¸è¿›åŠ¨ç”»
-Add_Sec_Out:
-	bbs7	Timer_Flag, Count_Start
+	rmb1	Timer_Flag							; ¶¯»­·Å8Ö¡£¬¼õÃëÖ»¼õÒ»´Î
+; Ã»ÓĞ16HzÔò²»½ø¶¯»­
+Add_Sec_Out_Des:
+	bbs7	Timer_Flag, Count_Start_Des
 	rts
 
-Count_Start:
-	dec		Frame_Counter					; å¸§è®¡æ•°
-	lda		R_Time_Sec						; åˆ¤æ–­æ˜¯å¦å­˜åœ¨åˆ†é’Ÿå€Ÿä½
+Count_Start_Des:
+	dec		Frame_Counter						; Ö¡¼ÆÊı
+	lda		R_Time_Sec							; ÅĞ¶ÏÊÇ·ñ´æÔÚ·ÖÖÓ½èÎ»
 	clc
 	adc		#$01
 	cmp		#$00
-	bne		Set_BorrowFlag_Out				; ç½®å€Ÿ(è¿›)ä½å‘ç”Ÿæ ‡å¿—
+	bne		Set_BorrowFlag_Out					; ÖÃ½è(½ø)Î»·¢Éú±êÖ¾
 	smb2	Frame_Flag
 Set_BorrowFlag_Out:
 	bbr2	Frame_Flag,Borrow_Out
 	bra		L_BorrowToMin
 Borrow_Out:
-	jsr		F_DisFrame_Sec_d4				; secä¸ªä½èµ°æ—¶åŠ¨ç”»
+	jsr		F_DisFrame_Sec_d4					; sec¸öÎ»×ßÊ±¶¯»­
 
-	lda		R_Time_Sec						; æ£€æµ‹secåä½æœ‰æ— å€Ÿä½
+	lda		R_Time_Sec							; ¼ì²âsecÊ®Î»ÓĞÎŞ½èÎ»
 	clc
-	adc		#$01							; å…ˆå‡ç§’å†è¿›åŠ¨ç”»ï¼Œéœ€è¡¥å¿1ç§’
+	adc		#$01								; ÏÈ¼õÃëÔÙ½ø¶¯»­£¬Ğè²¹³¥1Ãë
 	jsr		F_DivideBy10
-	cmp		#0								; å•†ä¸º0åˆ™ä¸€å®šæ— 10ä¸ºï¼Œåä½ä¸èµ°æ—¶
+	cmp		#0									; ÉÌÎª0ÔòÒ»¶¨ÎŞÊ®Î»£¬Ê®Î»²»×ßÊ±
 	beq		L_Sec_D3_Out_Des
-	lda		P_Temp							; ä½™æ•°ä¸ä¸º0ä¹Ÿä¸æ›´æ–°åä½
+	lda		P_Temp								; ÓàÊı²»Îª0Ò²²»¸üĞÂÊ®Î»
 	cmp		#0
 	bne		L_Sec_D3_Out_Des
 
-	jsr		F_DisFrame_Sec_d3				; secåä½èµ°æ—¶åŠ¨ç”»
+	jsr		F_DisFrame_Sec_d3					; secÊ®Î»×ßÊ±¶¯»­
 
 
 L_Sec_D3_Out_Des:
-	lda		Frame_Counter					; ç¬¬8å¸§é‡ç½®å¸§è®¡æ•°
+	lda		Frame_Counter						; µÚ8Ö¡ÖØÖÃÖ¡¼ÆÊı
 	cmp		#$0
 	beq		L_Sec_Des_Out
 
 	ldx		#lcd_MS
-	jsr		F_ClrpSymbol					; æ²¡èµ°å®ŒåŠ¨ç”»åˆ™ç†„ç­MS
+	jsr		F_ClrpSymbol						; Ã»×ßÍê¶¯»­ÔòÏ¨ÃğMS
 
-	rmb7	Timer_Flag						; æ¸…16Hzï¼Œé¿å…é‡å¤æ’­åŠ¨ç”»
+	rmb7	Timer_Flag							; Çå16Hz£¬±ÜÃâÖØ¸´²¥¶¯»­
 
 	rts
 
 L_Sec_Des_Out:
-	rmb0	Timer_Flag						; åŠ¨ç”»èµ°å®Œå³ä¸ºååŠS
-	rmb7	Timer_Flag						; åŒæ ·æ¸…16Hz
-	ldx		#lcd_MS							; äº®MSå¹¶é‡ç½®å¸§è®¡æ•°
+	rmb0	Timer_Flag							; ¶¯»­×ßÍê¼´Îªºó°ëS
+	rmb7	Timer_Flag							; Í¬ÑùÇå16Hz
+	ldx		#lcd_MS								; ÁÁMS²¢ÖØÖÃÖ¡¼ÆÊı
 	jsr		F_DispSymbol
 	lda		#$8
 	sta		Frame_Counter
@@ -213,7 +195,7 @@ L_Sec_Des_rts:
 
 L_BorrowToMin:
 	smb2	Frame_Flag
-	bbs1	Frame_Flag,Dec_Once_Min			; å€Ÿä½åˆ†é’Ÿï¼ŒåŠ¨ç”»8å¸§ä½†å‡åˆ†åªå‡1æ¬¡
+	bbs1	Frame_Flag,Dec_Once_Min				; ½èÎ»·ÖÖÓ£¬¶¯»­8Ö¡µ«¼õ·ÖÖ»¼õ1´Î
 	dec		R_Time_Min
 	lda		#59
 	sta		R_Time_Sec
@@ -223,26 +205,26 @@ Dec_Once_Min:
 	clc
 	adc		#$01
 	cmp		#$00
-	beq		L_Time_Stop						; è®¡åˆ°00:00åœæ­¢
+	beq		L_Time_Stop							; ¼Æµ½00:00Í£Ö¹
 
-	jsr		F_DisFrame_Sec_d4				; Secä¸ªä½èµ°æ—¶
-	jsr		F_DisFrame_Sec_d3				; Secåä½èµ°æ—¶
-	jsr		F_DisFrame_Min_d2				; Minä¸ªä½èµ°æ—¶
+	jsr		F_DisFrame_Sec_d4					; Sec¸öÎ»×ßÊ±
+	jsr		F_DisFrame_Sec_d3					; SecÊ®Î»×ßÊ±
+	jsr		F_DisFrame_Min_d2					; Min¸öÎ»×ßÊ±
 
-	lda		R_Time_Min						; æ£€æµ‹Minåä½æœ‰æ— å€Ÿä½
+	lda		R_Time_Min							; ¼ì²âMinÊ®Î»ÓĞÎŞ½èÎ»
 	clc
 	adc		#$01
-	jsr		F_DivideBy10					; é™¤10åˆ¤æ–­åä½æ˜¯å¦éœ€è¦åŠ¨ç”»
+	jsr		F_DivideBy10						; ³ı10ÅĞ¶ÏÊ®Î»ÊÇ·ñĞèÒª¶¯»­
 	cmp		#0
 	beq		L_Min_D1_Out_Des
 	lda		P_Temp
 	cmp		#0
 	bne		L_Min_D1_Out_Des
 
-	jsr		F_DisFrame_Min_d1				; Minåä½èµ°æ—¶åŠ¨ç”»
+	jsr		F_DisFrame_Min_d1					; MinÊ®Î»×ßÊ±¶¯»­
 
 L_Min_D1_Out_Des:
-	lda		Frame_Counter					; æœ‰åŠ¨ç”»å°±ç†„ç­MS
+	lda		Frame_Counter						; ÓĞ¶¯»­¾ÍÏ¨ÃğMS
 	cmp		#$0
 	beq		L_Min_Des_Out
 	ldx		#lcd_MS
@@ -250,19 +232,19 @@ L_Min_D1_Out_Des:
 	rts
 
 L_Min_Des_Out:
-	rmb1	Frame_Flag						; å‡åˆ†æ ‡å¿—ä½
-	rmb2	Frame_Flag						; å€Ÿ(è¿›)ä½æ ‡å¿—ä½
-	ldx		#lcd_MS							; é‡ç½®å¸§è®¡æ•°
-	jsr		F_DispSymbol					; æ— åŠ¨ç”»å°±äº®MS
+	rmb1	Frame_Flag							; ¼õ·Ö±êÖ¾Î»
+	rmb2	Frame_Flag							; ½è(½ø)Î»±êÖ¾Î»
+	ldx		#lcd_MS								; ÖØÖÃÖ¡¼ÆÊı
+	jsr		F_DispSymbol						; ÎŞ¶¯»­¾ÍÁÁMS
 	lda		#$8
 	sta		Frame_Counter
 	rts
 
 L_Time_Stop:
-	lda		#$01							; å€’è®¡æ—¶å®Œæˆåˆ™å›åˆ°åˆå§‹æ€
+	lda		#$01								; µ¹¼ÆÊ±Íê³ÉÔò»Øµ½³õÊ¼Ì¬
 	sta		Sys_Status_Flag
-	smb3	Timer_Flag						; è®¡æ—¶å®Œæˆæ ‡å¿—ä½
-	lda		#$07							; å“é“ƒåºåˆ—
+	smb3	Timer_Flag							; ¼ÆÊ±Íê³É±êÖ¾Î»
+	lda		#$07								; ÏìÁåĞòÁĞ
 	sta		Beep_Serial
 	lda		#$0
 	sta		R_Time_Min

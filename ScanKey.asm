@@ -111,6 +111,7 @@ L_KeyC_Trigger:
 	lda		#$02								; 进入正计时态
 	sta		Sys_Status_Flag
 	TMR2_ON
+	TMR0_ON
 	rts
 
 	; 处理正倒计时中的情况
@@ -125,7 +126,7 @@ L_KeyC_Pause:
 	rmb3	Sys_Status_Flag						; 退出暂停态
 	jsr		Init_Frame_Count					; 初始化FrameCount
 	jsr		F_Display_Time
-	TMR2_ON										; 重新启动半S计时
+	TMR2_ON										; 重新启动半S计时和帧计时
 	TMR0_ON
 	rts
 

@@ -100,8 +100,6 @@ Status_Init:
 	bra		MainLoop
 Status_Pos:
 	jsr		F_Sec_Pos_Counter
-	bbr1	Timer_Flag,MainLoop
-	jsr		Pos_Time_Count
 	bra		MainLoop
 Status_Des:
 	jsr		F_Sec_Des_Counter
