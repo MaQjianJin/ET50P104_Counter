@@ -220,7 +220,9 @@ Dec_Once_Min:
 	jsr		F_DisFrame_Sec_d3				; Sec十位走时动画
 	jsr		F_DisFrame_Min_d2				; Min个位走时动画
 
-	lda		R_Time_Min						; 检测十位有没有进位
+	lda		R_Time_Min						; 检测十位有没有借位
+	clc
+	adc		#$01
 	jsr		F_DivideBy10					; 除以10的结果不为零，且余数为0才执行十位的动画
 	cmp		#0								; 商为0则一定无十位，d3无动画
 	beq		L_Min_D1_Out_Des
@@ -251,6 +253,8 @@ L_Time_Stop:
 	lda		#$01							; 倒计时完成则回到初始态
 	sta		Sys_Status_Flag
 	smb3	Timer_Flag						; 计时完成标志位
+	lda		#$07							; 设置响铃序列
+	sta		Beep_Serial
 	lda		#$0
 	sta		R_Time_Min
 	sta		R_Time_Sec
