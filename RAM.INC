@@ -53,7 +53,8 @@ Key_Flag				DS		1
 
 Frame_Flag				DS		1
 ;bit0 = 1 计时开始
-;bit1 = 1 分钟借位
+;bit1 = 1 分钟减时
+;bit2 = 1 借位发生
 
 
 P_PA_IO_Backup      	DS	1	;B

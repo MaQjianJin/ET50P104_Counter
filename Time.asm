@@ -154,12 +154,16 @@ Count_Start:
 	lda		Frame_Counter					; 测试用，监视帧计数的值
 	dec		Frame_Counter					; 帧计数
 
-	lda		R_Time_Sec						; 借位
+	lda		R_Time_Sec						; 判断是否有借位
 	clc
 	adc		#$01
 	cmp		#$00
-	beq		L_BorrowToMin					; 秒借位分动画
-
+	bne		Set_BorrowFlag_Out				; 置借位发生标志
+	smb2	Frame_Flag
+Set_BorrowFlag_Out:
+	bbr2	Frame_Flag,Borrow_Out
+	bra		L_BorrowToMin
+Borrow_Out:
 	jsr		F_DisFrame_Sec_d4				; sec个位走时动画
 
 	lda		R_Time_Sec						; 检测秒十位有没有借位
@@ -199,6 +203,7 @@ L_Sec_Des_rts:
 	rts
 
 L_BorrowToMin:
+	smb2	Frame_Flag
 	bbs1	Frame_Flag,Dec_Once_Min			; 借位减分钟，播放8帧动画，但减时只减1次
 	dec		R_Time_Min
 	lda		#59
@@ -231,11 +236,11 @@ L_Min_D1_Out_Des:
 	beq		L_Min_Des_Out
 	ldx		#lcd_MS
 	jsr		F_ClrpSymbol
-	dec		R_Time_Min
 	rts
 
 L_Min_Des_Out:
-	rmb1	Frame_Flag						; 借位动画完成，置0标志位以便下次借位
+	rmb1	Frame_Flag						; 置0减时标志位以便下次借位
+	rmb2	Frame_Flag						; 清借位标志位，不用再进借位动画
 	ldx		#lcd_MS							; 走到第8帧就重置帧计数
 	jsr		F_DispSymbol					; 不走动画了就亮MS
 	lda		#$8
