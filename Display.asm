@@ -71,7 +71,6 @@ Des_Frame_Cnt3:
 
 F_DisFrame_Min_d2:
 	lda		R_Time_Min
-	dea											; 正计时计数动画要-1修正
 	tax
 	lda		Table_Min_DataDot,X
 	and		#$0f
@@ -91,7 +90,6 @@ F_DisFrame_Min_d1:
 	lda		Table_Min_DataDot,X
 	and		#$f0
 	jsr		L_ROR_4Bit_Prog
-	dea											; 正计时计数动画要-1修正
 	clc
 	rol											; 乘8
 	rol

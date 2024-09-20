@@ -155,7 +155,9 @@ Count_Start:
 	dec		Frame_Counter					; 帧计数
 
 	lda		R_Time_Sec						; 借位
-	cmp		#00
+	clc
+	adc		#$01
+	cmp		#$00
 	beq		L_BorrowToMin					; 秒借位分动画
 
 	jsr		F_DisFrame_Sec_d4				; sec个位走时动画
@@ -199,12 +201,14 @@ L_Sec_Des_rts:
 L_BorrowToMin:
 	bbs1	Frame_Flag,Dec_Once_Min			; 借位减分钟，播放8帧动画，但减时只减1次
 	dec		R_Time_Min
+	lda		#59
+	sta		R_Time_Sec
 	smb1	Frame_Flag
 Dec_Once_Min:
 	lda		R_Time_Min
 	clc
-	adc		#01
-	cmp		#00
+	adc		#$01
+	cmp		#$00
 	beq		L_Time_Stop						; 计到00:00则停止
 
 	jsr		F_DisFrame_Sec_d4				; Sec个位走时动画
@@ -239,12 +243,6 @@ L_Min_Des_Out:
 	rts
 
 L_Time_Stop:
-	lda		Frame_Counter
-	cmp		#0
-	beq		L_Time_Stop_Over
-	jsr		F_DisFrame_Sec_d4
-	rts
-L_Time_Stop_Over:
 	lda		#$01							; 倒计时完成则回到初始态
 	sta		Sys_Status_Flag
 	smb3	Timer_Flag						; 计时完成标志位
@@ -252,31 +250,4 @@ L_Time_Stop_Over:
 	sta		R_Time_Min
 	sta		R_Time_Sec
 	jsr		F_Display_Time
-	rts
-
-; 减时独立于动画显示进行
-Des_Time_Count:
-	rmb1	Timer_Flag
-	lda		#$08
-	sta		Frame_Counter
-	lda		R_Time_Sec
-	cmp		#01
-	beq		Count_BorrowToMin				; 秒数满则借位分钟数
-	dec		R_Time_Sec
-	rts
-Count_BorrowToMin:
-	lda		R_Time_Min
-	cmp		#00
-	beq		Count_Stop						; 若借位时分钟已经为0，则计数停止
-	lda		#60
-	sta		R_Time_Sec
-	dec		R_Time_Min
-	rts
-
-Count_Stop:		
-	lda		#$0
-	sta		R_Time_Sec
-	sta		R_Time_Min
-	TMR2_OFF
-	TMR0_OFF
 	rts
