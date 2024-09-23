@@ -13,9 +13,9 @@ L_Init_SystemRam_Prog:							; 系统初始化
 	lda		#$01
 	sta		Sys_Status_Flag
 
-	lda		#0
+	lda		#00
 	sta		R_Time_Min
-	lda		#0
+	lda		#00
 	sta		R_Time_Sec
 
 	rts

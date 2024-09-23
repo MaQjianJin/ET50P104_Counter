@@ -6,6 +6,7 @@ F_Sec_Pos_Counter:
 	rts
 
 Count_Start_Pos:
+	lda		Frame_Flag
 	inc		Frame_Counter
 	lda		R_Time_Sec
 	cmp		#59
@@ -65,6 +66,8 @@ L_CarryToMin:
 	jsr		F_DisFrame_Min_d2					; Min个位走时
 
 	lda		R_Time_Min							; 检测Min十位有无进位
+	clc
+	adc		#$01								; 判断下1Min需不需要走十位
 	jsr		F_DivideBy10						; 除10判断十位是否需要动画
 	cmp		#0
 	beq		L_Min_D1_Out_Pos
@@ -104,6 +107,12 @@ L_Time_Overflow:
 	sta		R_Time_Min
 	lda		#59
 	sta		R_Time_Sec
+
+	lda		#$00
+	sta		Frame_Flag							; 复位相关标志位
+	rmb0	Timer_Flag
+	rmb7	Timer_Flag
+
 	jsr		F_Display_Time
 	rts
 
@@ -246,7 +255,13 @@ L_Time_Stop:
 	lda		#$07								; 响铃序列
 	sta		Beep_Serial
 	lda		#$0
-	sta		R_Time_Min
+	sta		R_Time_Min							; 清空计数
 	sta		R_Time_Sec
+	sta		Frame_Counter
+
+	sta		Frame_Flag						; 复位相关标志位
+	rmb0	Timer_Flag
+	rmb7	Timer_Flag
+
 	jsr		F_Display_Time
 	rts

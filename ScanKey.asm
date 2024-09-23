@@ -147,7 +147,11 @@ L_KeyMS_Trigger:
 	rts
 
 Init_Frame_Count:
-	bbs1	Sys_Status_Flag, Pos_Frame_Count
+	lda		#$00
+	sta		Frame_Flag							; 复位相关标志位
+	rmb0	Timer_Flag
+	rmb7	Timer_Flag
+	bbs1	Sys_Status_Flag, Pos_Frame_Count	; 根据目前计时状态初始化帧计数
 	lda		#$08
 	sta		Frame_Counter
 	rts
