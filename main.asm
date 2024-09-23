@@ -132,15 +132,6 @@ L_DivIrq:
 
 L_Timer2Irq:
 	CLR_TMR2_IRQ_FLAG
-	lda		CC1
-	cmp		#$01
-	beq		CC1_Overflow
-	inc		CC1
-	bra		L_EndIrq
-CC1_Overflow:
-	lda		#$00
-	sta		CC1
-
 	smb0	Timer_Flag							; 半秒标志，定时器本身是1秒
 	smb1	Timer_Flag							; 走时标志，第一次进计数子程序需要走时
 	bra		L_EndIrq							; 下半秒由动画完成时定义

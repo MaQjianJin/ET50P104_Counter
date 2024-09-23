@@ -58,7 +58,7 @@ L_CarryToMin:
 	smb2	Frame_Flag
 
 	lda		R_Time_Min
-	cmp		#100
+	cmp		#99
 	beq		L_Time_Overflow						; 计到99:59停止
 
 	jsr		F_DisFrame_Sec_d4					; Sec个位走时

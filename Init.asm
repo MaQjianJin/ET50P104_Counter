@@ -57,7 +57,7 @@ F_Port_Init:
 F_Timer_Init:
 	TMR1_CLK_512Hz								; TIM1时钟源Fsub/64(512Hz)
 	TMR0_CLK_FSUB								; TIM0时钟源Fsub(32768Hz)
-	DIV_512HZ									; DIV分频512Hz
+	DIV_256HZ									; DIV分频512Hz
 
 	lda		#$0									; 重装载计数设置为0
 	sta		TMR0
