@@ -1,20 +1,14 @@
 F_Sec_Pos_Counter:
-	bbs0	Timer_Flag, Is_Frame_Come_Pos		; 半秒为1时，判断帧计时
-	rts
-; 判断是否需要增时，还是单纯的动画帧
-Is_Frame_Come_Pos:
-	bbr1	Timer_Flag,Add_Sec_Out_Pos			; 有走时标志则增时
-	inc		R_Time_Sec
-	rmb1	Timer_Flag							; 动画放8帧，减秒只减一次
-; 没有16Hz则不进动画
-Add_Sec_Out_Pos:
-	bbs7	Timer_Flag, Count_Start_Pos
+	lda		Timer_Flag
+	and		#$81
+	cmp		#$81								; 进动画需要同时满足有半秒和有16Hz标志
+	beq		Count_Start_Pos
 	rts
 
 Count_Start_Pos:
 	inc		Frame_Counter
 	lda		R_Time_Sec
-	cmp		#60
+	cmp		#59
 	bne		Set_CarryFlag_Out
 	smb2	Frame_Flag							; 置借(进)位发生标志
 Set_CarryFlag_Out:
@@ -24,6 +18,8 @@ Carry_Out:
 	jsr		F_DisFrame_Sec_d4					; sec个位走时动画
 
 	lda		R_Time_Sec							; 检测sec十位有无进位
+	clc
+	adc		#$01								; 判断下1S需不需要走十位
 	jsr		F_DivideBy10
 	cmp		#0									; 商为0则一定无十位，十位不走时
 	beq		L_Sec_D3_Out
@@ -47,7 +43,8 @@ L_Sec_D3_Out:
 
 L_Sec_Pos_Out:
 	rmb0	Timer_Flag							; 动画走完即为后半S
-	rmb7	Timer_Flag							; 同样清16Hz
+	rmb7	Timer_Flag							; 清除相关标志位避免错误进入
+	inc		R_Time_Sec							; 增秒放在动画完成部分保证只增1次
 	ldx		#lcd_MS
 	jsr		F_DispSymbol
 	lda		#0
@@ -86,7 +83,9 @@ L_Min_D1_Out_Pos:
 	rts
 
 L_Min_Pos_Out:
-	rmb2	Frame_Flag							; 借(进)位标志位
+	rmb2	Frame_Flag							; 进位动画播放完毕
+	rmb0	Timer_Flag							; 清除相关的标志位
+	rmb7	Timer_Flag
 
 	lda		#$00
 	sta		R_Time_Sec							; 清空秒数

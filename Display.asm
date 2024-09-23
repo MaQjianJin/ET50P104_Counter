@@ -37,6 +37,11 @@ F_DisFrame_Sec_d4:
 	tax
 	lda		Table_Sec_DataDot,X
 	and		#$0f								; 个位数字
+; 	bbs2	Sys_Status_Flag,Des_Frame_Cnt4		; 倒计时预-1不需要修正
+; 	cmp		#$00
+; 	beq		Des_Frame_Cnt4						; 正计时个位等于0时也不需要修正
+; 	dea											; 计数动画要-1修正
+; Des_Frame_Cnt4:
 	clc
 	rol											; 乘8
 	rol
@@ -52,10 +57,10 @@ F_DisFrame_Sec_d3:
 	tax
 	lda		Table_Sec_DataDot,X
 	and		#$f0								; 十位数字
+; 	bbs2	Sys_Status_Flag,Des_Frame_Cnt3		; 倒计时预-1不需要修正
+; 	ina											; 正计时后+1，计数动画要+1修正
+; Des_Frame_Cnt3:
 	jsr		L_ROR_4Bit_Prog
-	bbs2	Sys_Status_Flag,Des_Frame_Cnt3		; 倒计时预-1不需要修正
-	dea											; 计数动画要-1修正
-Des_Frame_Cnt3:
 	clc
 	rol											; 乘8
 	rol
