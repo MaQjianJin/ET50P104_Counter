@@ -138,6 +138,9 @@ L_KeyMS_Trigger:
 	sta		Key_Flag
 	sta		Sys_Status_Flag
 	smb0	Sys_Status_Flag
+	sta		Frame_Flag							; 复位相关标志位
+	rmb0	Timer_Flag
+	rmb7	Timer_Flag
 	sta		TMR2								; 关闭半秒计时，并清空寄存器
 	TMR2_OFF
 	TMR0_OFF

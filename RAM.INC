@@ -24,6 +24,8 @@ Counter_1Hz				DS		1
 Counter_4Hz				DS		1
 Counter_16Hz			DS		1
 
+CC1						DS		1
+
 TimeCnt					DS		1
 
 Frame_Counter			DS		1
