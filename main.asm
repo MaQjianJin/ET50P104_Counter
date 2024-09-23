@@ -1,9 +1,9 @@
 ;********************************************************************************
-; PROJECT	: Calendar(MC830B)							*
-; AUTHOR	: WBN										*
-; REVISION	: 12/03/2012  V1.0	First issue				*
-; High OSC CLK  : Internal RC 4.4MHz	Fcpu = Fosc/2				*
-; Function	: 								*
+; PROJECT	: Time Counter(ET50P104)					*
+; AUTHOR	: WYH										*
+; REVISION	: 09/23/2024  V1.0							*
+; High OSC CLK  : Internal RC 4.4MHz	Fcpu = Fosc/2	*
+; Function	: 											*
 ;********************************************************************************
 	.CHIP	W65C02S		;cpu的选型
 	;.INCLIST	ON		;宏定义和文件
