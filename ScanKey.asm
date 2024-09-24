@@ -122,6 +122,7 @@ L_KeyC_Trigger:
 	sta		Frame_Flag
 	TMR2_ON
 	TMR0_ON
+	smb0	Timer_Flag
 	rts
 
 	; 处理正倒计时中的情况
