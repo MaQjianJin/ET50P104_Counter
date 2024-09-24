@@ -28,14 +28,21 @@ L_Quik_Add_1:
 	lda		P_PA								; 判断4种按键触发情况
 	and		#$A4
 	cmp		#$04
-	beq		L_KeyM_Trigger						; M单独触发
+	bne		No_KeyM_Trigger						; 由于跳转寻址能力的问题，这里采用jmp进行跳转
+	jmp		L_KeyM_Trigger						; M单独触发
+No_KeyM_Trigger:
 	cmp		#$20
-	beq		L_KeyS_Trigger						; S单独触发
+	bne		No_KeyS_Trigger
+	jmp		L_KeyS_Trigger						; S单独触发
+No_KeyS_Trigger:
 	bbs4	Timer_Flag,L_Quik_Add_2				; C触发和ms触发不需要快加
 	cmp		#$80
-	beq		L_KeyC_Trigger						; C单独触发
+	bne		No_KeyC_Trigger
+	jmp		L_KeyC_Trigger						; C单独触发
+No_KeyC_Trigger:
 	cmp		#$24
-	beq		L_KeyMS_Trigger						; M、S同时触发
+	bne		L_Quik_Add_2
+	jmp		L_KeyMS_Trigger						; M、S同时触发
 
 L_Quik_Add_2:
 	DIS_LCD_IRQ
@@ -110,6 +117,9 @@ L_KeyC_Trigger:
 	; 处理初始态的情况
 	lda		#$02								; 进入正计时态
 	sta		Sys_Status_Flag
+	lda		#$00
+	sta		Frame_Counter
+	sta		Frame_Flag
 	TMR2_ON
 	TMR0_ON
 	rts
@@ -117,7 +127,8 @@ L_KeyC_Trigger:
 	; 处理正倒计时中的情况
 L_KeyC_PosDes:
 	smb3	Sys_Status_Flag						; 进入正、倒计时暂停态
-	TMR2_OFF									; 关掉半S计时
+	jsr		F_Display_Time
+	TMR2_OFF									; 关掉半秒计时和帧计时
 	TMR0_OFF
 	rts
 
@@ -125,8 +136,8 @@ L_KeyC_PosDes:
 L_KeyC_Pause:
 	rmb3	Sys_Status_Flag						; 退出暂停态
 	jsr		Init_Frame_Count					; 初始化FrameCount
-	jsr		F_Display_Time
-	TMR2_ON										; 重新启动半S计时和帧计时
+
+	TMR2_ON										; 重新启动半秒计时和帧计时
 	TMR0_ON
 	rts
 
