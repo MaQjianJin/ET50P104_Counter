@@ -7,9 +7,9 @@ L_Init_SystemRam_Prog:							; 系统初始化
 	sta		Counter_16Hz
 	sta		Frame_Counter
 	sta		Frame_Flag
-	sta		TimeCnt
 	sta		Timer_Flag
 	sta		CC1
+	sta		CC2
 
 	lda		#$01
 	sta		Sys_Status_Flag

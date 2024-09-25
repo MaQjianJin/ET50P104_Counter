@@ -101,8 +101,10 @@ L_Min_Pos_Out:
 	rts
 
 L_Time_Overflow:
-	lda		#$0c								; 正计时完成则回到倒计时暂停
+	lda		#$1100B								; 正计时完成则回到倒计时暂停
 	sta		Sys_Status_Flag
+	TMR0_OFF									; 暂停态不需要时钟
+	TMR2_OFF
 	lda		#99
 	sta		R_Time_Min
 	lda		#59
@@ -249,19 +251,44 @@ L_Min_Des_Out:
 	rts
 
 L_Time_Stop:
-	lda		#$01								; 倒计时完成则回到初始态
+	lda		#$10000B							; 倒计时完成则进入倒计时完成态进行响铃
 	sta		Sys_Status_Flag
-	smb3	Timer_Flag							; 计时完成标志位
-	lda		#$07								; 响铃序列
-	sta		Beep_Serial
-	lda		#$0
-	sta		R_Time_Min							; 清空计数
-	sta		R_Time_Sec
-	sta		Frame_Counter
-
-	sta		Frame_Flag						; 复位相关标志位
+	TMR0_OFF									; 先不关Time2，倒计时完成态也需要用它30S
+	
+	lda		#$00
+	sta		Frame_Flag							; 复位相关标志位
 	rmb0	Timer_Flag
 	rmb7	Timer_Flag
 
 	jsr		F_Display_Time
+	rts
+
+
+F_Des_Counter_Finish:
+	bbs0	Timer_Flag,Beep_Start				; 每隔1秒进一次
+	rts
+Beep_Start:
+	lda		CC2
+	cmp		#29
+	beq		Finish_Time_Out
+
+	smb3	Timer_Flag							; 计时完成标志位
+	lda		#$07								; 响铃序列，一共响4次
+	sta		Beep_Serial
+
+	rmb0	Timer_Flag							; 清1秒标志防止重复进入
+	inc		CC2
+	rts
+
+Finish_Time_Out:
+	lda		R_SetTime_Min						; 计数重置为倒计时初始值
+	sta		R_Time_Min
+	lda		R_SetTime_Sec
+	sta		R_Time_Sec
+	lda		#1100B								; 状态切换为倒计时暂停态
+	sta		Sys_Status_Flag
+	rmb3	Timer_Flag							; 清掉响铃标志
+	TMR2_OFF
+	lda		#00
+	sta		CC2
 	rts

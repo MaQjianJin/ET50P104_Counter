@@ -34,7 +34,7 @@ V_RESET:
 	LDA		#$B7								; #$07    
 	STA		SYSCLK								; 设置系统时钟
 	ClrAllRam									; 清RAM
-	LDA		#0
+	LDA		#$0
 	STA		DIVC								; 分频控制器，定时器与DICV异步
 	STA		IER									; 除能中断
 	STA		IFR									; 初始化中断标志位
@@ -85,7 +85,7 @@ Key_QA_Out:
 	smb0	Key_Flag							; 扫键标志位
 
 Key_Flag_Out:
-	bbr0	Key_Flag,Key_Out 
+	bbr0	Key_Flag,Key_Out
 	jsr		F_Key_Trigger						; 有按键按下和长按延时到了才扫键
 
 Key_Out:
@@ -94,6 +94,7 @@ Key_Out:
 	bbs3	Sys_Status_Flag, Status_Pause
 	bbs1	Sys_Status_Flag, Status_Pos
 	bbs2	Sys_Status_Flag, Status_Des
+	bbs4	Sys_Status_Flag, Status_Finish
 
 Status_Init:
 
@@ -107,7 +108,9 @@ Status_Des:
 Status_Pause:
 
 	bra		MainLoop
-
+Status_Finish:
+	
+	bra		MainLoop
 
 
 ;***********************************************************************

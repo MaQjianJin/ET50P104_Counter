@@ -25,15 +25,14 @@ Counter_4Hz				DS		1
 Counter_16Hz			DS		1
 
 CC1						DS		1
-
-TimeCnt					DS		1
+CC2						DS		1
 
 Frame_Counter			DS		1
 
 Beep_Serial				DS		1
 
 Timer_Flag				DS		1
-;bit0 = 1 半秒标志
+;bit0 = 1 Tim2半秒标志
 ;bit1 = 1 走时标志
 ;bit2 = 1 按键提示音标志位
 ;bit3 = 1 计时完成标志位
@@ -47,6 +46,7 @@ Sys_Status_Flag			DS		1
 ;bit1 = 1 正计时态
 ;bit2 = 1 倒计时态
 ;bit3 = 1 暂停态
+;bit4 = 1 倒计时完成态
 
 Key_Flag				DS		1
 ;bit0 = 1 扫键标志位
@@ -58,6 +58,9 @@ Frame_Flag				DS		1
 ;bit1 = 1 分钟减时
 ;bit2 = 1 借(进)位发生
 
+Beep_Flag				DS		1
+;bit0 = 1
+
 
 P_PA_IO_Backup      	DS	1	;B
 P_PA_Backup         	DS	1	;C
@@ -68,6 +71,8 @@ P_PC_Backup         	DS	1	;F
 Time_Str_Addr	EQU		$
 R_Time_Sec				DS	1	;时间秒
 R_Time_Min				DS	1	;时间分
+R_SetTime_Sec			DS	1	;倒计时初值时间秒
+R_SetTime_Min			DS	1	;倒计时初值时间分
 
 ;---------------------------------------       
 P_Temp					DS	16	

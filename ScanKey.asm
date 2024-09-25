@@ -60,6 +60,7 @@ L_KeyM_Trigger:
 	; 处理正、倒计时态的情况，若是这两种状态，则按键触发无效
 	bbs3	Sys_Status_Flag,L_KeyM_Pause		; 若非暂停态或初始态，则状态不会改变
 	bbs0	Sys_Status_Flag,L_KeyM_Pause
+	bbs4	Sys_Status_Flag,L_KeyM_Finish
 	rts
 	; 处理初始态和暂停态的情况
 L_KeyM_Pause:
@@ -67,6 +68,7 @@ L_KeyM_Pause:
 	sta		Sys_Status_Flag
 	inc		R_Time_Min
 	lda		R_Time_Min
+	sta		R_SetTime_Min						; M键每次有效都更新一次倒计时初值
 	cmp		#100
 	beq		L_Reset_Min
 	jsr		L_DisTimer_Min
@@ -78,12 +80,24 @@ L_Reset_Min:
 	jsr		L_DisTimer_Min
 	rts
 
+; 处理倒计时完成态的情况
+L_KeyM_Finish:
+	lda		R_SetTime_Min						; 计数重置为倒计时初始值
+	sta		R_Time_Min
+	lda		R_SetTime_Sec
+	sta		R_Time_Sec
+	lda		#1100B								; 状态切换为倒计时暂停态
+	sta		Sys_Status_Flag
+	rmb3	Timer_Flag							; 清掉响铃标志
+	rts
+
 
 L_KeyS_Trigger:
 	smb2	Timer_Flag							; 按键提示音
 	; 处理正、倒计时态的情况，若是这两种状态，则按键触发无效
 	bbs3	Sys_Status_Flag,L_KeyS_Pause		; 若非暂停态或初始态，则状态不会改变
 	bbs0	Sys_Status_Flag,L_KeyS_Pause
+	bbs4	Sys_Status_Flag,L_KeyS_Finish
 	rts
 	; 处理初始态和暂停态的情况
 L_KeyS_Pause:
@@ -92,6 +106,7 @@ L_KeyS_Pause:
 	
 	inc		R_Time_Sec
 	lda		R_Time_Sec
+	sta		R_SetTime_Sec						; 每次S的有效都会触发一次倒计时初值的更新
 	cmp		#60
 	beq		L_Reset_Sec
 	jsr		L_DisTimer_Sec
@@ -103,10 +118,22 @@ L_Reset_Sec:									; 60溢出后回到0
 	jsr		L_DisTimer_Sec
 	rts
 
+; 处理倒计时完成态的情况
+L_KeyS_Finish:
+	lda		R_SetTime_Min						; 计数重置为倒计时初始值
+	sta		R_Time_Min
+	lda		R_SetTime_Sec
+	sta		R_Time_Sec
+	lda		#1100B								; 状态切换为倒计时暂停态
+	sta		Sys_Status_Flag
+	rmb3	Timer_Flag							; 清掉响铃标志
+	rts
+
 
 L_KeyC_Trigger:
 	smb2	Timer_Flag							; 按键提示音
 
+	bbs4	Sys_Status_Flag,L_KeyC_Finish		; 倒计时完成态处理
 	lda		Sys_Status_Flag						; 处于正、倒计时态，需转为对应暂停态
 	cmp		#$02
 	beq		L_KeyC_PosDes
@@ -140,6 +167,16 @@ L_KeyC_Pause:
 
 	TMR2_ON										; 重新启动半秒计时和帧计时
 	TMR0_ON
+	rts
+
+L_KeyC_Finish:
+	lda		R_SetTime_Min						; 计数重置为倒计时初始值
+	sta		R_Time_Min
+	lda		R_SetTime_Sec
+	sta		R_Time_Sec
+	lda		#1100B								; 状态切换为倒计时暂停态
+	sta		Sys_Status_Flag
+	rmb3	Timer_Flag							; 清掉响铃标志
 	rts
 
 
