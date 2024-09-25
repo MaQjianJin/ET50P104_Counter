@@ -291,4 +291,5 @@ Finish_Time_Out:
 	TMR2_OFF
 	lda		#00
 	sta		CC2
+
 	rts
