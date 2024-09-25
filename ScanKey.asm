@@ -86,6 +86,7 @@ L_KeyM_Finish:
 	sta		R_Time_Min
 	lda		R_SetTime_Sec
 	sta		R_Time_Sec
+	jsr		F_Display_Time
 	lda		#1100B								; ×´Ì¬ÇÐ»»Îªµ¹¼ÆÊ±ÔÝÍ£Ì¬
 	sta		Sys_Status_Flag
 	TMR1_OFF
@@ -125,6 +126,7 @@ L_KeyS_Finish:
 	sta		R_Time_Min
 	lda		R_SetTime_Sec
 	sta		R_Time_Sec
+	jsr		F_Display_Time
 	lda		#1100B								; ×´Ì¬ÇÐ»»Îªµ¹¼ÆÊ±ÔÝÍ£Ì¬
 	sta		Sys_Status_Flag
 	TMR1_OFF
@@ -176,6 +178,7 @@ L_KeyC_Finish:
 	sta		R_Time_Min
 	lda		R_SetTime_Sec
 	sta		R_Time_Sec
+	jsr		F_Display_Time
 	lda		#1100B								; ×´Ì¬ÇÐ»»Îªµ¹¼ÆÊ±ÔÝÍ£Ì¬
 	sta		Sys_Status_Flag
 	TMR1_OFF

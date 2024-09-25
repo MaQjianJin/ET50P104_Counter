@@ -257,6 +257,8 @@ L_Time_Stop:
 	
 	lda		#$00
 	sta		Frame_Flag							; 复位相关标志位
+	sta		R_Time_Min
+	sta		R_Time_Sec
 	rmb0	Timer_Flag
 	rmb7	Timer_Flag
 
