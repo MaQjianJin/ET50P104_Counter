@@ -251,9 +251,13 @@ L_Min_Des_Out:
 	rts
 
 L_Time_Stop:
-	lda		#$10000B							; 倒计时完成则进入倒计时完成态进行响铃
+	lda		#10000B								; 倒计时完成则进入倒计时完成态进行响铃
 	sta		Sys_Status_Flag
-	TMR0_OFF									; 先不关Time2，倒计时完成态也需要用它30S
+	lda		#01001001B							; 设置响铃序列
+	sta		Beep_Serial
+	lda		#10B
+	sta		Beep_Serial+1
+	TMR0_OFF									; 先不关Time2，倒计时完成态也需要用它计30S
 	
 	lda		#$00
 	sta		Frame_Flag							; 复位相关标志位
@@ -272,10 +276,7 @@ Beep_Start:
 	cmp		#29
 	beq		Finish_Time_Out
 
-	smb3	Timer_Flag							; 计时完成标志位
-	lda		#$07								; 响铃序列，一共响4次
-	sta		Beep_Serial
-
+	smb3	Timer_Flag							; 计时完成响铃标志位
 	rmb0	Timer_Flag							; 清1秒标志防止重复进入
 	inc		CC2
 	rts
@@ -287,7 +288,8 @@ Finish_Time_Out:
 	sta		R_Time_Sec
 	lda		#1100B								; 状态切换为倒计时暂停态
 	sta		Sys_Status_Flag
-	rmb3	Timer_Flag							; 清掉响铃标志
+	rmb7	TMRC
+	TMR1_OFF
 	TMR2_OFF
 	lda		#00
 	sta		CC2

@@ -29,13 +29,13 @@ CC2						DS		1
 
 Frame_Counter			DS		1
 
-Beep_Serial				DS		1
+Beep_Serial				DS		2
 
 Timer_Flag				DS		1
 ;bit0 = 1 Tim2半秒标志
 ;bit1 = 1 走时标志
 ;bit2 = 1 按键提示音标志位
-;bit3 = 1 计时完成标志位
+;bit3 = 1 计时完成响铃标志位
 ;bit4 = 1 快加标志位
 ;bit5 = 1 Tim1 32Hz计时标志位
 ;bit6 = 1 LCD 4Hz计时
@@ -59,7 +59,7 @@ Frame_Flag				DS		1
 ;bit2 = 1 借(进)位发生
 
 Beep_Flag				DS		1
-;bit0 = 1
+;bit0 = 1 响铃
 
 
 P_PA_IO_Backup      	DS	1	;B

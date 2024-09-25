@@ -63,7 +63,7 @@ V_RESET:
 MainLoop:
 main:
 	lda		Timer_Flag							; ÅĞ¶ÏÊÇ·ñĞèÒªÏìÁå
-	and		#$0c
+	and		#1100B
 	cmp		#$00
 	beq		Beep_Out
 	jsr		F_Beep_Manage
@@ -109,7 +109,7 @@ Status_Pause:
 
 	bra		MainLoop
 Status_Finish:
-	
+	jsr		F_Des_Counter_Finish
 	bra		MainLoop
 
 

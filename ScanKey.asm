@@ -11,7 +11,7 @@ L_Delay_Trigger:								; 消抖延时循环用标签
 	bne		L_Delay_Trigger						; 软件消抖
 
 L_Key_Beep:
-	lda		#$02								; 设置按键提示音的响铃序列
+	lda		#10B								; 设置按键提示音的响铃序列
 	sta		Beep_Serial
 	lda		#$ef
 	sta		TMR1
@@ -88,7 +88,8 @@ L_KeyM_Finish:
 	sta		R_Time_Sec
 	lda		#1100B								; 状态切换为倒计时暂停态
 	sta		Sys_Status_Flag
-	rmb3	Timer_Flag							; 清掉响铃标志
+	TMR1_OFF
+	rmb7	TMRC
 	rts
 
 
@@ -126,7 +127,8 @@ L_KeyS_Finish:
 	sta		R_Time_Sec
 	lda		#1100B								; 状态切换为倒计时暂停态
 	sta		Sys_Status_Flag
-	rmb3	Timer_Flag							; 清掉响铃标志
+	TMR1_OFF
+	rmb7	TMRC
 	rts
 
 
@@ -176,7 +178,8 @@ L_KeyC_Finish:
 	sta		R_Time_Sec
 	lda		#1100B								; 状态切换为倒计时暂停态
 	sta		Sys_Status_Flag
-	rmb3	Timer_Flag							; 清掉响铃标志
+	TMR1_OFF
+	rmb7	TMRC
 	rts
 
 
@@ -208,6 +211,6 @@ Init_Frame_Count:
 	sta		Frame_Counter
 	rts
 Pos_Frame_Count:
-	lda		#$0
+	lda		#$00
 	sta		Frame_Counter
 	rts
