@@ -9,16 +9,16 @@ L_Init_SystemRam_Prog:							; 系统初始化
 	sta		Frame_Counter
 	sta		Frame_Flag
 	sta		Timer_Flag
-	sta		Beep_Flag
+	sta		Overflow_Flag
 	sta		CC1
 	sta		CC2
 
 	lda		#$01
 	sta		Sys_Status_Flag
 
-	lda		#00
+	lda		#99
 	sta		R_Time_Min
-	lda		#00
+	lda		#55
 	sta		R_Time_Sec
 
 	rts

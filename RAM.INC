@@ -58,6 +58,9 @@ Frame_Flag				DS		1
 ;bit1 = 1 分钟减时
 ;bit2 = 1 借(进)位发生
 
+Overflow_Flag			DS		1
+;bit0 = 1 正计时溢出
+
 
 P_PA_IO_Backup      	DS	1	;B
 P_PA_Backup         	DS	1	;C

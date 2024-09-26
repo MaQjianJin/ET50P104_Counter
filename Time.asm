@@ -110,6 +110,8 @@ L_Time_Overflow:
 	lda		#59
 	sta		R_Time_Sec
 
+	smb0	Overflow_Flag						; 置位正计时溢出标志位
+
 	lda		#$00
 	sta		Frame_Flag							; 复位相关标志位
 	rmb0	Timer_Flag

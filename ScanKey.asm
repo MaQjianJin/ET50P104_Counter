@@ -18,7 +18,7 @@ L_Key_Beep:
 	bra		L_Quik_Add_1
 
 L_Key_Wait:	
-	lda		P_PA								; 长按时，在快加到来前，只需要判断有效按键是否存在					
+	lda		P_PA								; 长按时，在快加到来前，只需要判断有效按键是否存在
 	and		#$a4								; 并关闭中断
 	cmp		#$0
 	beq		L_Quik_Add_2
@@ -29,10 +29,12 @@ L_Quik_Add_1:
 	and		#$A4
 	cmp		#$04
 	bne		No_KeyM_Trigger						; 由于跳转寻址能力的问题，这里采用jmp进行跳转
+	rmb0	Overflow_Flag						; 第一次按键触发后，正计时溢出都不再有效
 	jmp		L_KeyM_Trigger						; M单独触发
 No_KeyM_Trigger:
 	cmp		#$20
 	bne		No_KeyS_Trigger
+	rmb0	Overflow_Flag
 	jmp		L_KeyS_Trigger						; S单独触发
 No_KeyS_Trigger:
 	bbs4	Timer_Flag,L_Quik_Add_2				; C触发和ms触发不需要快加
@@ -42,6 +44,7 @@ No_KeyS_Trigger:
 No_KeyC_Trigger:
 	cmp		#$24
 	bne		L_Quik_Add_2
+	rmb0	Overflow_Flag
 	jmp		L_KeyMS_Trigger						; M、S同时触发
 
 L_Quik_Add_2:
@@ -138,6 +141,7 @@ L_KeyC_Trigger:
 	smb2	Timer_Flag							; 按键提示音
 
 	bbs4	Sys_Status_Flag,L_KeyC_Finish		; 倒计时完成态处理
+	bbs0	Overflow_Flag,L_KeyC_Overflow		; 正计时完成时额外处理
 	lda		Sys_Status_Flag						; 处于正、倒计时态，需转为对应暂停态
 	cmp		#$02
 	beq		L_KeyC_PosDes
@@ -184,6 +188,15 @@ L_KeyC_Finish:
 	TMR1_OFF
 	rmb7	TMRC
 	rts
+
+L_KeyC_Overflow:								; 如果在正计时完成后按C
+	rmb0	Overflow_Flag						; 则清空所有计数，回到初始态
+	lda		#00
+	sta		R_Time_Min
+	sta		R_Time_Sec
+	lda		#01
+	sta		Sys_Status_Flag
+
 
 
 L_KeyMS_Trigger:
