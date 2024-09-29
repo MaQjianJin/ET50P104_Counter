@@ -291,6 +291,7 @@ Finish_Time_Out:
 	sta		R_Time_Min
 	lda		R_SetTime_Sec
 	sta		R_Time_Sec
+	jsr		F_Display_Time
 	lda		#1100B								; ×´Ì¬ÇÐ»»Îªµ¹¼ÆÊ±ÔÝÍ£Ì¬
 	sta		Sys_Status_Flag
 	rmb7	TMRC

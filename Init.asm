@@ -1,4 +1,4 @@
-L_Init_SystemRam_Prog:							; 系统初始化
+L_Init_SystemRam_Prog:							; 系统锟斤拷始锟斤拷
 	lda		#0
 	sta		Key_Flag
 	sta		Beep_Serial
@@ -16,39 +16,39 @@ L_Init_SystemRam_Prog:							; 系统初始化
 	lda		#$01
 	sta		Sys_Status_Flag
 
-	lda		#99
+	lda		#00
 	sta		R_Time_Min
-	lda		#55
+	lda		#00
 	sta		R_Time_Sec
 
 	rts
 
 
 F_LCD_Init:
-	jsr		F_ClearScreen						; LCD初始化
+	jsr		F_ClearScreen						; LCD锟斤拷始锟斤拷
 	CHECK_LCD
 
-	PC45_SEG									; 配置IO口为SEG线模式
+	PC45_SEG									; 锟斤拷锟斤拷IO锟斤拷为SEG锟斤拷模式
 	PC67_SEG
 	PD03_SEG
 	PD47_SEG
 
-	RMB0	P_LCD_COM							; 配置COM线数量
+	RMB0	P_LCD_COM							; 锟斤拷锟斤拷COM锟斤拷锟斤拷锟斤拷
 	SMB1	P_LCD_COM
 
 	LCD_ON
-	jsr		F_ClearScreen						; 清屏
+	jsr		F_ClearScreen						; 锟斤拷锟斤拷
 
 	rts
 
 
 F_Port_Init:
-	LDA		#$A4								; PA2\5\7作按键输入
+	LDA		#$A4								; PA2\5\7锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷
 	STA		P_PA_WAKE
 	STA		P_PA_IO
 	LDA		#$FF
 	STA		P_PA
-	EN_PA_IRQ									; 打开PA口外部中断
+	EN_PA_IRQ									; 锟斤拷PA锟斤拷锟解部锟叫讹拷
 
 	PB2_PWM
 	PB3_PB3_COMS
@@ -57,20 +57,20 @@ F_Port_Init:
 
 
 F_Timer_Init:
-	TMR1_CLK_512Hz								; TIM1时钟源Fsub/64(512Hz)
-	TMR0_CLK_FSUB								; TIM0时钟源Fsub(32768Hz)
-	DIV_256HZ									; DIV分频512Hz
+	TMR1_CLK_512Hz								; TIM1时锟斤拷源Fsub/64(512Hz)
+	TMR0_CLK_FSUB								; TIM0时锟斤拷源Fsub(32768Hz)
+	DIV_256HZ									; DIV锟斤拷频512Hz
 
-	lda		#$0									; 重装载计数设置为0
+	lda		#$0									; 锟斤拷装锟截硷拷锟斤拷锟斤拷锟斤拷为0
 	sta		TMR0
 	sta		TMR2
 
 	lda		#$ef
 	sta		TMR1
 
-	rmb6	DIVC								; 关闭定时器同步
+	rmb6	DIVC								; 锟截闭讹拷时锟斤拷同锟斤拷
 
-	EN_TMR1_IRQ									; 开定时器中断
+	EN_TMR1_IRQ									; 锟斤拷锟斤拷时锟斤拷锟叫讹拷
 	EN_TMR2_IRQ
 	EN_TMR0_IRQ
 	TMR0_OFF
@@ -81,7 +81,7 @@ F_Timer_Init:
 
 
 F_Beep_Init:
-	TONE_2KHZ									; 配置蜂鸣器音调频率
+	TONE_2KHZ									; 锟斤拷锟矫凤拷锟斤拷锟斤拷锟斤拷锟斤拷频锟斤拷
 	lda		#$0
 	sta		AUDCR
 	lda		#$ff
