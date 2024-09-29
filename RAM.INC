@@ -57,6 +57,7 @@ Frame_Flag				DS		1
 ;bit0 = 1 计时开始
 ;bit1 = 1 分钟减时
 ;bit2 = 1 借(进)位发生
+;bit3 = 1 blink
 
 Overflow_Flag			DS		1
 ;bit0 = 1 正计时溢出

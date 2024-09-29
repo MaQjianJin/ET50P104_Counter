@@ -70,8 +70,10 @@ L_KeyM_Pause:
 	lda		#1100B
 	sta		Sys_Status_Flag
 	inc		R_Time_Min
+	lda		R_Time_Sec
+	sta		R_SetTime_Sec						; 每次M的有效都会触发一次倒计时初值的更新
 	lda		R_Time_Min
-	sta		R_SetTime_Min						; M键每次有效都更新一次倒计时初值
+	sta		R_SetTime_Min
 	cmp		#100
 	beq		L_Reset_Min
 	jsr		L_DisTimer_Min
@@ -112,6 +114,8 @@ L_KeyS_Pause:
 	inc		R_Time_Sec
 	lda		R_Time_Sec
 	sta		R_SetTime_Sec						; 每次S的有效都会触发一次倒计时初值的更新
+	lda		R_Time_Min
+	sta		R_SetTime_Min
 	cmp		#60
 	beq		L_Reset_Sec
 	jsr		L_DisTimer_Sec

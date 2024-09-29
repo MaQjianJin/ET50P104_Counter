@@ -11,16 +11,16 @@ F_Beep_Manage:
 	bbr0	Beep_Serial,L_No_Beep			; 判断响铃序列第1位，为1就响，为0就不响
 	smb7	TMRC
 	clc
-	ror		Beep_Serial
 	ror		Beep_Serial+1
+	ror		Beep_Serial
 
 	bra		L_Beep_rts
 
 L_No_Beep:
 	rmb7	TMRC
 	clc
-	ror		Beep_Serial
 	ror		Beep_Serial+1
+	ror		Beep_Serial
 
 L_Beep_rts:
 	rts

@@ -255,7 +255,6 @@ L_Min_Des_Out:
 L_Time_Stop:
 	lda		#10000B								; 倒计时完成则进入倒计时完成态进行响铃
 	sta		Sys_Status_Flag
-	TMR0_OFF									; 先不关Time2，倒计时完成态也需要用它计30S
 	
 	lda		#$00
 	sta		Frame_Flag							; 复位相关标志位
@@ -265,7 +264,7 @@ L_Time_Stop:
 	rmb7	Timer_Flag
 
 	jsr		F_Display_Time
-	rts
+	jmp		Beep_Start
 
 
 F_Des_Counter_Finish:
@@ -295,6 +294,7 @@ Finish_Time_Out:
 	lda		#1100B								; 状态切换为倒计时暂停态
 	sta		Sys_Status_Flag
 	rmb7	TMRC
+	TMR0_OFF
 	TMR1_OFF
 	TMR2_OFF
 	lda		#00

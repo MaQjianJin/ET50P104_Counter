@@ -97,7 +97,8 @@ Key_Out:
 	bbs4	Sys_Status_Flag, Status_Finish
 
 Status_Init:
-
+	ldx		#lcd_MS
+	jsr		F_DispSymbol
 	bra		MainLoop
 Status_Pos:
 	jsr		F_Sec_Pos_Counter
@@ -106,10 +107,33 @@ Status_Des:
 	jsr		F_Sec_Des_Counter
 	bra		MainLoop
 Status_Pause:
-
+	ldx		#lcd_MS
+	jsr		F_DispSymbol
 	bra		MainLoop
 Status_Finish:
 	jsr		F_Des_Counter_Finish
+
+	bbr7	Timer_Flag,Blink_Out
+	rmb7	Timer_Flag
+	lda		CC1
+	cmp		#$08
+	beq		Blink_MS
+	inc		CC1
+	bra		MainLoop
+Blink_MS:
+	lda		#$00
+	sta		CC1
+	bbr3	Frame_Flag,Blink_DP
+	rmb3	Frame_Flag
+	ldx		#lcd_MS
+	jsr		F_ClrpSymbol
+	bra		Blink_Out
+Blink_DP:
+	smb3	Frame_Flag
+	ldx		#lcd_MS
+	jsr		F_DispSymbol
+
+Blink_Out:
 	bra		MainLoop
 
 
