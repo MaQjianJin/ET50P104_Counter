@@ -74,6 +74,7 @@ L_KeyM_Pause:
 	sta		R_SetTime_Sec						; 每次M的有效都会触发一次倒计时初值的更新
 	lda		R_Time_Min
 	sta		R_SetTime_Min
+	lda		R_Time_Min
 	cmp		#100
 	beq		L_Reset_Min
 	jsr		L_DisTimer_Min
@@ -116,6 +117,7 @@ L_KeyS_Pause:
 	sta		R_SetTime_Sec						; 每次S的有效都会触发一次倒计时初值的更新
 	lda		R_Time_Min
 	sta		R_SetTime_Min
+	lda		R_Time_Sec
 	cmp		#60
 	beq		L_Reset_Sec
 	jsr		L_DisTimer_Sec
