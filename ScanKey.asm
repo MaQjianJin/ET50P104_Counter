@@ -176,6 +176,16 @@ L_KeyC_PosDes:
 
 	; 处理暂停态的情况
 L_KeyC_Pause:
+	bbs1	Sys_Status_Flag,No_Need_Des_Count	; 倒计时开始时如果是0，则转到正计时开始
+	lda		R_Time_Min
+	cmp		#$00
+	bne		No_Need_Des_Count
+	lda		R_Time_Sec
+	cmp		#$00
+	bne		No_Need_Des_Count
+	lda		#$02
+	sta		Sys_Status_Flag
+No_Need_Des_Count:
 	rmb3	Sys_Status_Flag						; 退出暂停态
 	jsr		Init_Frame_Count					; 初始化FrameCount
 

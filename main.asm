@@ -196,7 +196,7 @@ L_PaIrp:
 L_LcdIrq:
 	CLR_LCD_IRQ_FLAG
 	lda		Counter_4Hz
-	cmp		#$4
+	cmp		#$8
 	bcc		L_LCD_4Hz_Out
 	lda		#$0
 	sta		Counter_4Hz
